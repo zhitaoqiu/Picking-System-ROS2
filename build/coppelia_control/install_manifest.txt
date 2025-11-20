@@ -1,0 +1,15 @@
+/home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control
+/home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.sh
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.dsv
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.sh
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.dsv
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.bash
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.sh
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.zsh
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.dsv
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.dsv
+/home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/packages/coppelia_control
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig.cmake
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig-version.cmake
+/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.xml
