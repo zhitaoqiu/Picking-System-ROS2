@@ -18,7 +18,7 @@ bool PlanningInterface::initialize()
     {
         move_group_=std::make_shared<moveit::planning_interface::MoveGroupInterface>(node_,PLANNING_GROUP);
         move_group_->setPlanningTime(10.0);
-        move_group_->setEndEffectorLink("参数待定");
+        //move_group_->setEndEffectorLink("参数待定");
         RCLCPP_INFO(node_->get_logger(), "MoveGroupInterface已成功初始化规划组 %s。", PLANNING_GROUP.c_str());
         return true;
     }

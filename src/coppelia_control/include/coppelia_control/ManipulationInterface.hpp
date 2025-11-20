@@ -24,7 +24,8 @@ private:
     rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr gripper_cmd_publisher_;
     std::string joint_cmd_topic_;
     std::string gripper_cmd_topic_;
-    std::vector<std::string> last_executed_joint_names_;
+    std::vector<std::string> joint_names_;
+    std::vector<std::string> gripper_joint_names_;
     bool use_smooth_trajectory_;
 };
 }
