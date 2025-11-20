@@ -197,6 +197,115 @@ coppelia_control_uninstall/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_uninstall.dir/build.make CMakeFiles/coppelia_control_uninstall.dir/build
 .PHONY : coppelia_control_uninstall/fast
 
+#=============================================================================
+# Target rules for targets named coppelia_control
+
+# Build rule for target.
+coppelia_control: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coppelia_control
+.PHONY : coppelia_control
+
+# fast build rule for target.
+coppelia_control/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/build
+.PHONY : coppelia_control/fast
+
+src/ManipulationInterface.o: src/ManipulationInterface.cpp.o
+.PHONY : src/ManipulationInterface.o
+
+# target to build an object file
+src/ManipulationInterface.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/ManipulationInterface.cpp.o
+.PHONY : src/ManipulationInterface.cpp.o
+
+src/ManipulationInterface.i: src/ManipulationInterface.cpp.i
+.PHONY : src/ManipulationInterface.i
+
+# target to preprocess a source file
+src/ManipulationInterface.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/ManipulationInterface.cpp.i
+.PHONY : src/ManipulationInterface.cpp.i
+
+src/ManipulationInterface.s: src/ManipulationInterface.cpp.s
+.PHONY : src/ManipulationInterface.s
+
+# target to generate assembly for a file
+src/ManipulationInterface.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/ManipulationInterface.cpp.s
+.PHONY : src/ManipulationInterface.cpp.s
+
+src/PlanningInterface.o: src/PlanningInterface.cpp.o
+.PHONY : src/PlanningInterface.o
+
+# target to build an object file
+src/PlanningInterface.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/PlanningInterface.cpp.o
+.PHONY : src/PlanningInterface.cpp.o
+
+src/PlanningInterface.i: src/PlanningInterface.cpp.i
+.PHONY : src/PlanningInterface.i
+
+# target to preprocess a source file
+src/PlanningInterface.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/PlanningInterface.cpp.i
+.PHONY : src/PlanningInterface.cpp.i
+
+src/PlanningInterface.s: src/PlanningInterface.cpp.s
+.PHONY : src/PlanningInterface.s
+
+# target to generate assembly for a file
+src/PlanningInterface.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/PlanningInterface.cpp.s
+.PHONY : src/PlanningInterface.cpp.s
+
+src/VisionInterface.o: src/VisionInterface.cpp.o
+.PHONY : src/VisionInterface.o
+
+# target to build an object file
+src/VisionInterface.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/VisionInterface.cpp.o
+.PHONY : src/VisionInterface.cpp.o
+
+src/VisionInterface.i: src/VisionInterface.cpp.i
+.PHONY : src/VisionInterface.i
+
+# target to preprocess a source file
+src/VisionInterface.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/VisionInterface.cpp.i
+.PHONY : src/VisionInterface.cpp.i
+
+src/VisionInterface.s: src/VisionInterface.cpp.s
+.PHONY : src/VisionInterface.s
+
+# target to generate assembly for a file
+src/VisionInterface.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/VisionInterface.cpp.s
+.PHONY : src/VisionInterface.cpp.s
+
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -212,6 +321,19 @@ help:
 	@echo "... test"
 	@echo "... coppelia_control_uninstall"
 	@echo "... uninstall"
+	@echo "... coppelia_control"
+	@echo "... src/ManipulationInterface.o"
+	@echo "... src/ManipulationInterface.i"
+	@echo "... src/ManipulationInterface.s"
+	@echo "... src/PlanningInterface.o"
+	@echo "... src/PlanningInterface.i"
+	@echo "... src/PlanningInterface.s"
+	@echo "... src/VisionInterface.o"
+	@echo "... src/VisionInterface.i"
+	@echo "... src/VisionInterface.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 .PHONY : help
 
 

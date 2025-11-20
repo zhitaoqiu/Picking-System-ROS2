@@ -1,3 +1,7 @@
+/home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/VisionInterface.hpp
+/home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/ManipulationInterface.hpp
+/home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/PlanningInterface.hpp
+/home/rosqiu/coppelia_control/install/coppelia_control/lib/libcoppelia_control.so
 /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control
 /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control
 /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.sh

@@ -1,6 +1,6 @@
 #pragma onece
 #include <rclcpp/rclcpp.hpp>
-#include<moveit/moveit_group_interface/move_group_interface.h>
+#include <moveit/move_group_interface/move_group_interface.h>
 #include<moveit_msgs/msg/robot_trajectory.hpp>
 #include<geometry_msgs/msg/pose.hpp>
 #include<string>
@@ -17,6 +17,7 @@ public:
     bool planCartesianPath(const std::vector<geometry_msgs::msg::Pose>& waypoints,moveit_msgs::msg::RobotTrajectory& trajectory);
     bool planToNamedTarget(const std::string& target_name,moveit::planning_interface::MoveGroupInterface::Plan& plan);
     void smoothTrajectory(moveit_msgs::msg::RobotTrajectory& trajectory);
+    geometry_msgs::msg::Pose getCurrentPose(); 
 private:
     rclcpp::Node::SharedPtr node_;
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;

@@ -28,10 +28,10 @@ bool PlanningInterface::initialize()
         return false;
     }
 }
-bool PlanningInterface::planTopose(const geometry_msgs::msg::Pose& target_pose,moveit::planning_interface::MoveGroupInterface::Plan& plan)
+bool PlanningInterface::planToPose(const geometry_msgs::msg::Pose& target_pose,moveit::planning_interface::MoveGroupInterface::Plan& plan)
 {
     move_group_->setPoseTarget(target_pose);
-    return (move_group_->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    return (move_group_->plan(plan) == moveit::core::MoveItErrorCode::SUCCESS);
 }
 bool PlanningInterface::planCartesianPath(const std::vector<geometry_msgs::msg::Pose>& waypoints,moveit_msgs::msg::RobotTrajectory& trajectory)
 {
@@ -44,11 +44,11 @@ bool PlanningInterface::planCartesianPath(const std::vector<geometry_msgs::msg::
 bool PlanningInterface::planToNamedTarget(const std::string& target_name,moveit::planning_interface::MoveGroupInterface::Plan& plan)
 {
     move_group_->setNamedTarget(target_name);
-    return (move_group_->plan(plan)== moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    return (move_group_->plan(plan)== moveit::core::MoveItErrorCode::SUCCESS);
 }
 void PlanningInterface::smoothTrajectory(moveit_msgs::msg::RobotTrajectory& trajectory)
 {
-        robot_trajectory::RobotTrajectory rt(move_group_->getRobotModel(), PLANNING_GROUP);
+    robot_trajectory::RobotTrajectory rt(move_group_->getRobotModel(), PLANNING_GROUP);
     rt.setRobotTrajectoryMsg(*move_group_->getCurrentState(), trajectory);
 
     trajectory_processing::IterativeParabolicTimeParameterization iptp;

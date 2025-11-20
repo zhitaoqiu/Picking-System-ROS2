@@ -32,7 +32,7 @@ void ManipulationInterface::setJointNames(const std::vector<std::string>& joint_
 {
     joint_names_ = joint_names;
 }
-bool ManipulationInterface::execute_smooth_interpolation(const moveit_msgs::msg::RobotTrajectory& trajectory)
+bool ManipulationInterface::execute_smooth_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory)
 {
     const auto& joint_names = trajectory.joint_trajectory.joint_names;
     const auto& points = trajectory.joint_trajectory.points;
@@ -45,7 +45,7 @@ bool ManipulationInterface::execute_smooth_interpolation(const moveit_msgs::msg:
     cmd.name = joint_names;
     cmd.position = last_point.positions;
 
-    joint_cmd_pub_->publish(cmd);
+    joint_cmd_publisher_->publish(cmd);
     
     double total_duration_sec = static_cast<double>(last_point.time_from_start.sec) + 
                                 static_cast<double>(last_point.time_from_start.nanosec) * 1e-9;
@@ -91,27 +91,26 @@ bool ManipulationInterface::execute_point_to_point_trajectory(const moveit_msgs:
     RCLCPP_INFO(node_->get_logger(), "Execution finished in POINT-TO-POINT mode.");
     return true;
 }
-void ManipulationInterface::closeGripper()
+bool ManipulationInterface::openGripper()
 {
-  sensor_msgs::msg::JointState cmd;
-  cmd.header.stamp = node_->now();
-  cmd.name = gripper_joint_names_;
-  cmd.position.resize(gripper_joint_names_.size(), 0.00);
-  
-  gripper_cmd_pub_->publish(cmd);
-  RCLCPP_INFO(node_->get_logger(), "Gripper commanded to close (0.00) on topic: %s.", gripper_cmd_topic_.c_str());
+    sensor_msgs::msg::JointState cmd;
+    cmd.header.stamp = node_->now();
+    cmd.name = gripper_joint_names_;
+    cmd.position.resize(gripper_joint_names_.size(), 0.04);
+
+    gripper_cmd_publisher_->publish(cmd);
+    return true;
 }
 
-// Gripper control: Open
-void ManipulationInterface::openGripper()
+bool ManipulationInterface::closeGripper()
 {
-  sensor_msgs::msg::JointState cmd;
-  cmd.header.stamp = node_->now();
-  cmd.name = gripper_joint_names_;
-  cmd.position.resize(gripper_joint_names_.size(), 0.04);
+    sensor_msgs::msg::JointState cmd;
+    cmd.header.stamp = node_->now();
+    cmd.name = gripper_joint_names_;
+    cmd.position.resize(gripper_joint_names_.size(), 0.00);
 
-  gripper_cmd_pub_->publish(cmd);
-  RCLCPP_INFO(node_->get_logger(), "Gripper commanded to open (0.04) on topic: %s.", gripper_cmd_topic_.c_str());
+    gripper_cmd_publisher_->publish(cmd);
+    return true;
 }
 
 } 

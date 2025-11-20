@@ -63,7 +63,7 @@ CMAKE_BINARY_DIR = /home/rosqiu/coppelia_control/build/coppelia_control
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all:
+all: CMakeFiles/coppelia_control.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -73,6 +73,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/uninstall.dir/clean
 clean: CMakeFiles/coppelia_control_uninstall.dir/clean
+clean: CMakeFiles/coppelia_control.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -126,6 +127,32 @@ coppelia_control_uninstall: CMakeFiles/coppelia_control_uninstall.dir/rule
 CMakeFiles/coppelia_control_uninstall.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_uninstall.dir/build.make CMakeFiles/coppelia_control_uninstall.dir/clean
 .PHONY : CMakeFiles/coppelia_control_uninstall.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/coppelia_control.dir
+
+# All Build rule for target.
+CMakeFiles/coppelia_control.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles --progress-num=1,2,3,4,5 "Built target coppelia_control"
+.PHONY : CMakeFiles/coppelia_control.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/coppelia_control.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/coppelia_control.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles 0
+.PHONY : CMakeFiles/coppelia_control.dir/rule
+
+# Convenience name for target.
+coppelia_control: CMakeFiles/coppelia_control.dir/rule
+.PHONY : coppelia_control
+
+# clean rule for target.
+CMakeFiles/coppelia_control.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control.dir/build.make CMakeFiles/coppelia_control.dir/clean
+.PHONY : CMakeFiles/coppelia_control.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

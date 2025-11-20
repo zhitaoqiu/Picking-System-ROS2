@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 project(coppelia_control)
 
-# 默认使用 C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 找依赖
+# 依赖
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -13,24 +12,20 @@ find_package(geometry_msgs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(moveit_msgs REQUIRED)
 
-# 包含 include 目录
 include_directories(
   include
 )
 
-# 你的 cpp 实现文件（后面加即可）
-set(SOURCES
-  src/planning_interface.cpp
-  src/manipulation_interface.cpp
-  src/vision_interface.cpp
+# ================
+# 1. 编译库
+# ================
+add_library(coppelia_control_lib SHARED
+  src/PlanningInterface.cpp
+  src/ManipulationInterface.cpp
+  src/VisionInterface.cpp
 )
 
-# 编译库，供节点或其他包调用
-add_library(${PROJECT_NAME} SHARED
-  ${SOURCES}
-)
-
-ament_target_dependencies(${PROJECT_NAME}
+ament_target_dependencies(coppelia_control_lib
   rclcpp
   sensor_msgs
   geometry_msgs
@@ -38,16 +33,39 @@ ament_target_dependencies(${PROJECT_NAME}
   moveit_msgs
 )
 
+# 安装库
+install(TARGETS coppelia_control_lib
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 # 安装头文件
 install(DIRECTORY include/
   DESTINATION include/
 )
 
-# 安装库
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
+# ================
+# 2. 编译 main 节点
+# ================
+add_executable(main_node src/main.cpp)
+
+# 链接上库
+target_link_libraries(main_node
+  coppelia_control_lib
+)
+
+ament_target_dependencies(main_node
+  rclcpp
+  sensor_msgs
+  geometry_msgs
+  moveit_ros_planning_interface
+  moveit_msgs
+)
+
+# 安装可执行文件
+install(TARGETS main_node
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()

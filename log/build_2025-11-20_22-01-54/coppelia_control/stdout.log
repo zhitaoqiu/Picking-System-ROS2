@@ -1,0 +1,27 @@
+[35m[1mConsolidate compiler generated dependencies of target coppelia_control[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/coppelia_control.dir/src/PlanningInterface.cpp.o[0m
+[ 50%] [32m[1mLinking CXX shared library libcoppelia_control.so[0m
+[100%] Built target coppelia_control
+-- Install configuration: ""
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/include/
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/VisionInterface.hpp
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/ManipulationInterface.hpp
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/PlanningInterface.hpp
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libcoppelia_control.so
+-- Set runtime path of "/home/rosqiu/coppelia_control/install/coppelia_control/lib/libcoppelia_control.so" to ""
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.sh
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.dsv
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.sh
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.dsv
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.bash
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.sh
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.zsh
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.dsv
+-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.dsv
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/packages/coppelia_control
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig.cmake
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig-version.cmake
+-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.xml
