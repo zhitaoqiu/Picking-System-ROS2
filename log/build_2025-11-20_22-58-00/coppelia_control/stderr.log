@@ -1,0 +1,6 @@
+[31mCMake Error at CMakeLists.txt:54 (target_link_libraries):
+  Cannot specify link libraries for target "main_node" which is not built by
+  this project.
+
+[0m
+gmake: *** [Makefile:362：cmake_check_build_system] 错误 1

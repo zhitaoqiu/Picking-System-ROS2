@@ -1,6 +1,7 @@
 /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/uninstall.dir
 /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/coppelia_control_uninstall.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/coppelia_control.dir
+/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/coppelia_control_lib.dir
+/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/main_node.dir
 /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/test.dir
 /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/edit_cache.dir
 /home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/rebuild_cache.dir
