@@ -310,8 +310,11 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install(FILES "urdf/panda.urdf" "srdf/panda.srdf" "DESTINATION" "share/coppelia_control/")
-ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "urdf/panda.urdf" "srdf/panda.srdf" "DESTINATION" "share/coppelia_control/")
+# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.urdf" "DESTINATION" "share/coppelia_control/urdf")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.urdf" "DESTINATION" "share/coppelia_control/urdf")
+
+# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.srdf" "DESTINATION" "share/coppelia_control/srdf")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.srdf" "DESTINATION" "share/coppelia_control/srdf")
 
 # install("TARGETS" "coppelia_control_lib" "ARCHIVE_DESTINATION" "lib" "LIBRARY_DESTINATION" "lib" "RUNTIME_DESTINATION" "bin")
 include("/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
@@ -321,6 +324,9 @@ ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppeli
 
 # install("TARGETS" "main_node" "DESTINATION" "lib/coppelia_control")
 include("/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_symlink_install_targets_1_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
+
+# install(DIRECTORY "config/" "DESTINATION" "share/coppelia_control/config")
+ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "config/" "DESTINATION" "share/coppelia_control/config")
 
 # install(DIRECTORY "launch/" "DESTINATION" "share/coppelia_control/launch")
 ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "launch/" "DESTINATION" "share/coppelia_control/launch")

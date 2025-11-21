@@ -16,6 +16,10 @@ public:
     bool openGripper();
     bool closeGripper();
     void setJointNames(const std::vector<std::string>& joint_names);
+    void setGripperJointNames(const std::vector<std::string>& gripper_joint_names);
+    void setJointCmdTopic(const std::string& topic);
+    void setGripperCmdTopic(const std::string& topic);
+    void useSmoothTrajectoryExecution(bool use_smooth);
 private:
     bool execute_smooth_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);
     bool execute_point_to_point_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);

@@ -10,6 +10,7 @@ ManipulationInterface::ManipulationInterface(const rclcpp::Node::SharedPtr& node
     node_->declare_parameter<std::string>("joint_cmd_topic", "/coppelia/joint_cmd");
     node_->declare_parameter<std::string>("gripper_cmd_topic", "/coppelia/gripper_cmd");
     node_->declare_parameter<bool>("use_smooth_trajectory", true);
+
     node_->get_parameter("joint_cmd_topic", joint_cmd_topic_);
     node_->get_parameter("gripper_cmd_topic", gripper_cmd_topic_);
     node_->get_parameter("use_smooth_trajectory", use_smooth_trajectory_);
@@ -31,6 +32,25 @@ bool ManipulationInterface::executeTrajectory(const moveit_msgs::msg::RobotTraje
 void ManipulationInterface::setJointNames(const std::vector<std::string>& joint_names)
 {
     joint_names_ = joint_names;
+}
+void ManipulationInterface::setGripperJointNames(const std::vector<std::string>& gripper_joint_names)
+{
+    gripper_joint_names_ = gripper_joint_names;
+}
+void ManipulationInterface::setJointCmdTopic(const std::string& topic)
+{
+    joint_cmd_topic_ = topic;
+    joint_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(joint_cmd_topic_, 10);
+}
+
+void ManipulationInterface::setGripperCmdTopic(const std::string& topic)
+{
+    gripper_cmd_topic_ = topic;
+    gripper_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(gripper_cmd_topic_, 10);
+}
+void ManipulationInterface::useSmoothTrajectoryExecution(bool use_smooth)
+{
+    use_smooth_trajectory_ = use_smooth;
 }
 bool ManipulationInterface::execute_smooth_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory)
 {
@@ -112,5 +132,4 @@ bool ManipulationInterface::closeGripper()
     gripper_cmd_publisher_->publish(cmd);
     return true;
 }
-
 } 
