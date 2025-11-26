@@ -1,58 +1,52 @@
-import os
-import yaml
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from ament_index_python.packages import get_package_share_directory
+from launch_ros.parameter_descriptions import ParameterValue
+from ament_index_python.packages import get_package_share_path
+import os
+import yaml
 
+def load_yaml(package_name, file_path):
+    package_path = get_package_share_path(package_name)
+    yaml_file = os.path.join(package_path, file_path)
+
+    with open(yaml_file, 'r') as f:
+        return yaml.safe_load(f)
 
 def generate_launch_description():
 
-    pkg_path = get_package_share_directory('coppelia_control')
+    # -------------------------
+    # 路径
+    # -------------------------
+    panda_description = get_package_share_path("moveit_resources_panda_description")
+    panda_moveit_config = get_package_share_path("moveit_resources_panda_moveit_config")
 
-    # -------------------------------
-    # 文件路径
-    # -------------------------------
-    urdf_path = os.path.join(pkg_path, 'urdf','panda.urdf')
-    srdf_path = os.path.join(pkg_path, 'srdf','panda.srdf')
-    kinematics_yaml_path = os.path.join(pkg_path, 'config', 'kinematics.yaml')
+    urdf_path = os.path.join(panda_description, "urdf", "panda.urdf")
+    srdf_path = os.path.join(panda_moveit_config, "config", "panda.srdf")
 
-    # -------------------------------
-    # 读取 URDF
-    # -------------------------------
-    with open(urdf_path, 'r') as f:
-        robot_description = f.read()
+    # Load yaml configs
+    kinematics_yaml = load_yaml("moveit_resources_panda_moveit_config", "config/kinematics.yaml")
+    ompl_yaml = load_yaml("moveit_resources_panda_moveit_config", "config/ompl_planning.yaml")
 
-    # -------------------------------
-    # 读取 SRDF
-    # -------------------------------
-    with open(srdf_path, 'r') as f:
-        robot_description_semantic = f.read()
-
-    # -------------------------------
-    # 读取 kinematics.yaml（必须用 safe_load）
-    # -------------------------------
-    with open(kinematics_yaml_path, 'r') as f:
-        robot_description_kinematics = yaml.safe_load(f)
-
-    # -------------------------------
-    # 参数字典
-    # -------------------------------
-    params = {
-        "robot_description": robot_description,
-        "robot_description_semantic": robot_description_semantic,
-        "robot_description_kinematics": robot_description_kinematics
-    }
-
-    # -------------------------------
-    # 主节点
-    # -------------------------------
-    main_node = Node(
-        package="coppelia_control",
-        executable="main_node",
-        output="screen",
-        parameters=[params]
-    )
+    # Parameters
+    robot_description = ParameterValue(open(urdf_path).read(), value_type=str)
+    robot_description_semantic = ParameterValue(open(srdf_path).read(), value_type=str)
 
     return LaunchDescription([
-        main_node
+        Node(
+            package="moveit_ros_move_group",
+            executable="move_group",
+            output="screen",
+            parameters=[
+                {"robot_description": robot_description},
+                {"robot_description_semantic": robot_description_semantic},
+                {"kinematics": kinematics_yaml},
+                {"ompl": ompl_yaml},
+
+                # ---- 最关键修复项 ----
+                {"planning_pipelines": ["ompl"]},
+                # ----------------------
+
+                {"default_planning_pipeline": "ompl"},
+            ]
+        )
     ])

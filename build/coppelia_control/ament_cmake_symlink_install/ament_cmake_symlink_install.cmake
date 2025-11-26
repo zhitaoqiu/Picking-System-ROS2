@@ -310,12 +310,6 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.urdf" "DESTINATION" "share/coppelia_control/urdf")
-ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.urdf" "DESTINATION" "share/coppelia_control/urdf")
-
-# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.srdf" "DESTINATION" "share/coppelia_control/srdf")
-ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/panda.srdf" "DESTINATION" "share/coppelia_control/srdf")
-
 # install("TARGETS" "coppelia_control_lib" "ARCHIVE_DESTINATION" "lib" "LIBRARY_DESTINATION" "lib" "RUNTIME_DESTINATION" "bin")
 include("/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 

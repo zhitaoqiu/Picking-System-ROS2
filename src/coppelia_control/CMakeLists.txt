@@ -15,32 +15,6 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(moveit_msgs REQUIRED)
 
 # ---------------------------
-# Install URDF / SRDF
-# ---------------------------
-# 原始文件路径（在你的包内）
-set(URDF_INPUT urdf/panda.urdf)
-set(SRDF_INPUT srdf/panda.srdf)
-
-# 构建后输出
-set(URDF_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/panda.urdf)
-set(SRDF_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/panda.srdf)
-
-# 复制到构建目录
-configure_file(${URDF_INPUT} ${URDF_OUTPUT} COPYONLY)
-configure_file(${SRDF_INPUT} ${SRDF_OUTPUT} COPYONLY)
-
-# 安装 URDF 和 SRDF 到对应目录
-install(
-  FILES ${URDF_OUTPUT}
-  DESTINATION share/${PROJECT_NAME}/urdf
-)
-
-install(
-  FILES ${SRDF_OUTPUT}
-  DESTINATION share/${PROJECT_NAME}/srdf
-)
-
-# ---------------------------
 # Library
 # ---------------------------
 add_library(coppelia_control_lib SHARED
@@ -79,7 +53,6 @@ install(
 # Main node executable
 # ---------------------------
 add_executable(main_node src/main.cpp)
-
 target_link_libraries(main_node
   coppelia_control_lib
 )
@@ -93,7 +66,7 @@ ament_target_dependencies(main_node
 )
 
 install(
-  TARGETS main_node
+  TARGETS main_node 
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -111,5 +84,3 @@ install(
 )
 
 ament_package()
-
-

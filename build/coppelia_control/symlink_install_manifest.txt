@@ -1,11 +1,8 @@
-/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/urdf/panda.urdf
-/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/srdf/panda.srdf
 /home/rosqiu/coppelia_control/install/coppelia_control/lib/libcoppelia_control_lib.so
 /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/ManipulationInterface.hpp
 /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/PlanningInterface.hpp
 /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/VisionInterface.hpp
 /home/rosqiu/coppelia_control/install/coppelia_control/lib/coppelia_control/main_node
-/home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/config/kinematics.yaml
 /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/launch/bringup.launch.py
 /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control
 /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control

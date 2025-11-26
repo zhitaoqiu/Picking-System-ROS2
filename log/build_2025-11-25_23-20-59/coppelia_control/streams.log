@@ -1,0 +1,35 @@
+[0.063s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[0.284s] [ 66%] Built target coppelia_control_lib
+[0.332s] [35m[1mConsolidate compiler generated dependencies of target main_node[0m
+[0.438s] [ 83%] [32mBuilding CXX object CMakeFiles/main_node.dir/src/main.cpp.o[0m
+[16.619s] [100%] [32m[1mLinking CXX executable main_node[0m
+[18.524s] [100%] Built target main_node
+[18.588s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[18.636s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --install /home/rosqiu/coppelia_control/build/coppelia_control
+[18.661s] -- Install configuration: ""
+[18.665s] -- Execute custom install script
+[18.665s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/urdf/panda.urdf
+[18.668s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/srdf/panda.srdf
+[18.668s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libcoppelia_control_lib.so
+[18.668s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/ManipulationInterface.hpp
+[18.669s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/PlanningInterface.hpp
+[18.669s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/include//coppelia_control/VisionInterface.hpp
+[18.670s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/lib/coppelia_control/main_node
+[18.670s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/config/kinematics.yaml
+[18.671s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/launch/bringup.launch.py
+[18.671s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control
+[18.672s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control
+[18.673s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.sh
+[18.673s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.dsv
+[18.674s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.sh
+[18.674s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.dsv
+[18.675s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.bash
+[18.676s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.sh
+[18.690s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.zsh
+[18.691s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.dsv
+[18.691s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.dsv
+[18.705s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/packages/coppelia_control
+[18.705s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig.cmake
+[18.705s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig-version.cmake
+[18.706s] -- Up-to-date symlink: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.xml
+[18.711s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --install /home/rosqiu/coppelia_control/build/coppelia_control

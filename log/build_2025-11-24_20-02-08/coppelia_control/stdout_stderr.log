@@ -1,0 +1,11 @@
+[ 16%] [32mBuilding CXX object CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.o[0m
+[ 33%] [32m[1mLinking CXX shared library libcoppelia_control_lib.so[0m
+[ 66%] Built target coppelia_control_lib
+[ 83%] [32mBuilding CXX object CMakeFiles/main_node.dir/src/main.cpp.o[0m
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:63:38:[m[K [01;31m[Kerror: [m[K‘[01m[Kmoveit::planning_interface::MoveGroupInterface::MoveItErrorCode[m[K’ has not been declared
+   63 |     if(result == MoveGroupInterface::[01;31m[KMoveItErrorCode[m[K::SUCCESS)
+      |                                      [01;31m[K^~~~~~~~~~~~~~~[m[K
+gmake[2]: *** [CMakeFiles/main_node.dir/build.make:76：CMakeFiles/main_node.dir/src/main.cpp.o] 错误 1
+gmake[1]: *** [CMakeFiles/Makefile2:165：CMakeFiles/main_node.dir/all] 错误 2
+gmake: *** [Makefile:146：all] 错误 2

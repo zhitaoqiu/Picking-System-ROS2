@@ -1,0 +1,172 @@
+[0.000000] (-) TimerEvent: {}
+[0.000338] (coppelia_control) JobQueued: {'identifier': 'coppelia_control', 'dependencies': OrderedDict()}
+[0.000437] (coppelia_control) JobStarted: {'identifier': 'coppelia_control'}
+[0.018044] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'cmake'}
+[0.019589] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'build'}
+[0.020539] (coppelia_control) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/rosqiu/coppelia_control/build/coppelia_control', '--', '-j3', '-l3'], 'cwd': '/home/rosqiu/coppelia_control/build/coppelia_control', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('PYTHON_BASIC_REPL', '1'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'zh_CN:zh'), ('USER', 'rosqiu'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/rosqiu/coppelia_control/install/coppelia_control/lib:/home/rosqiu/demo01/install/learning_interface/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/rosqiu'), ('CHROME_DESKTOP', 'code.desktop'), ('TERM_PROGRAM_VERSION', '1.105.1'), ('DESKTOP_SESSION', 'ubuntu-xorg'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1312'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('SYSTEMD_EXEC_PID', '2010'), ('BUNDLED_DEBUGPY_PATH', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy'), ('VSCODE_PYTHON_AUTOACTIVATE_GUARD', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '2541'), ('COLCON_PREFIX_PATH', '/home/rosqiu/coppelia_control/install:/home/rosqiu/demo01/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'fcitx'), ('LOGNAME', 'rosqiu'), ('JOURNAL_STREAM', '8:11844'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'rosqiu'), ('TERM', 'xterm-256color'), ('GAZEBO_MODEL_PATH', ':/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models:/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/rosqiu/.local/bin:/opt/ros/humble/bin:/home/rosqiu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/scripts/noConfigScripts:/home/rosqiu/.config/Code/User/globalStorage/github.copilot-chat/debugCommand'), ('SESSION_MANAGER', 'local/rosqiu-VirtualBox:@/tmp/.ICE-unix/1983,unix/rosqiu-VirtualBox:/tmp/.ICE-unix/1983'), ('INVOCATION_ID', '60464a3d3970483cbc04367a8f9fe522'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('VSCODE_DEBUGPY_ADAPTER_ENDPOINTS', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-061bb56a379043d5.txt'), ('LANG', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('PYTHONSTARTUP', '/home/rosqiu/.config/Code/User/workspaceStorage/1aee79d0c48459474cf90a350bea737a/ms-python.python/pythonrc.py'), ('XMODIFIERS', '@im=fcitx'), ('XDG_SESSION_DESKTOP', 'ubuntu-xorg'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-f8d3d69579.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/coppelia_control:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic_cpp:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf_cpp:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service_cpp:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_pkg_c:/home/rosqiu/demo01/install/learning_parameter_cpp:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node_cpp:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action_cpp:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_interface:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu-xorg'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', ':/opt/ros/humble/share/moveit_resources_panda_description/meshes:/opt/ros/humble/share/moveit_resources_panda_description/meshes'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('QT_IM_MODULE', 'fcitx'), ('PWD', '/home/rosqiu/coppelia_control/build/coppelia_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu-xorg:/etc/xdg'), ('CLUTTER_IM_MODULE', 'xim'), ('XDG_DATA_DIRS', '/usr/share/ubuntu-xorg:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/rosqiu/demo01/install/learning_urdf/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_topic/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_tf/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_service/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_qos/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_pkg_python/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_parameter/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_node/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_launch/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_action/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_interface/local/lib/python3.10/dist-packages:/home/rosqiu/demo01/install/learning_gazebo_harmonic/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_gazebo/lib/python3.10/site-packages:/home/rosqiu/demo01/install/learning_cv/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/coppelia_control:/home/rosqiu/demo01/install/learning_topic_cpp:/home/rosqiu/demo01/install/learning_tf_cpp:/home/rosqiu/demo01/install/learning_service_cpp:/home/rosqiu/demo01/install/learning_pkg_c:/home/rosqiu/demo01/install/learning_parameter_cpp:/home/rosqiu/demo01/install/learning_node_cpp:/home/rosqiu/demo01/install/learning_action_cpp:/home/rosqiu/demo01/install/learning_interface:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble')]), 'shell': False}
+[0.089949] (-) TimerEvent: {}
+[0.194103] (-) TimerEvent: {}
+[0.206139] (coppelia_control) StdoutLine: {'line': b'[ 66%] Built target coppelia_control_lib\n'}
+[0.235932] (coppelia_control) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target main_node\x1b[0m\n'}
+[0.296203] (-) TimerEvent: {}
+[0.317413] (coppelia_control) StdoutLine: {'line': b'[ 83%] \x1b[32mBuilding CXX object CMakeFiles/main_node.dir/src/main.cpp.o\x1b[0m\n'}
+[0.403942] (-) TimerEvent: {}
+[0.528402] (-) TimerEvent: {}
+[0.644146] (-) TimerEvent: {}
+[0.754968] (-) TimerEvent: {}
+[0.856999] (-) TimerEvent: {}
+[0.959168] (-) TimerEvent: {}
+[1.065192] (-) TimerEvent: {}
+[1.169079] (-) TimerEvent: {}
+[1.269553] (-) TimerEvent: {}
+[1.372130] (-) TimerEvent: {}
+[1.482822] (-) TimerEvent: {}
+[1.594107] (-) TimerEvent: {}
+[1.714677] (-) TimerEvent: {}
+[1.818593] (-) TimerEvent: {}
+[1.920425] (-) TimerEvent: {}
+[2.022212] (-) TimerEvent: {}
+[2.134972] (-) TimerEvent: {}
+[2.244155] (-) TimerEvent: {}
+[2.349508] (-) TimerEvent: {}
+[2.457972] (-) TimerEvent: {}
+[2.560034] (-) TimerEvent: {}
+[2.663935] (-) TimerEvent: {}
+[2.768653] (-) TimerEvent: {}
+[2.881665] (-) TimerEvent: {}
+[2.985064] (-) TimerEvent: {}
+[3.087942] (-) TimerEvent: {}
+[3.205607] (-) TimerEvent: {}
+[3.324607] (-) TimerEvent: {}
+[3.429332] (-) TimerEvent: {}
+[3.530205] (-) TimerEvent: {}
+[3.631624] (-) TimerEvent: {}
+[3.735024] (-) TimerEvent: {}
+[3.860542] (-) TimerEvent: {}
+[3.979033] (-) TimerEvent: {}
+[4.081046] (-) TimerEvent: {}
+[4.189894] (-) TimerEvent: {}
+[4.306285] (-) TimerEvent: {}
+[4.410865] (-) TimerEvent: {}
+[4.525135] (-) TimerEvent: {}
+[4.629115] (-) TimerEvent: {}
+[4.730617] (-) TimerEvent: {}
+[4.842106] (-) TimerEvent: {}
+[4.943326] (-) TimerEvent: {}
+[5.052346] (-) TimerEvent: {}
+[5.168963] (-) TimerEvent: {}
+[5.272119] (-) TimerEvent: {}
+[5.373658] (-) TimerEvent: {}
+[5.480082] (-) TimerEvent: {}
+[5.581949] (-) TimerEvent: {}
+[5.683108] (-) TimerEvent: {}
+[5.791181] (-) TimerEvent: {}
+[5.897144] (-) TimerEvent: {}
+[6.003007] (-) TimerEvent: {}
+[6.105147] (-) TimerEvent: {}
+[6.216478] (-) TimerEvent: {}
+[6.330364] (-) TimerEvent: {}
+[6.431742] (-) TimerEvent: {}
+[6.536016] (-) TimerEvent: {}
+[6.638001] (-) TimerEvent: {}
+[6.745127] (-) TimerEvent: {}
+[6.852210] (-) TimerEvent: {}
+[6.958988] (-) TimerEvent: {}
+[7.066028] (-) TimerEvent: {}
+[7.191465] (-) TimerEvent: {}
+[7.294687] (-) TimerEvent: {}
+[7.399067] (-) TimerEvent: {}
+[7.505105] (-) TimerEvent: {}
+[7.620638] (-) TimerEvent: {}
+[7.726171] (-) TimerEvent: {}
+[7.830318] (-) TimerEvent: {}
+[7.941176] (-) TimerEvent: {}
+[8.042720] (-) TimerEvent: {}
+[8.149623] (-) TimerEvent: {}
+[8.251384] (-) TimerEvent: {}
+[8.367065] (-) TimerEvent: {}
+[8.468506] (-) TimerEvent: {}
+[8.574611] (-) TimerEvent: {}
+[8.687606] (-) TimerEvent: {}
+[8.796271] (-) TimerEvent: {}
+[8.909100] (-) TimerEvent: {}
+[9.020570] (-) TimerEvent: {}
+[9.121055] (-) TimerEvent: {}
+[9.221728] (-) TimerEvent: {}
+[9.323485] (-) TimerEvent: {}
+[9.425431] (-) TimerEvent: {}
+[9.528184] (-) TimerEvent: {}
+[9.633270] (-) TimerEvent: {}
+[9.738416] (-) TimerEvent: {}
+[9.843598] (-) TimerEvent: {}
+[9.947397] (-) TimerEvent: {}
+[10.051101] (-) TimerEvent: {}
+[10.153385] (-) TimerEvent: {}
+[10.267270] (-) TimerEvent: {}
+[10.370312] (-) TimerEvent: {}
+[10.481375] (-) TimerEvent: {}
+[10.583948] (-) TimerEvent: {}
+[10.692888] (-) TimerEvent: {}
+[10.794058] (-) TimerEvent: {}
+[10.896058] (-) TimerEvent: {}
+[10.997033] (-) TimerEvent: {}
+[11.104327] (-) TimerEvent: {}
+[11.208548] (-) TimerEvent: {}
+[11.309910] (-) TimerEvent: {}
+[11.413306] (-) TimerEvent: {}
+[11.514989] (-) TimerEvent: {}
+[11.616761] (-) TimerEvent: {}
+[11.726922] (-) TimerEvent: {}
+[11.995357] (coppelia_control) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24\x1b[m\x1b[K,\n'}
+[11.995565] (-) TimerEvent: {}
+[11.995788] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40\x1b[m\x1b[K,\n'}
+[11.995879] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24\x1b[m\x1b[K,\n'}
+[11.995930] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20\x1b[m\x1b[K,\n'}
+[11.995977] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25\x1b[m\x1b[K,\n'}
+[11.996025] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18\x1b[m\x1b[K,\n'}
+[11.996073] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20\x1b[m\x1b[K,\n'}
+[11.996120] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37\x1b[m\x1b[K,\n'}
+[11.996168] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25\x1b[m\x1b[K,\n'}
+[11.996216] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21\x1b[m\x1b[K,\n'}
+[11.996263] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155\x1b[m\x1b[K,\n'}
+[11.996309] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:1\x1b[m\x1b[K:\n'}
+[11.996356] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:\x1b[m\x1b[K In function \xe2\x80\x98\x1b[01m\x1b[Kint main(int, char**)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[11.996404] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:106:33:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Kclass moveit::core::MoveItErrorCode\x1b[m\x1b[K\xe2\x80\x99 has no member named \xe2\x80\x98\x1b[01m\x1b[Kas_string\x1b[m\x1b[K\xe2\x80\x99\n'}
+[11.996454] (coppelia_control) StderrLine: {'line': b'  106 |                      error_code.\x1b[01;31m\x1b[Kas_string\x1b[m\x1b[K().c_str());\n'}
+[11.996506] (coppelia_control) StderrLine: {'line': b'      |                                 \x1b[01;31m\x1b[K^~~~~~~~~\x1b[m\x1b[K\n'}
+[12.105481] (-) TimerEvent: {}
+[12.213177] (-) TimerEvent: {}
+[12.319024] (-) TimerEvent: {}
+[13.410050] (-) TimerEvent: {}
+[13.511569] (-) TimerEvent: {}
+[13.616893] (-) TimerEvent: {}
+[13.720103] (-) TimerEvent: {}
+[13.823364] (-) TimerEvent: {}
+[13.931806] (-) TimerEvent: {}
+[14.040902] (-) TimerEvent: {}
+[14.144004] (-) TimerEvent: {}
+[14.245636] (-) TimerEvent: {}
+[14.352922] (-) TimerEvent: {}
+[14.460123] (-) TimerEvent: {}
+[14.572385] (-) TimerEvent: {}
+[14.687673] (-) TimerEvent: {}
+[14.789586] (-) TimerEvent: {}
+[14.891470] (-) TimerEvent: {}
+[14.994958] (-) TimerEvent: {}
+[15.096492] (-) TimerEvent: {}
+[15.198073] (-) TimerEvent: {}
+[15.298543] (-) TimerEvent: {}
+[15.403239] (-) TimerEvent: {}
+[15.504288] (-) TimerEvent: {}
+[15.606777] (-) TimerEvent: {}
+[15.708031] (-) TimerEvent: {}
+[15.820331] (-) TimerEvent: {}
+[15.925730] (-) TimerEvent: {}
+[16.026246] (-) TimerEvent: {}
+[16.123838] (coppelia_control) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/main_node.dir/build.make:76\xef\xbc\x9aCMakeFiles/main_node.dir/src/main.cpp.o] \xe9\x94\x99\xe8\xaf\xaf 1\n'}
+[16.124075] (coppelia_control) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:165\xef\xbc\x9aCMakeFiles/main_node.dir/all] \xe9\x94\x99\xe8\xaf\xaf 2\n'}
+[16.125135] (coppelia_control) StderrLine: {'line': b'gmake: *** [Makefile:146\xef\xbc\x9aall] \xe9\x94\x99\xe8\xaf\xaf 2\n'}
+[16.127072] (-) TimerEvent: {}
+[16.137419] (coppelia_control) CommandEnded: {'returncode': 2}
+[16.177417] (coppelia_control) JobEnded: {'identifier': 'coppelia_control', 'rc': 2}
+[16.190685] (-) EventReactorShutdown: {}

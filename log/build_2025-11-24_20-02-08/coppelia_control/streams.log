@@ -1,0 +1,13 @@
+[0.066s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[0.892s] [ 16%] [32mBuilding CXX object CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.o[0m
+[10.719s] [ 33%] [32m[1mLinking CXX shared library libcoppelia_control_lib.so[0m
+[13.788s] [ 66%] Built target coppelia_control_lib
+[13.874s] [ 83%] [32mBuilding CXX object CMakeFiles/main_node.dir/src/main.cpp.o[0m
+[22.884s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[22.889s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:63:38:[m[K [01;31m[Kerror: [m[K‘[01m[Kmoveit::planning_interface::MoveGroupInterface::MoveItErrorCode[m[K’ has not been declared
+[22.889s]    63 |     if(result == MoveGroupInterface::[01;31m[KMoveItErrorCode[m[K::SUCCESS)
+[22.889s]       |                                      [01;31m[K^~~~~~~~~~~~~~~[m[K
+[28.927s] gmake[2]: *** [CMakeFiles/main_node.dir/build.make:76：CMakeFiles/main_node.dir/src/main.cpp.o] 错误 1
+[28.930s] gmake[1]: *** [CMakeFiles/Makefile2:165：CMakeFiles/main_node.dir/all] 错误 2
+[28.933s] gmake: *** [Makefile:146：all] 错误 2
+[28.934s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3

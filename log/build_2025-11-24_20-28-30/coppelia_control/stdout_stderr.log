@@ -1,0 +1,31 @@
+[ 66%] Built target coppelia_control_lib
+[35m[1mConsolidate compiler generated dependencies of target main_node[0m
+[ 83%] [32mBuilding CXX object CMakeFiles/main_node.dir/src/main.cpp.o[0m
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:40:27:[m[K [01;35m[Kwarning: [m[Kcharacter constant too long for its type
+   40 |     ctrl.setJointCmdTopic([01;35m[K'/joint_commands'[m[K);
+      |                           [01;35m[K^~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:41:29:[m[K [01;35m[Kwarning: [m[Kcharacter constant too long for its type
+   41 |     ctrl.setGripperCmdTopic([01;35m[K'/gripper_command'[m[K);
+      |                             [01;35m[K^~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:40:27:[m[K [01;31m[Kerror: [m[Kcannot convert ‘[01m[Kint[m[K’ to ‘[01m[Kconst string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+   40 |     ctrl.setJointCmdTopic([01;31m[K'/joint_commands'[m[K);
+      |                           [01;31m[K^~~~~~~~~~~~~~~~~[m[K
+      |                           [01;31m[K|[m[K
+      |                           [01;31m[Kint[m[K
+In file included from [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:3[m[K:
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/include/coppelia_control/ManipulationInterface.hpp:20:46:[m[K [01;36m[Knote: [m[K  initializing argument 1 of ‘[01m[Kvoid coppelia_control::ManipulationInterface::setJointCmdTopic(const string&)[m[K’
+   20 |     void setJointCmdTopic([01;36m[Kconst std::string& topic[m[K);
+      |                           [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~~[m[K
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:41:29:[m[K [01;31m[Kerror: [m[Kcannot convert ‘[01m[Kint[m[K’ to ‘[01m[Kconst string&[m[K’ {aka ‘[01m[Kconst std::__cxx11::basic_string<char>&[m[K’}
+   41 |     ctrl.setGripperCmdTopic([01;31m[K'/gripper_command'[m[K);
+      |                             [01;31m[K^~~~~~~~~~~~~~~~~~[m[K
+      |                             [01;31m[K|[m[K
+      |                             [01;31m[Kint[m[K
+In file included from [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:3[m[K:
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/include/coppelia_control/ManipulationInterface.hpp:21:48:[m[K [01;36m[Knote: [m[K  initializing argument 1 of ‘[01m[Kvoid coppelia_control::ManipulationInterface::setGripperCmdTopic(const string&)[m[K’
+   21 |     void setGripperCmdTopic([01;36m[Kconst std::string& topic[m[K);
+      |                             [01;36m[K~~~~~~~~~~~~~~~~~~~^~~~~[m[K
+gmake[2]: *** [CMakeFiles/main_node.dir/build.make:76：CMakeFiles/main_node.dir/src/main.cpp.o] 错误 1
+gmake[1]: *** [CMakeFiles/Makefile2:165：CMakeFiles/main_node.dir/all] 错误 2
+gmake: *** [Makefile:146：all] 错误 2

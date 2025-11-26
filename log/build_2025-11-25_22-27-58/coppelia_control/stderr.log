@@ -1,0 +1,8 @@
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:[m[K In function ‘[01m[Kint main(int, char**)[m[K’:
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/main.cpp:87:43:[m[K [01;31m[Kerror: [m[K‘[01m[Kstruct moveit::planning_interface::MoveGroupInterface::Plan[m[K’ has no member named ‘[01m[Ktrajectory[m[K’; did you mean ‘[01m[Ktrajectory_[m[K’?
+   87 |         if (!ctrl->executeTrajectory(plan.[01;31m[Ktrajectory[m[K))
+      |                                           [01;31m[K^~~~~~~~~~[m[K
+      |                                           [32m[Ktrajectory_[m[K
+gmake[2]: *** [CMakeFiles/main_node.dir/build.make:76：CMakeFiles/main_node.dir/src/main.cpp.o] 错误 1
+gmake[1]: *** [CMakeFiles/Makefile2:165：CMakeFiles/main_node.dir/all] 错误 2
+gmake: *** [Makefile:146：all] 错误 2

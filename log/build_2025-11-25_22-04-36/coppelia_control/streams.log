@@ -1,0 +1,17 @@
+[0.027s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[0.157s] [35m[1mConsolidate compiler generated dependencies of target coppelia_control_lib[0m
+[0.238s] [ 16%] [32mBuilding CXX object CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.o[0m
+[5.094s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/ManipulationInterface.cpp:25:19:[m[K [01;31m[Kerror: [m[K‘[01m[KJointStateManipulationInterface[m[K’ in namespace ‘[01m[Ksensor_msgs::msg[m[K’ does not name a type
+[5.095s]    25 | sensor_msgs::msg::[01;31m[KJointStateManipulationInterface[m[K::translateJointNames(const sensor_msgs::msg::JointState& moveit_joint_state)
+[5.095s]       |                   [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[5.099s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/ManipulationInterface.cpp:[m[K In member function ‘[01m[Kbool coppelia_control::ManipulationInterface::execute_point_to_point_trajectory(const RobotTrajectory&)[m[K’:
+[5.100s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/ManipulationInterface.cpp:114:9:[m[K [01;31m[Kerror: [m[K‘[01m[Kensor_msgs[m[K’ has not been declared
+[5.100s]   114 |         [01;31m[Kensor_msgs[m[K::msg::JointState moveit_state;
+[5.100s]       |         [01;31m[K^~~~~~~~~~[m[K
+[5.111s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/ManipulationInterface.cpp:115:9:[m[K [01;31m[Kerror: [m[K‘[01m[Kmoveit_state[m[K’ was not declared in this scope
+[5.111s]   115 |         [01;31m[Kmoveit_state[m[K.header.stamp = node_->now();
+[5.112s]       |         [01;31m[K^~~~~~~~~~~~[m[K
+[6.836s] gmake[2]: *** [CMakeFiles/coppelia_control_lib.dir/build.make:90：CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.o] 错误 1
+[6.844s] gmake[1]: *** [CMakeFiles/Makefile2:139：CMakeFiles/coppelia_control_lib.dir/all] 错误 2
+[6.846s] gmake: *** [Makefile:146：all] 错误 2
+[6.867s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/rosqiu/demo01/install/learning_urdf:/home/rosqiu/demo01/install/learning_topic:/home/rosqiu/demo01/install/learning_tf:/home/rosqiu/demo01/install/learning_service:/home/rosqiu/demo01/install/learning_qos:/home/rosqiu/demo01/install/learning_pkg_python:/home/rosqiu/demo01/install/learning_parameter:/home/rosqiu/demo01/install/learning_node:/home/rosqiu/demo01/install/learning_launch:/home/rosqiu/demo01/install/learning_action:/home/rosqiu/demo01/install/learning_gazebo_harmonic:/home/rosqiu/demo01/install/learning_gazebo:/home/rosqiu/demo01/install/learning_cv:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3

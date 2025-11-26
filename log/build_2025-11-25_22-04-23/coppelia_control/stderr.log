@@ -1,0 +1,6 @@
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/ManipulationInterface.cpp:25:19:[m[K [01;31m[Kerror: [m[K‘[01m[KJointStateManipulationInterface[m[K’ in namespace ‘[01m[Ksensor_msgs::msg[m[K’ does not name a type
+   25 | sensor_msgs::msg::[01;31m[KJointStateManipulationInterface[m[K::translateJointNames(const sensor_msgs::msg::JointState& moveit_joint_state)
+      |                   [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+gmake[2]: *** [CMakeFiles/coppelia_control_lib.dir/build.make:90：CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.o] 错误 1
+gmake[1]: *** [CMakeFiles/Makefile2:139：CMakeFiles/coppelia_control_lib.dir/all] 错误 2
+gmake: *** [Makefile:146：all] 错误 2

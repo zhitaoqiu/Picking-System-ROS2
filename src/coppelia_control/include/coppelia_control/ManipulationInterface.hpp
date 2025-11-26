@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 #include <vector> 
-
+#include <map>
 namespace coppelia_control
 {
 class ManipulationInterface
@@ -20,6 +20,8 @@ public:
     void setJointCmdTopic(const std::string& topic);
     void setGripperCmdTopic(const std::string& topic);
     void useSmoothTrajectoryExecution(bool use_smooth);
+    void setMoveItToCoppeliaJointMap(const std::map<std::string,std::string> & joint_map);
+   
 private:
     bool execute_smooth_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);
     bool execute_point_to_point_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);
@@ -30,6 +32,8 @@ private:
     std::string gripper_cmd_topic_;
     std::vector<std::string> joint_names_;
     std::vector<std::string> gripper_joint_names_;
+    std::map<std::string,std::string> moveit_to_coppelia_joint_map_;
+    sensor_msgs::msg::JointState translateJointNames(const sensor_msgs::msg::JointState& moveit_joint_state);
     bool use_smooth_trajectory_;
 };
 }
