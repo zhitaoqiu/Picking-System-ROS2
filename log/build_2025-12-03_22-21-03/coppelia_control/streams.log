@@ -1,0 +1,171 @@
+[0.017s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/rosqiu/coppelia_control/src/coppelia_control -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/rosqiu/coppelia_control/install/coppelia_control
+[0.036s] -- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.153s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.163s] -- Found rclcpp: 16.0.15 (/opt/ros/humble/share/rclcpp/cmake)
+[0.193s] -- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.196s] -- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.202s] -- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.211s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.224s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.254s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.256s] -- Found rmw_fastrtps_cpp: 6.2.8 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.409s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.492s] -- Found moveit_core: 2.5.9 (/opt/ros/humble/share/moveit_core/cmake)
+[0.520s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: chrono date_time filesystem iostreams program_options regex serialization system thread 
+[0.566s] -- Found parameter_traits: 0.5.0 (/opt/ros/humble/share/parameter_traits/cmake)
+[0.583s] -- Found rclcpp_lifecycle: 16.0.15 (/opt/ros/humble/share/rclcpp_lifecycle/cmake)
+[0.624s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: filesystem 
+[0.753s] -- library: /usr/lib/x86_64-linux-gnu/libcurl.so
+[0.821s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[1.200s] -- Found moveit_ros_planning: 2.5.9 (/opt/ros/humble/share/moveit_ros_planning/cmake)
+[1.210s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread chrono 
+[1.238s] -- Found moveit_ros_planning_interface: 2.5.9 (/opt/ros/humble/share/moveit_ros_planning_interface/cmake)
+[1.261s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: date_time filesystem program_options system thread 
+[1.275s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: thread system filesystem regex date_time program_options 
+[1.304s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system filesystem date_time program_options thread 
+[1.384s] -- Found ament_lint_auto: 0.12.14 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.562s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.577s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.582s] -- Configured cppcheck include dirs: /home/rosqiu/coppelia_control/src/coppelia_control/include
+[1.582s] -- Configured cppcheck exclude dirs and/or files: 
+[1.597s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[1.599s] -- Configured cpplint exclude dirs and/or files: 
+[1.605s] -- Added test 'flake8' to check Python code syntax and style conventions
+[1.606s] -- Added test 'lint_cmake' to check CMake code style
+[1.612s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[1.623s] -- Added test 'uncrustify' to check C / C++ code style
+[1.624s] -- Configured uncrustify additional arguments: 
+[1.627s] -- Added test 'xmllint' to check XML markup files
+[1.641s] -- Configuring done
+[1.830s] -- Generating done
+[1.890s] -- Build files have been written to: /home/rosqiu/coppelia_control/build/coppelia_control
+[1.918s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/rosqiu/coppelia_control/src/coppelia_control -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/rosqiu/coppelia_control/install/coppelia_control
+[1.922s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[2.076s] [35m[1mConsolidate compiler generated dependencies of target vision_interface[0m
+[2.078s] [35m[1mConsolidate compiler generated dependencies of target manipulation_interface[0m
+[2.087s] [35m[1mConsolidate compiler generated dependencies of target planning_interface[0m
+[2.165s] [ 12%] [32m[1mLinking CXX shared library libvision_interface.so[0m
+[2.177s] [ 25%] [32m[1mLinking CXX shared library libmanipulation_interface.so[0m
+[2.196s] [ 37%] [32m[1mLinking CXX shared library libplanning_interface.so[0m
+[2.703s] [ 50%] Built target planning_interface
+[3.481s] [ 62%] Built target manipulation_interface
+[3.532s] [35m[1mConsolidate compiler generated dependencies of target franka_control_node[0m
+[3.651s] [ 75%] [32m[1mLinking CXX executable franka_control_node[0m
+[4.504s] [ 87%] Built target franka_control_node
+[4.509s] [100%] Built target vision_interface
+[4.549s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[4.581s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/rosqiu/coppelia_control/build/coppelia_control
+[4.606s] -- Install configuration: ""
+[4.612s] -- Execute custom install script
+[4.613s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libmanipulation_interface.so
+[4.642s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libplanning_interface.so
+[4.674s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libvision_interface.so
+[4.706s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/lib/coppelia_control/franka_control_node
+[4.727s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control/ManipulationInterface.hpp
+[4.762s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control/PlanningInterface.hpp
+[4.783s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control/VisionInterface.hpp
+[4.810s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/launch/franka_control.launch.py
+[4.852s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/urdf/Franka.urdf
+[4.881s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_FrankaGripper_coll_1.dae
+[4.908s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_FrankaGripper_coll_2.dae
+[4.934s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_FrankaGripper_coll_3.dae
+[4.962s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_1.dae
+[4.982s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_2.dae
+[5.004s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_3.dae
+[5.041s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_4.dae
+[5.072s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_5.dae
+[5.087s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_6.dae
+[5.122s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_7.dae
+[5.151s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_8.dae
+[5.175s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_9.dae
+[5.197s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_visible_vis_1.dae
+[5.218s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftPad_coll_1.dae
+[5.246s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftPad_visible_vis_1.dae
+[5.268s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_1.dae
+[5.315s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_2.dae
+[5.343s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_3.dae
+[5.365s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_4.dae
+[5.403s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link2_resp_coll_1.dae
+[5.428s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link2_resp_coll_2.dae
+[5.453s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_1.dae
+[5.474s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_2.dae
+[5.494s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_3.dae
+[5.519s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_4.dae
+[5.543s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_1.dae
+[5.566s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_2.dae
+[5.586s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_3.dae
+[5.607s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_4.dae
+[5.644s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_5.dae
+[5.671s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_6.dae
+[5.688s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_1.dae
+[5.706s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_2.dae
+[5.741s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_3.dae
+[5.750s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_4.dae
+[5.771s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_5.dae
+[5.788s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_6.dae
+[5.807s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_7.dae
+[5.827s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_8.dae
+[5.845s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_9.dae
+[5.868s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_1.dae
+[5.884s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_10.dae
+[5.903s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_11.dae
+[5.922s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_12.dae
+[5.943s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_13.dae
+[5.977s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_14.dae
+[5.999s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_15.dae
+[6.017s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_16.dae
+[6.042s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_2.dae
+[6.070s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_3.dae
+[6.092s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_4.dae
+[6.108s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_5.dae
+[6.126s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_6.dae
+[6.148s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_7.dae
+[6.186s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_8.dae
+[6.213s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_9.dae
+[6.231s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_0_vis_1.dae
+[6.250s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_1_vis_1.dae
+[6.271s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_2_vis_1.dae
+[6.289s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_3_vis_1.dae
+[6.317s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_3_vis_2.dae
+[6.335s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_4_vis_1.dae
+[6.363s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_4_vis_2.dae
+[6.386s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_5_vis_1.dae
+[6.408s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_5_vis_2.dae
+[6.437s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_6_vis_1.dae
+[6.456s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_6_vis_2.dae
+[6.478s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_7_top_vis_1.dae
+[6.499s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_1.dae
+[6.524s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_2.dae
+[6.541s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_3.dae
+[6.558s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_4.dae
+[6.580s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_5.dae
+[6.602s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_6.dae
+[6.621s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_7.dae
+[6.653s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_8.dae
+[6.676s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_9.dae
+[6.695s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_visible_vis_1.dae
+[6.712s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightPad_coll_1.dae
+[6.725s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightPad_visible_vis_1.dae
+[6.745s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_robot_base_coll_1.dae
+[6.767s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_visible_vis_1.dae
+[6.791s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/library_path.sh
+[6.814s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/library_path.dsv
+[6.835s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control
+[6.863s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control
+[6.894s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.sh
+[6.917s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.dsv
+[6.937s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.sh
+[6.949s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.dsv
+[6.979s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.bash
+[7.008s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.sh
+[7.025s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.zsh
+[7.042s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.dsv
+[7.062s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.dsv
+[7.089s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/packages/coppelia_control
+[7.112s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/ament_cmake_export_include_directories-extras.cmake
+[7.129s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/ament_cmake_export_libraries-extras.cmake
+[7.142s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/ament_cmake_export_dependencies-extras.cmake
+[7.163s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig.cmake
+[7.174s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig-version.cmake
+[7.192s] -- Symlinking: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.xml
+[7.230s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/rosqiu/coppelia_control/build/coppelia_control

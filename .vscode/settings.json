@@ -65,5 +65,6 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/rosqiu/coppelia_control/src/coppelia_control"
 }

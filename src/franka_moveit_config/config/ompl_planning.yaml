@@ -1,0 +1,70 @@
+planner_configs:
+  SBLkConfigDefault:
+    type: geometric::SBL
+    range: 0.0  # Max motion segment length. 0 means use state space default
+  ESTkConfigDefault:
+    type: geometric::EST
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    goal_bias: 0.05  # When sampling, this fraction of the time, sample around the goal
+  LBKPIECEkConfigDefault:
+    type: geometric::LBKPIECE
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    border_fraction: 0.9  # Fraction of time focused on the border of the exploration
+    min_valid_path_fraction: 0.5  # Fraction of valid path required before declaring success
+  BKPIECEkConfigDefault:
+    type: geometric::BKPIECE
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    border_fraction: 0.9  # Fraction of time focused on the border of the exploration
+    failed_expansion_score_factor: 0.5  # When a projection expansion fails, penalize the score by this factor
+    min_valid_path_fraction: 0.5  # Fraction of valid path required before declaring success
+  KPIECEkConfigDefault:
+    type: geometric::KPIECE
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    goal_bias: 0.05  # When sampling, this fraction of the time, sample around the goal
+    border_fraction: 0.9  # Fraction of time focused on the border of the exploration
+    failed_expansion_score_factor: 0.5  # When a projection expansion fails, penalize the score by this factor
+    min_valid_path_fraction: 0.5  # Fraction of valid path required before declaring success
+  RRTkConfigDefault:
+    type: geometric::RRT
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    goal_bias: 0.05  # When sampling, this fraction of the time, sample around the goal
+  RRTConnectkConfigDefault:
+    type: geometric::RRTConnect
+    range: 0.0  # Max motion segment length. 0 means use state space default
+  RRTstarkConfigDefault:
+    type: geometric::RRTstar
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    goal_bias: 0.05  # When sampling, this fraction of the time, sample around the goal
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found
+  TRRTkConfigDefault:
+    type: geometric::TRRT
+    range: 0.0  # Max motion segment length. 0 means use state space default
+    goal_bias: 0.05  # When sampling, this fraction of the time, sample around the goal
+    max_states_failed: 10  # when to switch to random expansion
+    temp_change_factor: 2.0  # how much to decrease temperature
+    min_temperature: 10e-10  # lower limit of temperature
+    init_temperature: 10e-6  # initial temperature
+    frountier_threshold: 0.0  # dist new state to nearest neighbor
+    frountierNodeRatio: 0.1  # 1/10, or 1 nonfrontier for every 10 frontier.
+    k_constant: 0.0  # value used to normalize expression
+  PRMkConfigDefault:
+    type: geometric::PRM
+    max_nearest_neighbors: 10  # use k nearest neighbors
+  PRMstarkConfigDefault:
+    type: geometric::PRMstar
+    type: geometric::PRMstar
+
+# 这里的 group name 必须和你 SRDF 文件里的 group name 一致
+arm:
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault

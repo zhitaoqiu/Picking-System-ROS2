@@ -1,0 +1,1 @@
+/home/rosqiu/coppelia_control/build/franka_moveit_config/ament_cmake_environment_hooks/local_setup.bash

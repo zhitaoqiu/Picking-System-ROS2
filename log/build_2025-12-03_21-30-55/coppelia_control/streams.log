@@ -1,0 +1,17 @@
+[0.038s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[0.249s] [ 25%] Built target manipulation_interface
+[0.341s] [ 50%] Built target vision_interface
+[0.471s] [ 62%] [32mBuilding CXX object CMakeFiles/planning_interface.dir/src/PlanningInterface.cpp.o[0m
+[14.186s] [ 75%] [32m[1mLinking CXX shared library libplanning_interface.so[0m
+[14.530s] [ 75%] Built target planning_interface
+[14.554s] [35m[1mConsolidate compiler generated dependencies of target franka_control_node[0m
+[14.622s] [ 87%] [32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o[0m
+[21.933s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:[m[K In constructor ‘[01m[KFrankaControlNode::FrankaControlNode()[m[K’:
+[21.934s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:20:85:[m[K [01;31m[Kerror: [m[K‘[01m[Knode_ptr[m[K’ was not declared in this scope; did you mean ‘[01m[Kmode_t[m[K’?
+[21.935s]    20 |         planning_interface_ = std::make_shared<coppelia_control::PlanningInterface>([01;31m[Knode_ptr[m[K);
+[21.935s]       |                                                                                     [01;31m[K^~~~~~~~[m[K
+[21.935s]       |                                                                                     [32m[Kmode_t[m[K
+[25.636s] gmake[2]: *** [CMakeFiles/franka_control_node.dir/build.make:76：CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o] 错误 1
+[25.640s] gmake[1]: *** [CMakeFiles/Makefile2:222：CMakeFiles/franka_control_node.dir/all] 错误 2
+[25.640s] gmake: *** [Makefile:146：all] 错误 2
+[25.656s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3

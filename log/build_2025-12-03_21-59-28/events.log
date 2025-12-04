@@ -1,0 +1,105 @@
+[0.000000] (-) TimerEvent: {}
+[0.001539] (-) JobUnselected: {'identifier': 'franka_moveit_config'}
+[0.002788] (coppelia_control) JobQueued: {'identifier': 'coppelia_control', 'dependencies': OrderedDict()}
+[0.003277] (coppelia_control) JobStarted: {'identifier': 'coppelia_control'}
+[0.022949] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'cmake'}
+[0.024446] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'build'}
+[0.025388] (coppelia_control) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/rosqiu/coppelia_control/build/coppelia_control', '--', '-j3', '-l3'], 'cwd': '/home/rosqiu/coppelia_control/build/coppelia_control', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('PYTHON_BASIC_REPL', '1'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'zh_CN:zh'), ('USER', 'rosqiu'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/rosqiu/coppelia_control/install/coppelia_control/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/rosqiu'), ('CHROME_DESKTOP', 'code.desktop'), ('TERM_PROGRAM_VERSION', '1.105.1'), ('DESKTOP_SESSION', 'ubuntu-xorg'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1311'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('SYSTEMD_EXEC_PID', '2015'), ('BUNDLED_DEBUGPY_PATH', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy'), ('VSCODE_PYTHON_AUTOACTIVATE_GUARD', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3080'), ('COLCON_PREFIX_PATH', '/home/rosqiu/coppelia_control/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'fcitx'), ('LOGNAME', 'rosqiu'), ('JOURNAL_STREAM', '8:10818'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'rosqiu'), ('TERM', 'xterm-256color'), ('COPPELIASIM_ROOT_DIR', '/home/rosqiu/CoppeliaSim_Edu_V4_10_0_rev0_Ubuntu22_04'), ('GAZEBO_MODEL_PATH', ':/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models:/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/rosqiu/.local/bin:/opt/ros/humble/bin:/home/rosqiu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/scripts/noConfigScripts:/home/rosqiu/.config/Code/User/globalStorage/github.copilot-chat/debugCommand'), ('SESSION_MANAGER', 'local/rosqiu-VirtualBox:@/tmp/.ICE-unix/1988,unix/rosqiu-VirtualBox:/tmp/.ICE-unix/1988'), ('INVOCATION_ID', '024dc9269546402e86976362c2984076'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('VSCODE_DEBUGPY_ADAPTER_ENDPOINTS', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-061bb56a379043d5.txt'), ('LANG', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('PYTHONSTARTUP', '/home/rosqiu/.config/Code/User/workspaceStorage/1aee79d0c48459474cf90a350bea737a/ms-python.python/pythonrc.py'), ('XMODIFIERS', '@im=fcitx'), ('XDG_SESSION_DESKTOP', 'ubuntu-xorg'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-f8d3d69579.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/franka_moveit_config:/home/rosqiu/coppelia_control/install/coppelia_control:/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu-xorg'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', ':/opt/ros/humble/share/moveit_resources_panda_description/meshes:/opt/ros/humble/share/moveit_resources_panda_description/meshes'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('QT_IM_MODULE', 'fcitx'), ('PWD', '/home/rosqiu/coppelia_control/build/coppelia_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu-xorg:/etc/xdg'), ('CLUTTER_IM_MODULE', 'xim'), ('XDG_DATA_DIRS', '/usr/share/ubuntu-xorg:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/franka_moveit_config:/home/rosqiu/coppelia_control/install/coppelia_control:/opt/ros/humble')]), 'shell': False}
+[0.104011] (-) TimerEvent: {}
+[0.212422] (-) TimerEvent: {}
+[0.226918] (coppelia_control) StdoutLine: {'line': b'[ 25%] Built target manipulation_interface\n'}
+[0.228780] (coppelia_control) StdoutLine: {'line': b'[ 50%] Built target planning_interface\n'}
+[0.273996] (coppelia_control) StdoutLine: {'line': b'[ 75%] Built target vision_interface\n'}
+[0.281892] (coppelia_control) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target franka_control_node\x1b[0m\n'}
+[0.321261] (-) TimerEvent: {}
+[0.342749] (coppelia_control) StdoutLine: {'line': b'[ 87%] \x1b[32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o\x1b[0m\n'}
+[0.421432] (-) TimerEvent: {}
+[0.526979] (-) TimerEvent: {}
+[0.627680] (-) TimerEvent: {}
+[0.731615] (-) TimerEvent: {}
+[0.859305] (-) TimerEvent: {}
+[0.962716] (-) TimerEvent: {}
+[1.070201] (-) TimerEvent: {}
+[1.177848] (-) TimerEvent: {}
+[1.290438] (-) TimerEvent: {}
+[1.391475] (-) TimerEvent: {}
+[1.492815] (-) TimerEvent: {}
+[1.864843] (-) TimerEvent: {}
+[1.968663] (-) TimerEvent: {}
+[2.074104] (-) TimerEvent: {}
+[2.179414] (-) TimerEvent: {}
+[2.280037] (-) TimerEvent: {}
+[2.382893] (-) TimerEvent: {}
+[2.485329] (-) TimerEvent: {}
+[2.590628] (-) TimerEvent: {}
+[2.693979] (-) TimerEvent: {}
+[3.522329] (-) TimerEvent: {}
+[3.622733] (-) TimerEvent: {}
+[3.739585] (-) TimerEvent: {}
+[3.842332] (-) TimerEvent: {}
+[3.954872] (-) TimerEvent: {}
+[4.056016] (-) TimerEvent: {}
+[4.160425] (-) TimerEvent: {}
+[4.518948] (-) TimerEvent: {}
+[4.671648] (-) TimerEvent: {}
+[4.775226] (-) TimerEvent: {}
+[4.877280] (-) TimerEvent: {}
+[4.979464] (-) TimerEvent: {}
+[5.106503] (-) TimerEvent: {}
+[5.209539] (-) TimerEvent: {}
+[5.311741] (-) TimerEvent: {}
+[5.415957] (-) TimerEvent: {}
+[5.525010] (-) TimerEvent: {}
+[5.626011] (-) TimerEvent: {}
+[5.757751] (-) TimerEvent: {}
+[5.863379] (-) TimerEvent: {}
+[6.519515] (-) TimerEvent: {}
+[6.620664] (-) TimerEvent: {}
+[7.330874] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:\x1b[m\x1b[K In constructor \xe2\x80\x98\x1b[01m\x1b[KFrankaControlNode::FrankaControlNode()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[7.331068] (-) TimerEvent: {}
+[7.331273] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:21:69:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kreference to \xe2\x80\x98\x1b[01m\x1b[Kshared_from_this\x1b[m\x1b[K\xe2\x80\x99 is ambiguous\n'}
+[7.331362] (coppelia_control) StderrLine: {'line': b'   21 |         auto node_ptr_base = std::static_pointer_cast<rclcpp::Node>(\x1b[01;31m\x1b[Kshared_from_this\x1b[m\x1b[K());\n'}
+[7.331413] (coppelia_control) StderrLine: {'line': b'      |                                                                     \x1b[01;31m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[7.331460] (coppelia_control) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/usr/include/c++/11/memory:77\x1b[m\x1b[K,\n'}
+[7.331507] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153\x1b[m\x1b[K,\n'}
+[7.331553] (coppelia_control) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:1\x1b[m\x1b[K:\n'}
+[7.331598] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/11/bits/shared_ptr.h:811:7:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidates are: \xe2\x80\x98\x1b[01m\x1b[Kstd::shared_ptr<const _Tp> std::enable_shared_from_this<_Tp>::shared_from_this() const [with _Tp = FrankaControlNode]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[7.331646] (coppelia_control) StderrLine: {'line': b'  811 |       \x1b[01;36m\x1b[Kshared_from_this\x1b[m\x1b[K() const\n'}
+[7.331690] (coppelia_control) StderrLine: {'line': b'      |       \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[7.331735] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/11/bits/shared_ptr.h:807:7:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K                \xe2\x80\x98\x1b[01m\x1b[Kstd::shared_ptr<_Tp> std::enable_shared_from_this<_Tp>::shared_from_this() [with _Tp = FrankaControlNode]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[7.331782] (coppelia_control) StderrLine: {'line': b'  807 |       \x1b[01;36m\x1b[Kshared_from_this\x1b[m\x1b[K()\n'}
+[7.331826] (coppelia_control) StderrLine: {'line': b'      |       \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[7.331870] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/11/bits/shared_ptr.h:811:7:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K                \xe2\x80\x98\x1b[01m\x1b[Kstd::shared_ptr<const _Tp> std::enable_shared_from_this<_Tp>::shared_from_this() const [with _Tp = rclcpp::Node]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[7.331916] (coppelia_control) StderrLine: {'line': b'  811 |       \x1b[01;36m\x1b[Kshared_from_this\x1b[m\x1b[K() const\n'}
+[7.331962] (coppelia_control) StderrLine: {'line': b'      |       \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[7.332006] (coppelia_control) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/c++/11/bits/shared_ptr.h:807:7:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K                \xe2\x80\x98\x1b[01m\x1b[Kstd::shared_ptr<_Tp> std::enable_shared_from_this<_Tp>::shared_from_this() [with _Tp = rclcpp::Node]\x1b[m\x1b[K\xe2\x80\x99\n'}
+[7.332051] (coppelia_control) StderrLine: {'line': b'  807 |       \x1b[01;36m\x1b[Kshared_from_this\x1b[m\x1b[K()\n'}
+[7.332111] (coppelia_control) StderrLine: {'line': b'      |       \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[7.434550] (-) TimerEvent: {}
+[7.540157] (-) TimerEvent: {}
+[8.527566] (-) TimerEvent: {}
+[8.643516] (-) TimerEvent: {}
+[8.744745] (-) TimerEvent: {}
+[8.849690] (-) TimerEvent: {}
+[8.954566] (-) TimerEvent: {}
+[9.073986] (-) TimerEvent: {}
+[9.271773] (-) TimerEvent: {}
+[9.430352] (-) TimerEvent: {}
+[9.540166] (-) TimerEvent: {}
+[9.652507] (-) TimerEvent: {}
+[9.767969] (-) TimerEvent: {}
+[9.878012] (-) TimerEvent: {}
+[10.010846] (-) TimerEvent: {}
+[10.114602] (-) TimerEvent: {}
+[10.218589] (-) TimerEvent: {}
+[10.347715] (-) TimerEvent: {}
+[10.486407] (-) TimerEvent: {}
+[10.591676] (-) TimerEvent: {}
+[10.827725] (-) TimerEvent: {}
+[10.903386] (coppelia_control) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/franka_control_node.dir/build.make:76\xef\xbc\x9aCMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o] \xe9\x94\x99\xe8\xaf\xaf 1\n'}
+[10.907816] (coppelia_control) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:222\xef\xbc\x9aCMakeFiles/franka_control_node.dir/all] \xe9\x94\x99\xe8\xaf\xaf 2\n'}
+[10.912990] (coppelia_control) StderrLine: {'line': b'gmake: *** [Makefile:146\xef\xbc\x9aall] \xe9\x94\x99\xe8\xaf\xaf 2\n'}
+[10.929802] (coppelia_control) CommandEnded: {'returncode': 2}
+[10.931012] (-) TimerEvent: {}
+[10.960309] (coppelia_control) JobEnded: {'identifier': 'coppelia_control', 'rc': 2}
+[10.971089] (-) EventReactorShutdown: {}

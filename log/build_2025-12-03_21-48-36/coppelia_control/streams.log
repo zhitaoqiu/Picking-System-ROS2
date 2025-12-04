@@ -1,0 +1,14 @@
+[0.035s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3
+[0.243s] [ 25%] Built target manipulation_interface
+[0.266s] [ 50%] Built target vision_interface
+[0.269s] [ 75%] Built target planning_interface
+[0.362s] [ 87%] [32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o[0m
+[8.944s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:[m[K In constructor ‘[01m[KFrankaControlNode::FrankaControlNode()[m[K’:
+[8.944s] [01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:21:85:[m[K [01;31m[Kerror: [m[K‘[01m[Knode_shared_from_this[m[K’ was not declared in this scope; did you mean ‘[01m[Kenable_shared_from_this[m[K’?
+[8.944s]    21 |         planning_interface_ = std::make_shared<coppelia_control::PlanningInterface>([01;31m[Knode_shared_from_this[m[K());
+[8.944s]       |                                                                                     [01;31m[K^~~~~~~~~~~~~~~~~~~~~[m[K
+[8.944s]       |                                                                                     [32m[Kenable_shared_from_this[m[K
+[12.538s] gmake[2]: *** [CMakeFiles/franka_control_node.dir/build.make:76：CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o] 错误 1
+[12.538s] gmake[1]: *** [CMakeFiles/Makefile2:222：CMakeFiles/franka_control_node.dir/all] 错误 2
+[12.538s] gmake: *** [Makefile:146：all] 错误 2
+[12.547s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_control' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/rosqiu/coppelia_control/build/coppelia_control -- -j3 -l3

@@ -1,0 +1,13 @@
+[ 25%] Built target manipulation_interface
+[ 50%] Built target vision_interface
+[ 75%] Built target planning_interface
+[35m[1mConsolidate compiler generated dependencies of target franka_control_node[0m
+[ 87%] [32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o[0m
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:[m[K In constructor ‘[01m[KFrankaControlNode::FrankaControlNode()[m[K’:
+[01m[K/home/rosqiu/coppelia_control/src/coppelia_control/src/franka_control_node.cpp:25:93:[m[K [01;31m[Kerror: [m[K‘[01m[Knode_ptr[m[K’ was not declared in this scope; did you mean ‘[01m[Kmode_t[m[K’?
+   25 |         manipulation_interface_ = std::make_shared<coppelia_control::ManipulationInterface>([01;31m[Knode_ptr[m[K);
+      |                                                                                             [01;31m[K^~~~~~~~[m[K
+      |                                                                                             [32m[Kmode_t[m[K
+gmake[2]: *** [CMakeFiles/franka_control_node.dir/build.make:76：CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o] 错误 1
+gmake[1]: *** [CMakeFiles/Makefile2:222：CMakeFiles/franka_control_node.dir/all] 错误 2
+gmake: *** [Makefile:146：all] 错误 2

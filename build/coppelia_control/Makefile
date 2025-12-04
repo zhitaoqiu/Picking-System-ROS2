@@ -198,37 +198,63 @@ coppelia_control_uninstall/fast:
 .PHONY : coppelia_control_uninstall/fast
 
 #=============================================================================
-# Target rules for targets named coppelia_control_lib
+# Target rules for targets named manipulation_interface
 
 # Build rule for target.
-coppelia_control_lib: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 coppelia_control_lib
-.PHONY : coppelia_control_lib
+manipulation_interface: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 manipulation_interface
+.PHONY : manipulation_interface
 
 # fast build rule for target.
-coppelia_control_lib/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/build
-.PHONY : coppelia_control_lib/fast
+manipulation_interface/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/manipulation_interface.dir/build.make CMakeFiles/manipulation_interface.dir/build
+.PHONY : manipulation_interface/fast
 
 #=============================================================================
-# Target rules for targets named main_node
+# Target rules for targets named planning_interface
 
 # Build rule for target.
-main_node: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main_node
-.PHONY : main_node
+planning_interface: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 planning_interface
+.PHONY : planning_interface
 
 # fast build rule for target.
-main_node/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main_node.dir/build.make CMakeFiles/main_node.dir/build
-.PHONY : main_node/fast
+planning_interface/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/planning_interface.dir/build.make CMakeFiles/planning_interface.dir/build
+.PHONY : planning_interface/fast
+
+#=============================================================================
+# Target rules for targets named vision_interface
+
+# Build rule for target.
+vision_interface: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vision_interface
+.PHONY : vision_interface
+
+# fast build rule for target.
+vision_interface/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vision_interface.dir/build.make CMakeFiles/vision_interface.dir/build
+.PHONY : vision_interface/fast
+
+#=============================================================================
+# Target rules for targets named franka_control_node
+
+# Build rule for target.
+franka_control_node: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 franka_control_node
+.PHONY : franka_control_node
+
+# fast build rule for target.
+franka_control_node/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/franka_control_node.dir/build.make CMakeFiles/franka_control_node.dir/build
+.PHONY : franka_control_node/fast
 
 src/ManipulationInterface.o: src/ManipulationInterface.cpp.o
 .PHONY : src/ManipulationInterface.o
 
 # target to build an object file
 src/ManipulationInterface.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/manipulation_interface.dir/build.make CMakeFiles/manipulation_interface.dir/src/ManipulationInterface.cpp.o
 .PHONY : src/ManipulationInterface.cpp.o
 
 src/ManipulationInterface.i: src/ManipulationInterface.cpp.i
@@ -236,7 +262,7 @@ src/ManipulationInterface.i: src/ManipulationInterface.cpp.i
 
 # target to preprocess a source file
 src/ManipulationInterface.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/manipulation_interface.dir/build.make CMakeFiles/manipulation_interface.dir/src/ManipulationInterface.cpp.i
 .PHONY : src/ManipulationInterface.cpp.i
 
 src/ManipulationInterface.s: src/ManipulationInterface.cpp.s
@@ -244,7 +270,7 @@ src/ManipulationInterface.s: src/ManipulationInterface.cpp.s
 
 # target to generate assembly for a file
 src/ManipulationInterface.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/ManipulationInterface.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/manipulation_interface.dir/build.make CMakeFiles/manipulation_interface.dir/src/ManipulationInterface.cpp.s
 .PHONY : src/ManipulationInterface.cpp.s
 
 src/PlanningInterface.o: src/PlanningInterface.cpp.o
@@ -252,7 +278,7 @@ src/PlanningInterface.o: src/PlanningInterface.cpp.o
 
 # target to build an object file
 src/PlanningInterface.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/PlanningInterface.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/planning_interface.dir/build.make CMakeFiles/planning_interface.dir/src/PlanningInterface.cpp.o
 .PHONY : src/PlanningInterface.cpp.o
 
 src/PlanningInterface.i: src/PlanningInterface.cpp.i
@@ -260,7 +286,7 @@ src/PlanningInterface.i: src/PlanningInterface.cpp.i
 
 # target to preprocess a source file
 src/PlanningInterface.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/PlanningInterface.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/planning_interface.dir/build.make CMakeFiles/planning_interface.dir/src/PlanningInterface.cpp.i
 .PHONY : src/PlanningInterface.cpp.i
 
 src/PlanningInterface.s: src/PlanningInterface.cpp.s
@@ -268,7 +294,7 @@ src/PlanningInterface.s: src/PlanningInterface.cpp.s
 
 # target to generate assembly for a file
 src/PlanningInterface.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/PlanningInterface.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/planning_interface.dir/build.make CMakeFiles/planning_interface.dir/src/PlanningInterface.cpp.s
 .PHONY : src/PlanningInterface.cpp.s
 
 src/VisionInterface.o: src/VisionInterface.cpp.o
@@ -276,7 +302,7 @@ src/VisionInterface.o: src/VisionInterface.cpp.o
 
 # target to build an object file
 src/VisionInterface.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/VisionInterface.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vision_interface.dir/build.make CMakeFiles/vision_interface.dir/src/VisionInterface.cpp.o
 .PHONY : src/VisionInterface.cpp.o
 
 src/VisionInterface.i: src/VisionInterface.cpp.i
@@ -284,7 +310,7 @@ src/VisionInterface.i: src/VisionInterface.cpp.i
 
 # target to preprocess a source file
 src/VisionInterface.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/VisionInterface.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vision_interface.dir/build.make CMakeFiles/vision_interface.dir/src/VisionInterface.cpp.i
 .PHONY : src/VisionInterface.cpp.i
 
 src/VisionInterface.s: src/VisionInterface.cpp.s
@@ -292,32 +318,32 @@ src/VisionInterface.s: src/VisionInterface.cpp.s
 
 # target to generate assembly for a file
 src/VisionInterface.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/coppelia_control_lib.dir/build.make CMakeFiles/coppelia_control_lib.dir/src/VisionInterface.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vision_interface.dir/build.make CMakeFiles/vision_interface.dir/src/VisionInterface.cpp.s
 .PHONY : src/VisionInterface.cpp.s
 
-src/main.o: src/main.cpp.o
-.PHONY : src/main.o
+src/franka_control_node.o: src/franka_control_node.cpp.o
+.PHONY : src/franka_control_node.o
 
 # target to build an object file
-src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main_node.dir/build.make CMakeFiles/main_node.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
+src/franka_control_node.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/franka_control_node.dir/build.make CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o
+.PHONY : src/franka_control_node.cpp.o
 
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
+src/franka_control_node.i: src/franka_control_node.cpp.i
+.PHONY : src/franka_control_node.i
 
 # target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main_node.dir/build.make CMakeFiles/main_node.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
+src/franka_control_node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/franka_control_node.dir/build.make CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.i
+.PHONY : src/franka_control_node.cpp.i
 
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
+src/franka_control_node.s: src/franka_control_node.cpp.s
+.PHONY : src/franka_control_node.s
 
 # target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main_node.dir/build.make CMakeFiles/main_node.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
+src/franka_control_node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/franka_control_node.dir/build.make CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.s
+.PHONY : src/franka_control_node.cpp.s
 
 # Help Target
 help:
@@ -334,8 +360,10 @@ help:
 	@echo "... test"
 	@echo "... coppelia_control_uninstall"
 	@echo "... uninstall"
-	@echo "... coppelia_control_lib"
-	@echo "... main_node"
+	@echo "... franka_control_node"
+	@echo "... manipulation_interface"
+	@echo "... planning_interface"
+	@echo "... vision_interface"
 	@echo "... src/ManipulationInterface.o"
 	@echo "... src/ManipulationInterface.i"
 	@echo "... src/ManipulationInterface.s"
@@ -345,9 +373,9 @@ help:
 	@echo "... src/VisionInterface.o"
 	@echo "... src/VisionInterface.i"
 	@echo "... src/VisionInterface.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
+	@echo "... src/franka_control_node.o"
+	@echo "... src/franka_control_node.i"
+	@echo "... src/franka_control_node.s"
 .PHONY : help
 
 

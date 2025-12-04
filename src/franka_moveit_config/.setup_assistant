@@ -1,0 +1,31 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: coppelia_control
+    relative_path: urdf/Franka.urdf
+  srdf:
+    relative_path: config/Franka.srdf
+  package_settings:
+    author_name: user
+    author_email: user@163.com
+    generated_timestamp: 1764857910
+  control_xacro:
+    command:
+      - position
+      - velocity
+      - effort
+    state:
+      - position
+      - velocity
+      - effort
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+      - velocity
+      - effort
+    state:
+      - position
+      - velocity
+      - effort

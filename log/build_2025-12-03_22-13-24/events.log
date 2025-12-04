@@ -1,0 +1,303 @@
+[0.000000] (-) TimerEvent: {}
+[0.003962] (-) JobUnselected: {'identifier': 'franka_moveit_config'}
+[0.004463] (coppelia_control) JobQueued: {'identifier': 'coppelia_control', 'dependencies': OrderedDict()}
+[0.004669] (coppelia_control) JobStarted: {'identifier': 'coppelia_control'}
+[0.027074] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'cmake'}
+[0.029017] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'build'}
+[0.035354] (coppelia_control) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/rosqiu/coppelia_control/build/coppelia_control', '--', '-j3', '-l3'], 'cwd': '/home/rosqiu/coppelia_control/build/coppelia_control', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('PYTHON_BASIC_REPL', '1'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'zh_CN:zh'), ('USER', 'rosqiu'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/rosqiu/coppelia_control/install/coppelia_control/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/rosqiu'), ('CHROME_DESKTOP', 'code.desktop'), ('TERM_PROGRAM_VERSION', '1.105.1'), ('DESKTOP_SESSION', 'ubuntu-xorg'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1311'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('SYSTEMD_EXEC_PID', '2015'), ('BUNDLED_DEBUGPY_PATH', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy'), ('VSCODE_PYTHON_AUTOACTIVATE_GUARD', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3080'), ('COLCON_PREFIX_PATH', '/home/rosqiu/coppelia_control/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'fcitx'), ('LOGNAME', 'rosqiu'), ('JOURNAL_STREAM', '8:10818'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'rosqiu'), ('TERM', 'xterm-256color'), ('COPPELIASIM_ROOT_DIR', '/home/rosqiu/CoppeliaSim_Edu_V4_10_0_rev0_Ubuntu22_04'), ('GAZEBO_MODEL_PATH', ':/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models:/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/rosqiu/.local/bin:/opt/ros/humble/bin:/home/rosqiu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/scripts/noConfigScripts:/home/rosqiu/.config/Code/User/globalStorage/github.copilot-chat/debugCommand'), ('SESSION_MANAGER', 'local/rosqiu-VirtualBox:@/tmp/.ICE-unix/1988,unix/rosqiu-VirtualBox:/tmp/.ICE-unix/1988'), ('INVOCATION_ID', '024dc9269546402e86976362c2984076'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('VSCODE_DEBUGPY_ADAPTER_ENDPOINTS', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-061bb56a379043d5.txt'), ('LANG', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('PYTHONSTARTUP', '/home/rosqiu/.config/Code/User/workspaceStorage/1aee79d0c48459474cf90a350bea737a/ms-python.python/pythonrc.py'), ('XMODIFIERS', '@im=fcitx'), ('XDG_SESSION_DESKTOP', 'ubuntu-xorg'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-f8d3d69579.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/franka_moveit_config:/home/rosqiu/coppelia_control/install/coppelia_control:/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu-xorg'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', ':/opt/ros/humble/share/moveit_resources_panda_description/meshes:/opt/ros/humble/share/moveit_resources_panda_description/meshes'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('QT_IM_MODULE', 'fcitx'), ('PWD', '/home/rosqiu/coppelia_control/build/coppelia_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu-xorg:/etc/xdg'), ('CLUTTER_IM_MODULE', 'xim'), ('XDG_DATA_DIRS', '/usr/share/ubuntu-xorg:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/franka_moveit_config:/home/rosqiu/coppelia_control/install/coppelia_control:/opt/ros/humble')]), 'shell': False}
+[0.102085] (-) TimerEvent: {}
+[0.204128] (-) TimerEvent: {}
+[0.222715] (coppelia_control) StdoutLine: {'line': b'[ 25%] Built target vision_interface\n'}
+[0.239320] (coppelia_control) StdoutLine: {'line': b'[ 50%] Built target planning_interface\n'}
+[0.245090] (coppelia_control) StdoutLine: {'line': b'[ 75%] Built target manipulation_interface\n'}
+[0.280617] (coppelia_control) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target franka_control_node\x1b[0m\n'}
+[0.317337] (-) TimerEvent: {}
+[0.352136] (coppelia_control) StdoutLine: {'line': b'[ 87%] \x1b[32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o\x1b[0m\n'}
+[0.420166] (-) TimerEvent: {}
+[0.548138] (-) TimerEvent: {}
+[0.740058] (-) TimerEvent: {}
+[0.841777] (-) TimerEvent: {}
+[0.944370] (-) TimerEvent: {}
+[1.058425] (-) TimerEvent: {}
+[1.191162] (-) TimerEvent: {}
+[1.305624] (-) TimerEvent: {}
+[1.531372] (-) TimerEvent: {}
+[1.635363] (-) TimerEvent: {}
+[1.738589] (-) TimerEvent: {}
+[1.851209] (-) TimerEvent: {}
+[1.955711] (-) TimerEvent: {}
+[2.059132] (-) TimerEvent: {}
+[2.163840] (-) TimerEvent: {}
+[2.265144] (-) TimerEvent: {}
+[2.367861] (-) TimerEvent: {}
+[2.469399] (-) TimerEvent: {}
+[2.570817] (-) TimerEvent: {}
+[2.808055] (-) TimerEvent: {}
+[2.914861] (-) TimerEvent: {}
+[3.017921] (-) TimerEvent: {}
+[3.157821] (-) TimerEvent: {}
+[3.262419] (-) TimerEvent: {}
+[3.367484] (-) TimerEvent: {}
+[3.471805] (-) TimerEvent: {}
+[3.578061] (-) TimerEvent: {}
+[3.685449] (-) TimerEvent: {}
+[3.789339] (-) TimerEvent: {}
+[3.904405] (-) TimerEvent: {}
+[4.010036] (-) TimerEvent: {}
+[4.114898] (-) TimerEvent: {}
+[4.216827] (-) TimerEvent: {}
+[4.317451] (-) TimerEvent: {}
+[4.419244] (-) TimerEvent: {}
+[4.526869] (-) TimerEvent: {}
+[4.628159] (-) TimerEvent: {}
+[4.731109] (-) TimerEvent: {}
+[4.833822] (-) TimerEvent: {}
+[4.936037] (-) TimerEvent: {}
+[5.043062] (-) TimerEvent: {}
+[5.155643] (-) TimerEvent: {}
+[5.257285] (-) TimerEvent: {}
+[5.359954] (-) TimerEvent: {}
+[5.468344] (-) TimerEvent: {}
+[5.571899] (-) TimerEvent: {}
+[5.676293] (-) TimerEvent: {}
+[5.788143] (-) TimerEvent: {}
+[5.890400] (-) TimerEvent: {}
+[6.013688] (-) TimerEvent: {}
+[6.133774] (-) TimerEvent: {}
+[6.236440] (-) TimerEvent: {}
+[6.340489] (-) TimerEvent: {}
+[6.442101] (-) TimerEvent: {}
+[6.567757] (-) TimerEvent: {}
+[6.673437] (-) TimerEvent: {}
+[6.796901] (-) TimerEvent: {}
+[6.900763] (-) TimerEvent: {}
+[7.003656] (-) TimerEvent: {}
+[7.104700] (-) TimerEvent: {}
+[7.208935] (-) TimerEvent: {}
+[7.311944] (-) TimerEvent: {}
+[7.412755] (-) TimerEvent: {}
+[7.514685] (-) TimerEvent: {}
+[7.622907] (-) TimerEvent: {}
+[7.731990] (-) TimerEvent: {}
+[7.842296] (-) TimerEvent: {}
+[7.944134] (-) TimerEvent: {}
+[8.048018] (-) TimerEvent: {}
+[8.148840] (-) TimerEvent: {}
+[8.249503] (-) TimerEvent: {}
+[8.351509] (-) TimerEvent: {}
+[8.454131] (-) TimerEvent: {}
+[8.560509] (-) TimerEvent: {}
+[8.661990] (-) TimerEvent: {}
+[8.763828] (-) TimerEvent: {}
+[8.882161] (-) TimerEvent: {}
+[8.991811] (-) TimerEvent: {}
+[9.093388] (-) TimerEvent: {}
+[9.197000] (-) TimerEvent: {}
+[9.507169] (-) TimerEvent: {}
+[9.610210] (-) TimerEvent: {}
+[9.713171] (-) TimerEvent: {}
+[9.822980] (-) TimerEvent: {}
+[9.937382] (-) TimerEvent: {}
+[10.044984] (-) TimerEvent: {}
+[10.148767] (-) TimerEvent: {}
+[10.249854] (-) TimerEvent: {}
+[10.360212] (-) TimerEvent: {}
+[10.471354] (-) TimerEvent: {}
+[10.576305] (-) TimerEvent: {}
+[10.678128] (-) TimerEvent: {}
+[10.783346] (-) TimerEvent: {}
+[10.895100] (-) TimerEvent: {}
+[10.996058] (-) TimerEvent: {}
+[11.098745] (-) TimerEvent: {}
+[11.203403] (-) TimerEvent: {}
+[11.309329] (-) TimerEvent: {}
+[11.418968] (-) TimerEvent: {}
+[11.523722] (-) TimerEvent: {}
+[11.626334] (-) TimerEvent: {}
+[11.740992] (-) TimerEvent: {}
+[11.846147] (-) TimerEvent: {}
+[11.950113] (-) TimerEvent: {}
+[12.066000] (-) TimerEvent: {}
+[12.179091] (-) TimerEvent: {}
+[12.283371] (-) TimerEvent: {}
+[12.384278] (-) TimerEvent: {}
+[12.485041] (-) TimerEvent: {}
+[12.596272] (-) TimerEvent: {}
+[12.699786] (-) TimerEvent: {}
+[12.811019] (-) TimerEvent: {}
+[12.918909] (-) TimerEvent: {}
+[13.020974] (-) TimerEvent: {}
+[13.121883] (-) TimerEvent: {}
+[13.231420] (-) TimerEvent: {}
+[13.335827] (-) TimerEvent: {}
+[13.436669] (-) TimerEvent: {}
+[13.537613] (-) TimerEvent: {}
+[13.644382] (-) TimerEvent: {}
+[13.748326] (-) TimerEvent: {}
+[13.855757] (-) TimerEvent: {}
+[13.961312] (-) TimerEvent: {}
+[14.062513] (-) TimerEvent: {}
+[14.166677] (-) TimerEvent: {}
+[14.273032] (-) TimerEvent: {}
+[14.377749] (-) TimerEvent: {}
+[14.484383] (-) TimerEvent: {}
+[14.604192] (-) TimerEvent: {}
+[14.708316] (-) TimerEvent: {}
+[14.812971] (-) TimerEvent: {}
+[14.954219] (-) TimerEvent: {}
+[15.061522] (-) TimerEvent: {}
+[15.171826] (-) TimerEvent: {}
+[15.282233] (-) TimerEvent: {}
+[15.395628] (-) TimerEvent: {}
+[15.497560] (-) TimerEvent: {}
+[15.601206] (-) TimerEvent: {}
+[15.703842] (-) TimerEvent: {}
+[15.813906] (-) TimerEvent: {}
+[15.915036] (-) TimerEvent: {}
+[16.036091] (-) TimerEvent: {}
+[16.141044] (-) TimerEvent: {}
+[16.247903] (-) TimerEvent: {}
+[16.358024] (-) TimerEvent: {}
+[16.474443] (-) TimerEvent: {}
+[16.583882] (-) TimerEvent: {}
+[16.688564] (-) TimerEvent: {}
+[16.805563] (-) TimerEvent: {}
+[16.907064] (-) TimerEvent: {}
+[17.011993] (-) TimerEvent: {}
+[17.116806] (-) TimerEvent: {}
+[17.121450] (coppelia_control) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable franka_control_node\x1b[0m\n'}
+[17.224058] (-) TimerEvent: {}
+[17.331352] (-) TimerEvent: {}
+[17.446031] (-) TimerEvent: {}
+[17.552953] (-) TimerEvent: {}
+[17.655249] (-) TimerEvent: {}
+[17.766181] (-) TimerEvent: {}
+[17.878836] (-) TimerEvent: {}
+[17.988356] (coppelia_control) StdoutLine: {'line': b'[100%] Built target franka_control_node\n'}
+[17.988608] (-) TimerEvent: {}
+[18.074649] (coppelia_control) CommandEnded: {'returncode': 0}
+[18.076886] (coppelia_control) JobProgress: {'identifier': 'coppelia_control', 'progress': 'install'}
+[18.091835] (-) TimerEvent: {}
+[18.125170] (coppelia_control) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/rosqiu/coppelia_control/build/coppelia_control'], 'cwd': '/home/rosqiu/coppelia_control/build/coppelia_control', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('PYTHON_BASIC_REPL', '1'), ('LESSOPEN', '| /usr/bin/lesspipe %s'), ('LANGUAGE', 'zh_CN:zh'), ('USER', 'rosqiu'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/rosqiu/coppelia_control/install/coppelia_control/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/rosqiu'), ('CHROME_DESKTOP', 'code.desktop'), ('TERM_PROGRAM_VERSION', '1.105.1'), ('DESKTOP_SESSION', 'ubuntu-xorg'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('MANAGERPID', '1311'), ('PYDEVD_DISABLE_FILE_VALIDATION', '1'), ('SYSTEMD_EXEC_PID', '2015'), ('BUNDLED_DEBUGPY_PATH', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy'), ('VSCODE_PYTHON_AUTOACTIVATE_GUARD', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('COLORTERM', 'truecolor'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '3080'), ('COLCON_PREFIX_PATH', '/home/rosqiu/coppelia_control/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'fcitx'), ('LOGNAME', 'rosqiu'), ('JOURNAL_STREAM', '8:10818'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'rosqiu'), ('TERM', 'xterm-256color'), ('COPPELIASIM_ROOT_DIR', '/home/rosqiu/CoppeliaSim_Edu_V4_10_0_rev0_Ubuntu22_04'), ('GAZEBO_MODEL_PATH', ':/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models:/home/rosqiu/cam_sim_ws/src/fake_camera_gazebo/models'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/home/rosqiu/.local/bin:/opt/ros/humble/bin:/home/rosqiu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/scripts/noConfigScripts:/home/rosqiu/.config/Code/User/globalStorage/github.copilot-chat/debugCommand'), ('SESSION_MANAGER', 'local/rosqiu-VirtualBox:@/tmp/.ICE-unix/1988,unix/rosqiu-VirtualBox:/tmp/.ICE-unix/1988'), ('INVOCATION_ID', '024dc9269546402e86976362c2984076'), ('XDG_MENU_PREFIX', 'gnome-'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'x11'), ('DISPLAY', ':0'), ('VSCODE_DEBUGPY_ADAPTER_ENDPOINTS', '/home/rosqiu/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-061bb56a379043d5.txt'), ('LANG', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('PYTHONSTARTUP', '/home/rosqiu/.config/Code/User/workspaceStorage/1aee79d0c48459474cf90a350bea737a/ms-python.python/pythonrc.py'), ('XMODIFIERS', '@im=fcitx'), ('XDG_SESSION_DESKTOP', 'ubuntu-xorg'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-f8d3d69579.sock'), ('TERM_PROGRAM', 'vscode'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/franka_moveit_config:/home/rosqiu/coppelia_control/install/coppelia_control:/opt/ros/humble'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu-xorg'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', ':/opt/ros/humble/share/moveit_resources_panda_description/meshes:/opt/ros/humble/share/moveit_resources_panda_description/meshes'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('QT_IM_MODULE', 'fcitx'), ('PWD', '/home/rosqiu/coppelia_control/build/coppelia_control'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu-xorg:/etc/xdg'), ('CLUTTER_IM_MODULE', 'xim'), ('XDG_DATA_DIRS', '/usr/share/ubuntu-xorg:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('COLCON', '1'), ('CMAKE_PREFIX_PATH', '/home/rosqiu/coppelia_control/install/franka_moveit_config:/home/rosqiu/coppelia_control/install/coppelia_control:/opt/ros/humble')]), 'shell': False}
+[18.144939] (coppelia_control) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[18.147604] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libmanipulation_interface.so\n'}
+[18.148362] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libplanning_interface.so\n'}
+[18.150340] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/lib/libvision_interface.so\n'}
+[18.152619] (coppelia_control) StdoutLine: {'line': b'-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/lib/coppelia_control/franka_control_node\n'}
+[18.155600] (coppelia_control) StdoutLine: {'line': b'-- Set runtime path of "/home/rosqiu/coppelia_control/install/coppelia_control/lib/coppelia_control/franka_control_node" to ""\n'}
+[18.161885] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/include\n'}
+[18.164194] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control\n'}
+[18.173649] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control/VisionInterface.hpp\n'}
+[18.174022] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control/ManipulationInterface.hpp\n'}
+[18.174200] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/include/coppelia_control/PlanningInterface.hpp\n'}
+[18.174295] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/launch\n'}
+[18.174398] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/launch/franka_control.launch.py\n'}
+[18.174567] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/config\n'}
+[18.174677] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/urdf/Franka.urdf\n'}
+[18.174844] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes\n'}
+[18.175031] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_2_vis_1.dae\n'}
+[18.175193] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_6_vis_2.dae\n'}
+[18.175337] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_6.dae\n'}
+[18.175403] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_3.dae\n'}
+[18.175459] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_3.dae\n'}
+[18.193389] (-) TimerEvent: {}
+[18.195388] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_7_top_vis_1.dae\n'}
+[18.195551] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_13.dae\n'}
+[18.195985] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_visible_vis_1.dae\n'}
+[18.196121] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_FrankaGripper_coll_2.dae\n'}
+[18.196192] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_7.dae\n'}
+[18.196246] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_7.dae\n'}
+[18.196297] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_7.dae\n'}
+[18.196445] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_1_vis_1.dae\n'}
+[18.196504] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftPad_visible_vis_1.dae\n'}
+[18.196555] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link2_resp_coll_1.dae\n'}
+[18.196605] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_1.dae\n'}
+[18.197113] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_7.dae\n'}
+[18.197210] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_4_vis_1.dae\n'}
+[18.197294] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_5.dae\n'}
+[18.197361] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_2.dae\n'}
+[18.197410] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_12.dae\n'}
+[18.197457] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_1.dae\n'}
+[18.197562] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_0_vis_1.dae\n'}
+[18.197615] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_1.dae\n'}
+[18.197662] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_4.dae\n'}
+[18.197709] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_2.dae\n'}
+[18.197774] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_4.dae\n'}
+[18.197876] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_4.dae\n'}
+[18.198000] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_8.dae\n'}
+[18.198105] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_4.dae\n'}
+[18.198159] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_3_vis_2.dae\n'}
+[18.198208] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link1_resp_coll_2.dae\n'}
+[18.198281] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_1.dae\n'}
+[18.198368] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_6.dae\n'}
+[18.198549] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_1.dae\n'}
+[18.198661] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_11.dae\n'}
+[18.198829] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_3.dae\n'}
+[18.198929] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_5.dae\n'}
+[18.198978] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_9.dae\n'}
+[18.199023] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_4.dae\n'}
+[18.199066] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_FrankaGripper_coll_3.dae\n'}
+[18.199113] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_2.dae\n'}
+[18.199158] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_8.dae\n'}
+[18.199203] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_1.dae\n'}
+[18.199246] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightPad_visible_vis_1.dae\n'}
+[18.199290] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_8.dae\n'}
+[18.199347] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_robot_base_coll_1.dae\n'}
+[18.199391] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_5_vis_1.dae\n'}
+[18.199545] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_4_vis_2.dae\n'}
+[18.211651] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_5_vis_2.dae\n'}
+[18.211879] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftPad_coll_1.dae\n'}
+[18.211937] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_2.dae\n'}
+[18.211986] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_1.dae\n'}
+[18.212035] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_3_vis_1.dae\n'}
+[18.212082] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_10.dae\n'}
+[18.212129] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_5.dae\n'}
+[18.212175] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_3.dae\n'}
+[18.212222] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_9.dae\n'}
+[18.212286] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_4.dae\n'}
+[18.212333] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_9.dae\n'}
+[18.212379] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_9.dae\n'}
+[18.212425] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_visible_vis_1.dae\n'}
+[18.212473] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_6.dae\n'}
+[18.212519] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_3.dae\n'}
+[18.212565] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_14.dae\n'}
+[18.212619] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link5_resp_coll_3.dae\n'}
+[18.212667] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link3_resp_coll_3.dae\n'}
+[18.212714] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link2_resp_coll_2.dae\n'}
+[18.212760] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_8.dae\n'}
+[18.212807] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_2.dae\n'}
+[18.212853] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_4.dae\n'}
+[18.212898] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_FrankaGripper_coll_1.dae\n'}
+[18.212945] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightPad_coll_1.dae\n'}
+[18.212991] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link_6_vis_1.dae\n'}
+[18.213037] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_visible_vis_1.dae\n'}
+[18.213085] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_6.dae\n'}
+[18.213145] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link4_resp_coll_2.dae\n'}
+[18.213192] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_5.dae\n'}
+[18.213239] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_15.dae\n'}
+[18.213296] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_rightFinger_coll_6.dae\n'}
+[18.213379] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_link6_resp_coll_16.dae\n'}
+[18.213444] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/meshes/meshes/Franka_leftFinger_coll_5.dae\n'}
+[18.213490] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/library_path.sh\n'}
+[18.213537] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/library_path.dsv\n'}
+[18.213582] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/package_run_dependencies/coppelia_control\n'}
+[18.213628] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/parent_prefix_path/coppelia_control\n'}
+[18.213672] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.sh\n'}
+[18.213717] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/ament_prefix_path.dsv\n'}
+[18.213762] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.sh\n'}
+[18.213806] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/environment/path.dsv\n'}
+[18.213849] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.bash\n'}
+[18.213893] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.sh\n'}
+[18.213936] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.zsh\n'}
+[18.213980] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/local_setup.dsv\n'}
+[18.214032] (coppelia_control) StdoutLine: {'line': b'-- Installing: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.dsv\n'}
+[18.214077] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/ament_index/resource_index/packages/coppelia_control\n'}
+[18.214121] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[18.214166] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[18.214210] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[18.214254] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig.cmake\n'}
+[18.214300] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/cmake/coppelia_controlConfig-version.cmake\n'}
+[18.214354] (coppelia_control) StdoutLine: {'line': b'-- Up-to-date: /home/rosqiu/coppelia_control/install/coppelia_control/share/coppelia_control/package.xml\n'}
+[18.214403] (coppelia_control) CommandEnded: {'returncode': 0}
+[18.272742] (coppelia_control) JobEnded: {'identifier': 'coppelia_control', 'rc': 0}
+[18.275207] (-) EventReactorShutdown: {}

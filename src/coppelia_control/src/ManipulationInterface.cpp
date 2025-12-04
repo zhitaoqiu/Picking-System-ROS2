@@ -5,83 +5,76 @@
 
 namespace coppelia_control
 {
-ManipulationInterface::ManipulationInterface(const rclcpp::Node::SharedPtr& node):node_(node)
-{
-    node_->declare_parameter<std::string>("joint_cmd_topic", "/coppelia/joint_cmd");
-    node_->declare_parameter<std::string>("gripper_cmd_topic", "/coppelia/gripper_cmd");
-    node_->declare_parameter<bool>("use_smooth_trajectory", true);
 
-    node_->get_parameter("joint_cmd_topic", joint_cmd_topic_);
-    node_->get_parameter("gripper_cmd_topic", gripper_cmd_topic_);
-    node_->get_parameter("use_smooth_trajectory", use_smooth_trajectory_);
+ManipulationInterface::ManipulationInterface(const rclcpp::Node::SharedPtr& node)
+    : node_(node),
+      joint_cmd_topic_("/coppelia/joint_cmd"),
+      gripper_cmd_topic_("/coppelia/gripper_cmd"),
+      use_smooth_trajectory_(true)
+{
+    // 构造函数不做 Publisher 初始化，留给 initialize 或 setTopic
+}
+
+bool ManipulationInterface::initialize()
+{
+    if (!node_) return false;
     
+    // 创建发布者
     joint_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(joint_cmd_topic_, 10);
     gripper_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(gripper_cmd_topic_, 10);
+    
+    RCLCPP_INFO(node_->get_logger(), "操作接口初始化完成 | Cmd Topic: %s", joint_cmd_topic_.c_str());
+    return true;
 }
 
-void ManipulationInterface::setMoveItToCoppeliaJointMap(const std::map<std::string,std::string> & joint_map)
+void ManipulationInterface::setJointNameRemap(const std::map<std::string, std::string>& remap_rules)
 {
-    moveit_to_coppelia_joint_map_ = joint_map;
+    joint_name_map_ = remap_rules;
+    RCLCPP_INFO(node_->get_logger(), "已设置 %zu 条关节名称映射规则", remap_rules.size());
 }
 
-sensor_msgs::msg::JointState
-ManipulationInterface::translateJointNames(
-    const sensor_msgs::msg::JointState& moveit_joint_state)
+std::vector<std::string> ManipulationInterface::remapNames(const std::vector<std::string>& original_names)
 {
-    sensor_msgs::msg::JointState result;
-    result.header = moveit_joint_state.header;
-
-    for (size_t i = 0; i < moveit_joint_state.name.size(); ++i)
-    {
-        const std::string& moveit_name = moveit_joint_state.name[i];
-
-        if (moveit_to_coppelia_joint_map_.count(moveit_name) == 0)
-        {
-            RCLCPP_WARN(node_->get_logger(),
-                "MoveIt joint [%s] not found in mapping table, skipping...",
-                moveit_name.c_str());
-            continue;
-        }
-
-        // 1. 名字替换
-        result.name.push_back(moveit_to_coppelia_joint_map_.at(moveit_name));
-
-        // 2. 对应位置复制
-        if (i < moveit_joint_state.position.size())
-            result.position.push_back(moveit_joint_state.position[i]);
+    // 如果没有映射表，直接返回原名
+    if (joint_name_map_.empty()) {
+        return original_names;
     }
 
-    return result;
+    std::vector<std::string> new_names;
+    new_names.reserve(original_names.size());
+
+    for (const auto& name : original_names) {
+        auto it = joint_name_map_.find(name);
+        if (it != joint_name_map_.end()) {
+            new_names.push_back(it->second); // 使用映射后的名字
+        } else {
+            new_names.push_back(name); // 没找到映射就用原名
+        }
+    }
+    return new_names;
 }
 
 bool ManipulationInterface::executeTrajectory(const moveit_msgs::msg::RobotTrajectory& trajectory)
 {
-    // 添加轨迹有效性检查
-    if (trajectory.joint_trajectory.points.empty())
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Trajectory is empty!");
+    if (trajectory.joint_trajectory.points.empty()) {
+        RCLCPP_WARN(node_->get_logger(), "收到空轨迹，忽略执行");
         return false;
     }
     
-    if (!joint_cmd_publisher_)
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Joint command publisher not initialized!");
-        return false;
+    if (!joint_cmd_publisher_) {
+        // 尝试懒加载初始化
+        initialize(); 
+        if (!joint_cmd_publisher_) {
+            RCLCPP_ERROR(node_->get_logger(), "Publisher 未初始化!");
+            return false;
+        }
     }
     
-    if (use_smooth_trajectory_)
-    {
+    if (use_smooth_trajectory_) {
         return execute_smooth_trajectory(trajectory);
-    }
-    else
-    {
+    } else {
         return execute_point_to_point_trajectory(trajectory);
     }
-}
-
-void ManipulationInterface::setJointNames(const std::vector<std::string>& joint_names)
-{
-    joint_names_ = joint_names;
 }
 
 void ManipulationInterface::setGripperJointNames(const std::vector<std::string>& gripper_joint_names)
@@ -92,13 +85,18 @@ void ManipulationInterface::setGripperJointNames(const std::vector<std::string>&
 void ManipulationInterface::setJointCmdTopic(const std::string& topic)
 {
     joint_cmd_topic_ = topic;
-    joint_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(joint_cmd_topic_, 10);
+    // 重新创建 publisher
+    if (node_) {
+        joint_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(joint_cmd_topic_, 10);
+    }
 }
 
 void ManipulationInterface::setGripperCmdTopic(const std::string& topic)
 {
     gripper_cmd_topic_ = topic;
-    gripper_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(gripper_cmd_topic_, 10);
+    if (node_) {
+        gripper_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(gripper_cmd_topic_, 10);
+    }
 }
 
 void ManipulationInterface::useSmoothTrajectoryExecution(bool use_smooth)
@@ -110,31 +108,30 @@ bool ManipulationInterface::execute_smooth_trajectory(const moveit_msgs::msg::Ro
 {
     const auto& jt = trajectory.joint_trajectory;
     
-    sensor_msgs::msg::JointState moveit_final;
-    moveit_final.header.stamp = node_->now();
-    moveit_final.name = jt.joint_names;
-    moveit_final.position = jt.points.back().positions;
-
-    sensor_msgs::msg::JointState cmd = translateJointNames(moveit_final);
+    sensor_msgs::msg::JointState cmd;
+    cmd.header.stamp = node_->now();
     
-    // 检查是否有有效的关节命令
-    if (cmd.name.empty() || cmd.position.empty())
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Translated joint command is empty!");
-        return false;
-    }
+    // 【关键】进行名称重映射
+    cmd.name = remapNames(jt.joint_names);
+    
+    // 平滑模式通常假设仿真器有插值能力，或者我们只发送终点
+    // 这里我们只发送轨迹的最后一个点作为目标
+    cmd.position = jt.points.back().positions;
+    
+    if (cmd.name.empty() || cmd.position.empty()) return false;
 
     joint_cmd_publisher_->publish(cmd);
 
-    double total_duration_sec =
-        jt.points.back().time_from_start.sec +
-        jt.points.back().time_from_start.nanosec * 1e-9;
+    // 计算轨迹总耗时
+    double total_duration_sec = 0.5; // 默认最小时间
+    if (!jt.points.empty()) {
+        double traj_time = rclcpp::Duration(jt.points.back().time_from_start).seconds();
+        total_duration_sec = std::max(traj_time, 0.5);
+    }
 
-    // 确保至少等待 0.5 秒
-    std::this_thread::sleep_for(
-        std::chrono::duration<double>(std::max(total_duration_sec, 0.5)));
+    // 等待执行完成
+    std::this_thread::sleep_for(std::chrono::duration<double>(total_duration_sec));
 
-    RCLCPP_INFO(node_->get_logger(), "Execution finished in SMOOTH mode.");
     return true;
 }
 
@@ -143,95 +140,58 @@ bool ManipulationInterface::execute_point_to_point_trajectory(const moveit_msgs:
     const auto& jt = trajectory.joint_trajectory;
     double last_time_sec = 0.0;
     
+    // 缓存重映射后的名字，避免循环里重复查找
+    std::vector<std::string> target_names = remapNames(jt.joint_names);
+    
     for (const auto& point : jt.points)
     {
-        sensor_msgs::msg::JointState moveit_state;
-        moveit_state.header.stamp = node_->now();
-        moveit_state.name = jt.joint_names;
-        moveit_state.position = point.positions;
-
-        sensor_msgs::msg::JointState cmd = translateJointNames(moveit_state);
+        sensor_msgs::msg::JointState cmd;
+        cmd.header.stamp = node_->now();
+        cmd.name = target_names;
+        cmd.position = point.positions;
         
-        // 检查是否有有效的关节命令
-        if (cmd.name.empty() || cmd.position.empty())
-        {
-            RCLCPP_WARN(node_->get_logger(), "Skipping empty translated joint command");
-            continue;
-        }
-
         joint_cmd_publisher_->publish(cmd);
 
-        // 计算当前点的时间戳
-        double point_duration_sec = static_cast<double>(point.time_from_start.sec) + 
-                                    static_cast<double>(point.time_from_start.nanosec) * 1e-9;
-        
-        // 计算实际需要等待的时间（当前点时间 - 上一个点时间）
+        double point_duration_sec = rclcpp::Duration(point.time_from_start).seconds();
         double wait_time_sec = point_duration_sec - last_time_sec;
         
-        // 确保最小等待时间
-        if (wait_time_sec < 0.001)
-        {
-            wait_time_sec = 0.001;
+        if (wait_time_sec > 0.001) {
+            std::this_thread::sleep_for(std::chrono::duration<double>(wait_time_sec)); 
         }
         
-        // 修正：使用 wait_time_sec 而不是 point_duration_sec
-        std::this_thread::sleep_for(std::chrono::duration<double>(wait_time_sec)); 
-        
-        // 更新上一个点的时间
         last_time_sec = point_duration_sec;
     }
-
-    RCLCPP_INFO(node_->get_logger(), "Execution finished in POINT-TO-POINT mode.");
     return true;
 }
 
 bool ManipulationInterface::openGripper()
 {
-    if (!gripper_cmd_publisher_)
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Gripper command publisher not initialized!");
-        return false;
-    }
-    
-    if (gripper_joint_names_.empty())
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Gripper joint names not set!");
-        return false;
-    }
+    if (!gripper_cmd_publisher_) return false;
+    if (gripper_joint_names_.empty()) return false;
     
     sensor_msgs::msg::JointState cmd;
     cmd.header.stamp = node_->now();
-    cmd.name = gripper_joint_names_;
-    cmd.position.resize(gripper_joint_names_.size(), 0.04);
+    // 夹爪名字也支持重映射
+    cmd.name = remapNames(gripper_joint_names_);
+    cmd.position.resize(cmd.name.size(), 0.04); // 0.04m 打开
 
     gripper_cmd_publisher_->publish(cmd);
-    
-    RCLCPP_INFO(node_->get_logger(), "Gripper opened");
+    RCLCPP_INFO(node_->get_logger(), "Gripper Open 指令已发送");
     return true;
 }
 
 bool ManipulationInterface::closeGripper()
 {
-    if (!gripper_cmd_publisher_)
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Gripper command publisher not initialized!");
-        return false;
-    }
-    
-    if (gripper_joint_names_.empty())
-    {
-        RCLCPP_ERROR(node_->get_logger(), "Gripper joint names not set!");
-        return false;
-    }
+    if (!gripper_cmd_publisher_) return false;
+    if (gripper_joint_names_.empty()) return false;
     
     sensor_msgs::msg::JointState cmd;
     cmd.header.stamp = node_->now();
-    cmd.name = gripper_joint_names_;
-    cmd.position.resize(gripper_joint_names_.size(), 0.00);
+    cmd.name = remapNames(gripper_joint_names_);
+    cmd.position.resize(cmd.name.size(), 0.00); // 0.00m 关闭
 
     gripper_cmd_publisher_->publish(cmd);
-    
-    RCLCPP_INFO(node_->get_logger(), "Gripper closed");
+    RCLCPP_INFO(node_->get_logger(), "Gripper Close 指令已发送");
     return true;
 }
 

@@ -310,20 +310,29 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install("TARGETS" "coppelia_control_lib" "ARCHIVE_DESTINATION" "lib" "LIBRARY_DESTINATION" "lib" "RUNTIME_DESTINATION" "bin")
+# install("TARGETS" "manipulation_interface" "planning_interface" "vision_interface" "ARCHIVE_DESTINATION" "lib" "LIBRARY_DESTINATION" "lib" "RUNTIME_DESTINATION" "bin")
 include("/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
-# install(DIRECTORY "include/" "DESTINATION" "include/")
-ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "include/" "DESTINATION" "include/")
-
-# install("TARGETS" "main_node" "DESTINATION" "lib/coppelia_control")
+# install("TARGETS" "franka_control_node" "DESTINATION" "lib/coppelia_control")
 include("/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_symlink_install_targets_1_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
-# install(DIRECTORY "config/" "DESTINATION" "share/coppelia_control/config")
-ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "config/" "DESTINATION" "share/coppelia_control/config")
+# install(DIRECTORY "include/" "DESTINATION" "include")
+ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "include/" "DESTINATION" "include")
 
-# install(DIRECTORY "launch/" "DESTINATION" "share/coppelia_control/launch")
-ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "launch/" "DESTINATION" "share/coppelia_control/launch")
+# install(DIRECTORY "launch" "config" "DESTINATION" "share/coppelia_control")
+ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "launch" "config" "DESTINATION" "share/coppelia_control")
+
+# install(FILES "urdf/Franka.urdf" "DESTINATION" "share/coppelia_control/urdf")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "urdf/Franka.urdf" "DESTINATION" "share/coppelia_control/urdf")
+
+# install(DIRECTORY "meshes/" "DESTINATION" "share/coppelia_control/meshes")
+ament_cmake_symlink_install_directory("/home/rosqiu/coppelia_control/src/coppelia_control" DIRECTORY "meshes/" "DESTINATION" "share/coppelia_control/meshes")
+
+# install(FILES "/opt/ros/humble/lib/python3.10/site-packages/ament_package/template/environment_hook/library_path.sh" "DESTINATION" "share/coppelia_control/environment")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/opt/ros/humble/lib/python3.10/site-packages/ament_package/template/environment_hook/library_path.sh" "DESTINATION" "share/coppelia_control/environment")
+
+# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_environment_hooks/library_path.dsv" "DESTINATION" "share/coppelia_control/environment")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_environment_hooks/library_path.dsv" "DESTINATION" "share/coppelia_control/environment")
 
 # install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/coppelia_control" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
 ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/coppelia_control" "DESTINATION" "share/ament_index/resource_index/package_run_dependencies")
@@ -360,6 +369,15 @@ ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_co
 
 # install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_index/share/ament_index/resource_index/packages/coppelia_control" "DESTINATION" "share/ament_index/resource_index/packages")
 ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_index/share/ament_index/resource_index/packages/coppelia_control" "DESTINATION" "share/ament_index/resource_index/packages")
+
+# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/coppelia_control/cmake")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_export_include_directories/ament_cmake_export_include_directories-extras.cmake" "DESTINATION" "share/coppelia_control/cmake")
+
+# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake" "DESTINATION" "share/coppelia_control/cmake")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_export_libraries/ament_cmake_export_libraries-extras.cmake" "DESTINATION" "share/coppelia_control/cmake")
+
+# install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/coppelia_control/cmake")
+ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_export_dependencies/ament_cmake_export_dependencies-extras.cmake" "DESTINATION" "share/coppelia_control/cmake")
 
 # install(FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_core/coppelia_controlConfig.cmake" "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_core/coppelia_controlConfig-version.cmake" "DESTINATION" "share/coppelia_control/cmake")
 ament_cmake_symlink_install_files("/home/rosqiu/coppelia_control/src/coppelia_control" FILES "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_core/coppelia_controlConfig.cmake" "/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_core/coppelia_controlConfig-version.cmake" "DESTINATION" "share/coppelia_control/cmake")
