@@ -1,0 +1,9 @@
+<library path="cs_hardware_interface">
+  <class name="cs_hardware_interface/CsSystemHardware" 
+         type="cs_hardware_interface::CsSystem" 
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The CoppeliaSim System Hardware Interface.
+    </description>
+  </class>
+</library>

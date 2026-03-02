@@ -1,0 +1,1 @@
+/home/rosqiu/coppelia_control/build/cs_hardware_interface/ament_cmake_core/cs_hardware_interfaceConfig.cmake

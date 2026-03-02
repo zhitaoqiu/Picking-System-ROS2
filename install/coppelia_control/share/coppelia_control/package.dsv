@@ -1,9 +1,6 @@
 source;share/coppelia_control/hook/cmake_prefix_path.ps1
 source;share/coppelia_control/hook/cmake_prefix_path.dsv
 source;share/coppelia_control/hook/cmake_prefix_path.sh
-source;share/coppelia_control/hook/ld_library_path_lib.ps1
-source;share/coppelia_control/hook/ld_library_path_lib.dsv
-source;share/coppelia_control/hook/ld_library_path_lib.sh
 source;share/coppelia_control/local_setup.bash
 source;share/coppelia_control/local_setup.dsv
 source;share/coppelia_control/local_setup.ps1

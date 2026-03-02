@@ -5,7 +5,7 @@ set(coppelia_control_BUILD_DEPENDS "rclcpp" "std_msgs" "geometry_msgs" "sensor_m
 set(coppelia_control_BUILDTOOL_DEPENDS "ament_cmake")
 set(coppelia_control_BUILD_EXPORT_DEPENDS "rclcpp" "std_msgs" "geometry_msgs" "sensor_msgs" "moveit_core" "moveit_ros_planning" "moveit_ros_planning_interface" "moveit_msgs" "pluginlib" "trajectory_msgs")
 set(coppelia_control_BUILDTOOL_EXPORT_DEPENDS )
-set(coppelia_control_EXEC_DEPENDS "rclcpp" "std_msgs" "geometry_msgs" "sensor_msgs" "moveit_core" "moveit_ros_planning" "moveit_ros_planning_interface" "moveit_msgs" "pluginlib" "trajectory_msgs")
+set(coppelia_control_EXEC_DEPENDS "rclpy" "rclcpp" "std_msgs" "geometry_msgs" "sensor_msgs" "moveit_core" "moveit_ros_planning" "moveit_ros_planning_interface" "moveit_msgs" "pluginlib" "trajectory_msgs")
 set(coppelia_control_TEST_DEPENDS "ament_lint_auto" "ament_lint_common")
 set(coppelia_control_GROUP_DEPENDS )
 set(coppelia_control_MEMBER_OF_GROUPS )

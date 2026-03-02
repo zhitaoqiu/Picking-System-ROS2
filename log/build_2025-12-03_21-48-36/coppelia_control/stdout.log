@@ -1,4 +1,0 @@
-[ 25%] Built target manipulation_interface
-[ 50%] Built target vision_interface
-[ 75%] Built target planning_interface
-[ 87%] [32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o[0m

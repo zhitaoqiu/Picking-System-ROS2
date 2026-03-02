@@ -1,0 +1,32 @@
+vision_node:
+  ros__parameters:
+    # --- 话题配置 ---
+    # [关键修改] 必须和 Lua 脚本里的 M.cameraTopic 一致
+    sub_image_topic: "/camera/image_raw"
+    
+    # 发布：识别结果图像 (给 Rviz 看)
+    pub_debug_topic: "/vision/debug_image"
+    
+    # 发布：识别到的物体坐标 (给 coppelia_control 听)
+    pub_result_topic: "/vision/object_pose"
+
+    # --- 模型配置 ---
+    # 选择使用的模型类型: "color" (我们现在用颜色识别)
+    model_type: "color" 
+    
+    # [注] 下面这些 YOLO 的参数在 model_type="color" 时会被忽略，留着没事
+    model_path: "/home/rosqiu/coppelia_control/src/coppelia_vision/weights/yolov8n.pt"
+    device: "cuda" # 颜色识别其实用 cpu 就够了，不过写 cuda 也不影响
+    
+    # --- 算法参数 ---
+    conf_threshold: 0.5
+    enable_visualization: true
+
+    # --- [新增] 红色方块的 HSV 阈值 ---
+    # 这一步是为了让 color_detector.py 知道什么是"红色"
+    # CoppeliaSim 的红色通常很纯，H 分布在 0 和 180 附近
+    target_color:
+      lower: [0, 100, 100]    # H, S, V 下限
+      upper: [10, 255, 255]   # H, S, V 上限
+      lower2: [170, 100, 100] # 处理 HSV 色环另一端的红色
+      upper2: [180, 255, 255]

@@ -1,0 +1,29 @@
+[3.631s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_vision': PYTHONPATH=/home/rosqiu/coppelia_control/build/coppelia_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rosqiu/coppelia_control/install/coppelia_vision/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/rosqiu/coppelia_control/build/coppelia_vision/build --no-deps symlink_data
+[4.154s] running develop
+[4.385s] running egg_info
+[4.385s] creating coppelia_vision.egg-info
+[4.385s] writing coppelia_vision.egg-info/PKG-INFO
+[4.386s] writing dependency_links to coppelia_vision.egg-info/dependency_links.txt
+[4.386s] writing entry points to coppelia_vision.egg-info/entry_points.txt
+[4.388s] writing requirements to coppelia_vision.egg-info/requires.txt
+[4.392s] writing top-level names to coppelia_vision.egg-info/top_level.txt
+[4.393s] writing manifest file 'coppelia_vision.egg-info/SOURCES.txt'
+[4.404s] reading manifest file 'coppelia_vision.egg-info/SOURCES.txt'
+[4.409s] writing manifest file 'coppelia_vision.egg-info/SOURCES.txt'
+[4.415s] running build_ext
+[4.417s] Creating /home/rosqiu/coppelia_control/install/coppelia_vision/lib/python3.10/site-packages/coppelia-vision.egg-link (link to .)
+[4.424s] Installing vision_node script to /home/rosqiu/coppelia_control/install/coppelia_vision/lib/coppelia_vision
+[4.428s] 
+[4.428s] Installed /home/rosqiu/coppelia_control/build/coppelia_vision
+[4.428s] running symlink_data
+[4.428s] creating /home/rosqiu/coppelia_control/install/coppelia_vision/share/ament_index
+[4.428s] creating /home/rosqiu/coppelia_control/install/coppelia_vision/share/ament_index/resource_index
+[4.428s] creating /home/rosqiu/coppelia_control/install/coppelia_vision/share/ament_index/resource_index/packages
+[4.428s] symbolically linking /home/rosqiu/coppelia_control/build/coppelia_vision/resource/coppelia_vision -> /home/rosqiu/coppelia_control/install/coppelia_vision/share/ament_index/resource_index/packages
+[4.434s] symbolically linking /home/rosqiu/coppelia_control/build/coppelia_vision/package.xml -> /home/rosqiu/coppelia_control/install/coppelia_vision/share/coppelia_vision
+[4.440s] creating /home/rosqiu/coppelia_control/install/coppelia_vision/share/coppelia_vision/launch
+[4.446s] symbolically linking /home/rosqiu/coppelia_control/build/coppelia_vision/launch/vision_system.launch.py -> /home/rosqiu/coppelia_control/install/coppelia_vision/share/coppelia_vision/launch
+[4.446s] symbolically linking /home/rosqiu/coppelia_control/build/coppelia_vision/launch/global_vision_setup.launch.py -> /home/rosqiu/coppelia_control/install/coppelia_vision/share/coppelia_vision/launch
+[4.446s] creating /home/rosqiu/coppelia_control/install/coppelia_vision/share/coppelia_vision/config
+[4.446s] symbolically linking /home/rosqiu/coppelia_control/build/coppelia_vision/config/vision_params.yaml -> /home/rosqiu/coppelia_control/install/coppelia_vision/share/coppelia_vision/config
+[4.525s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_vision' returned '0': PYTHONPATH=/home/rosqiu/coppelia_control/build/coppelia_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rosqiu/coppelia_control/install/coppelia_vision/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/rosqiu/coppelia_control/build/coppelia_vision/build --no-deps symlink_data

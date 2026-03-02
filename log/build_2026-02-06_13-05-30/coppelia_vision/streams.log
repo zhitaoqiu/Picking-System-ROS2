@@ -1,0 +1,17 @@
+[2.264s] Invoking command in '/home/rosqiu/coppelia_control/build/coppelia_vision': PYTHONPATH=/home/rosqiu/coppelia_control/build/coppelia_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rosqiu/coppelia_control/install/coppelia_vision/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/rosqiu/coppelia_control/build/coppelia_vision/build --no-deps symlink_data
+[2.739s] running develop
+[3.088s] running egg_info
+[3.089s] writing coppelia_vision.egg-info/PKG-INFO
+[3.089s] writing dependency_links to coppelia_vision.egg-info/dependency_links.txt
+[3.089s] writing entry points to coppelia_vision.egg-info/entry_points.txt
+[3.089s] writing requirements to coppelia_vision.egg-info/requires.txt
+[3.089s] writing top-level names to coppelia_vision.egg-info/top_level.txt
+[3.089s] reading manifest file 'coppelia_vision.egg-info/SOURCES.txt'
+[3.089s] writing manifest file 'coppelia_vision.egg-info/SOURCES.txt'
+[3.089s] running build_ext
+[3.089s] Creating /home/rosqiu/coppelia_control/install/coppelia_vision/lib/python3.10/site-packages/coppelia-vision.egg-link (link to .)
+[3.089s] Installing vision_node script to /home/rosqiu/coppelia_control/install/coppelia_vision/lib/coppelia_vision
+[3.090s] 
+[3.090s] Installed /home/rosqiu/coppelia_control/build/coppelia_vision
+[3.090s] running symlink_data
+[3.237s] Invoked command in '/home/rosqiu/coppelia_control/build/coppelia_vision' returned '0': PYTHONPATH=/home/rosqiu/coppelia_control/build/coppelia_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rosqiu/coppelia_control/install/coppelia_vision/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/rosqiu/coppelia_control/build/coppelia_vision/build --no-deps symlink_data

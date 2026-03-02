@@ -5,116 +5,62 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# 查找依赖包
+# 1. 查找依赖包 (保留这些是为了让 ROS 知道环境依赖)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(moveit_core REQUIRED)
-find_package(moveit_ros_planning REQUIRED)
-find_package(moveit_ros_planning_interface REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(trajectory_msgs REQUIRED)
 
-# 包含目录
-include_directories(
-  include
-)
+# =========================================================
+#  C++ 编译区域 (已注释)
+#  如果你现在只用 Python 脚本控制，这部分是不需要的。
+#  注释掉可以避免 C++ 编译报错 (如找不到头文件、链接错误等)。
+# =========================================================
 
-# 依赖项列表
-set(THIS_PACKAGE_INCLUDE_DEPENDS
-  rclcpp
-  moveit_core
-  moveit_ros_planning
-  moveit_ros_planning_interface
-  moveit_msgs
-  geometry_msgs
-  sensor_msgs
-  trajectory_msgs
-)
+# include_directories(include)
 
-# 创建ManipulationInterface库
-add_library(manipulation_interface SHARED
-  src/ManipulationInterface.cpp
-)
+# add_library(manipulation_interface SHARED src/ManipulationInterface.cpp)
+# ament_target_dependencies(manipulation_interface rclcpp moveit_msgs geometry_msgs)
 
-ament_target_dependencies(manipulation_interface
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
-)
+# add_library(planning_interface SHARED src/PlanningInterface.cpp)
+# ament_target_dependencies(planning_interface rclcpp moveit_msgs geometry_msgs)
 
-# 创建PlanningInterface库
-add_library(planning_interface SHARED
-  src/PlanningInterface.cpp
-)
+# add_executable(franka_control_node src/franka_control_node.cpp)
+# target_link_libraries(franka_control_node manipulation_interface planning_interface)
+# ament_target_dependencies(franka_control_node rclcpp moveit_msgs geometry_msgs)
 
-ament_target_dependencies(planning_interface
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
-)
+# install(TARGETS manipulation_interface planning_interface
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+#   RUNTIME DESTINATION bin
+# )
+# install(TARGETS franka_control_node DESTINATION lib/${PROJECT_NAME})
+# install(DIRECTORY include/ DESTINATION include)
 
-# 创建VisionInterface库（如果需要）
-add_library(vision_interface SHARED
-  src/VisionInterface.cpp
-)
+# =========================================================
+#  安装区域 (核心保留)
+# =========================================================
 
-ament_target_dependencies(vision_interface
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
-)
-
-# 创建控制节点可执行文件
-add_executable(franka_control_node
-  src/franka_control_node.cpp
-)
-
-target_link_libraries(franka_control_node
-  manipulation_interface
-  planning_interface
-)
-
-ament_target_dependencies(franka_control_node
-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
-)
-
-# 安装目标
-install(TARGETS
-  manipulation_interface
-  planning_interface
-  vision_interface
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-
-install(TARGETS
-  franka_control_node
+# 2. 安装 Python 脚本 (你的大脑)
+install(PROGRAMS
+  scripts/grasp_manager.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 安装头文件
-install(DIRECTORY include/
-  DESTINATION include
-)
-
-# 安装启动文件和配置文件
+# 3. 安装 Launch 文件和 Config 文件 (你的身体配置)
+# 注意：这里删除了 URDF 的安装，因为通常 URDF 不放在 control 包里，
+# 即使放了，也可以通过 install(DIRECTORY ...) 一起装进去。
 install(DIRECTORY
   launch
   config
   DESTINATION share/${PROJECT_NAME}
 )
-install(
-  FILES urdf/Franka.urdf
-  DESTINATION share/${PROJECT_NAME}/urdf
-)
-install(
-  DIRECTORY meshes/
-  DESTINATION share/${PROJECT_NAME}/meshes
-)
+
+# 4. 测试依赖 (保留)
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_include_directories(include)
-ament_export_libraries(manipulation_interface planning_interface vision_interface)
-ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
-
+# 5. 导出依赖和结束
 ament_package()

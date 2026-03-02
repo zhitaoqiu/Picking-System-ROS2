@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/franka_moveit_config/launch/moveit_rviz.launch.py

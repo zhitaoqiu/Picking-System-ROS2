@@ -1,218 +1,328 @@
 #include <rclcpp/rclcpp.hpp>
 #include "coppelia_control/PlanningInterface.hpp"
 #include "coppelia_control/ManipulationInterface.hpp"
-#include <geometry_msgs/msg/pose.hpp>
-#include <thread>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <atomic>
-#include <chrono>
-#include <map>
+#include <thread>
 
-class FrankaControlNode : public rclcpp::Node
+using std::placeholders::_1;
+
+class FrankaCartesianGrasp : public rclcpp::Node
 {
 public:
-    FrankaControlNode() : Node("franka_control_node")
+    FrankaCartesianGrasp() : Node("franka_cartesian_grasp")
     {
-        // 1. 声明节点参数
-        // 控制演示任务是否自动启动
-        this->declare_parameter<bool>("auto_start_demo", true);
-        // 规划组名称 (默认为 panda_arm，可通过 launch 修改)
-        this->declare_parameter<std::string>("planning_group", "arm"); 
+        declare_parameter<std::string>("arm_group", "arm");
+        declare_parameter<std::string>("hand_group", "hand");
         
-        RCLCPP_INFO(this->get_logger(), "节点创建成功，等待调用 initialize_interfaces()...");
+        // ⚠️ 根据实际场景调整的参数
+        declare_parameter<double>("safe_height", 0.35);      // 安全高度（不碰到任何东西）
+        declare_parameter<double>("approach_height", 0.15);  // 接近高度（能清晰看到方块）
+        declare_parameter<double>("grasp_offset", -0.01);    // 抓取偏移（负值=下探，正值=上浮）
+        
+        enable_vision_ = false;
+        has_pose_ = false;
+        pose_count_ = 0;
+        
+        RCLCPP_INFO(get_logger(), "Franka Cartesian Grasp Node Initialized");
     }
 
-    ~FrankaControlNode()
+    void init()
     {
-        // 析构时安全等待线程结束
-        if (demo_thread_.joinable()) {
-            demo_thread_.join();
-        }
-    }
-    
-    void initialize_interfaces()
-    {
-        RCLCPP_INFO(this->get_logger(), "正在初始化控制接口...");
+        auto self = shared_from_this();
+        std::string arm, hand;
+        get_parameter("arm_group", arm);
+        get_parameter("hand_group", hand);
 
-        
-        auto node_ptr_base = this->shared_from_this();
-        
-        try {
-            // --- 步骤 1: 初始化规划层 (Planning) ---
-            std::string planning_group_name;
-            this->get_parameter("planning_group", planning_group_name);
-            RCLCPP_INFO(this->get_logger(), "使用规划组: %s", planning_group_name.c_str());
+        planner_ = std::make_shared<coppelia_control::PlanningInterface>(self, arm);
+        planner_->initialize();
+        planner_->setScalingFactors(0.3, 0.3);  // 降低速度提高精度
 
-            planning_interface_ = std::make_shared<coppelia_control::PlanningInterface>(node_ptr_base, planning_group_name);
-            if (!planning_interface_->initialize()) {throw std::runtime_error("PlanningInterface 初始化失败");}
-            // 可选：设置规划速度 (0.0 - 1.0)
-            planning_interface_->setScalingFactors(0.5, 0.5);
+        exec_ = std::make_shared<coppelia_control::ManipulationInterface>(self);
+        exec_->setJointCmdTopic("/coppelia/joint_cmd");
+        exec_->setGripperCmdTopic("/coppelia/gripper_cmd");
+        exec_->useSmoothTrajectoryExecution(true);
+        exec_->initialize();
 
-            // --- 步骤 2: 初始化执行层 (Manipulation) ---
-            manipulation_interface_ = std::make_shared<coppelia_control::ManipulationInterface>(node_ptr_base);
-            
-            // 【关键配置】设置关节名称映射表
-            // Key: MoveIt/URDF 里的标准名字 (SRDF里定义的)
-            // Value: CoppeliaSim 里通过 ros2 topic echo 看到的实际名字
-            std::map<std::string, std::string> name_map = {
-                {"joint_0", "/Franka/joint_0"},
-                {"joint_1", "/Franka/joint_1"},
-                {"joint_2", "/Franka/joint_2"},
-                {"joint_3", "/Franka/joint_3"},
-                {"joint_4", "/Franka/joint_4"},
-                {"joint_5", "/Franka/joint_5"},
-                {"joint_6", "/Franka/joint_6"},
-                // 夹爪映射
-                {"joint_7", "/Franka/FrankaGripper/joint_7"},
-                {"Open_CloseJoint", "/Franka/FrankaGripper/Open_CloseJoint"} 
-            };
-            manipulation_interface_->setJointNameRemap(name_map);
+        vision_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>(
+            "/vision/object_pose", 10,
+            std::bind(&FrankaCartesianGrasp::visionCB, this, _1));
 
-            // 设置夹爪关节名 (这是 MoveIt 里的名字)
-            manipulation_interface_->setGripperJointNames({"joint_7", "Open_CloseJoint"});
-            
-            // 启用平滑轨迹执行
-            manipulation_interface_->useSmoothTrajectoryExecution(true);
-            
-            // 初始化 Publisher (建立与 CoppeliaSim 的通信)
-            if (!manipulation_interface_->initialize()) {
-                 throw std::runtime_error("ManipulationInterface Publisher 初始化失败");
-            }
-            
-            RCLCPP_INFO(this->get_logger(), "所有接口初始化完成！");
-            
-            // --- 步骤 3: 启动演示任务线程 ---
-            if (this->get_parameter("auto_start_demo").as_bool()) {
-                demo_thread_ = std::thread(&FrankaControlNode::runDemoTask, this);
-            }
-
-        } catch (const std::exception& e) {
-            RCLCPP_ERROR(this->get_logger(), "初始化异常: %s", e.what());
-        }
+        RCLCPP_INFO(get_logger(), "Starting grasp thread...");
+        std::thread(&FrankaCartesianGrasp::run, this).detach();
     }
 
 private:
-    // 演示任务主逻辑 (运行在独立线程，不会阻塞 ROS)
-    void runDemoTask()
+    /* ================= Vision ================= */
+    void visionCB(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
     {
-        // 等待系统稳定 (等待 Publisher 和 Subscriber 建立连接)
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        RCLCPP_INFO(this->get_logger(), "=== 开始执行自动化控制流程 ===");
+        if (!enable_vision_) return;
         
-        // --- 动作 1: 归位 (Ready) ---
-        // 假设 SRDF 中定义了 "ready" 或 "home"
-        RCLCPP_INFO(this->get_logger(), "[Action 1] 移动到 Ready 姿态");
-        if (!moveToNamedTarget("ready")) {
-            RCLCPP_WARN(this->get_logger(), "Ready 姿态规划失败，尝试 Home...");
-            if (!moveToNamedTarget("home")) {
-                RCLCPP_ERROR(this->get_logger(), "无法回到初始位置，请检查 SRDF 配置");
-                return;
+        // 累积多帧取平均，降低抖动
+        pose_sum_.position.x += msg->pose.position.x;
+        pose_sum_.position.y += msg->pose.position.y;
+        pose_sum_.position.z += msg->pose.position.z;
+        pose_count_++;
+        
+        if (pose_count_ >= 5) {  // 累积5帧
+            cached_pose_.position.x = pose_sum_.position.x / pose_count_;
+            cached_pose_.position.y = pose_sum_.position.y / pose_count_;
+            cached_pose_.position.z = pose_sum_.position.z / pose_count_;
+            cached_pose_.orientation.w = 1.0;  // 默认姿态
+            has_pose_ = true;
+            
+            RCLCPP_DEBUG(get_logger(), "Vision averaged (%d frames): [%.3f, %.3f, %.3f]",
+                        pose_count_,
+                        cached_pose_.position.x,
+                        cached_pose_.position.y,
+                        cached_pose_.position.z);
+        }
+    }
+
+    geometry_msgs::msg::Pose visionOnce(double timeout = 1.5)
+    {
+        has_pose_ = false;
+        pose_count_ = 0;
+        pose_sum_ = geometry_msgs::msg::Pose();
+        
+        enable_vision_ = true;
+        auto start = std::chrono::steady_clock::now();
+        
+        while (!has_pose_ && rclcpp::ok()) {
+            auto elapsed = std::chrono::steady_clock::now() - start;
+            if (std::chrono::duration<double>(elapsed).count() > timeout) {
+                RCLCPP_WARN(get_logger(), "Vision timeout after %.1fs!", timeout);
+                break;
             }
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            rclcpp::spin_some(shared_from_this());
         }
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // --- 动作 2: 准备抓取 (张开夹爪) ---
-        RCLCPP_INFO(this->get_logger(), "[Action 2] 张开夹爪");
-        manipulation_interface_->openGripper();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // --- 动作 3: 移动到抓取上方 ---
-        RCLCPP_INFO(this->get_logger(), "[Action 3] 移动到抓取预备点");
-        // 获取当前位置作为基准
-        geometry_msgs::msg::Pose current_pose = planning_interface_->getCurrentPose();
         
-        // 定义一个相对于当前位置的目标 (例如：向前 20cm, 向下 10cm)
-        geometry_msgs::msg::Pose pre_grasp_pose = current_pose;
-        pre_grasp_pose.position.x += 0.2; 
-        pre_grasp_pose.position.z -= 0.1;
-        
-        if (!moveToPose(pre_grasp_pose)) return;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // --- 动作 4: 笛卡尔直线下降 ---
-        RCLCPP_INFO(this->get_logger(), "[Action 4] 执行笛卡尔路径下探");
-        std::vector<geometry_msgs::msg::Pose> waypoints;
-        waypoints.push_back(pre_grasp_pose); // 起点
-        
-        geometry_msgs::msg::Pose grasp_pose = pre_grasp_pose;
-        grasp_pose.position.z -= 0.1; // 垂直下降 10cm
-        waypoints.push_back(grasp_pose);
-        
-        if (!executeCartesianPath(waypoints)) return;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // --- 动作 5: 闭合夹爪 (模拟抓取) ---
-        RCLCPP_INFO(this->get_logger(), "[Action 5] 闭合夹爪");
-        manipulation_interface_->closeGripper();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // --- 动作 6: 带着物体抬起 ---
-        RCLCPP_INFO(this->get_logger(), "[Action 6] 抬起物体");
-        waypoints.clear();
-        waypoints.push_back(grasp_pose); // 起点
-        waypoints.push_back(pre_grasp_pose); // 终点 (回到预备点)
-        
-        if (!executeCartesianPath(waypoints)) return;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        // --- 动作 7: 结束 ---
-        RCLCPP_INFO(this->get_logger(), "=== 演示任务圆满完成 ===");
+        enable_vision_ = false;
+        return cached_pose_;
     }
-    
-    // --- 封装的辅助函数 (连接 Planning 和 Manipulation) ---
 
-    bool moveToNamedTarget(const std::string& target_name)
+    /* ================= Motion ================= */
+    bool cartesianTo(const geometry_msgs::msg::Pose& target, double speed_factor = 1.0)
     {
-        moveit::planning_interface::MoveGroupInterface::Plan plan;
-        // 1. 规划
-        if (!planning_interface_->planToNamedTarget(target_name, plan)) {
-            RCLCPP_ERROR(this->get_logger(), "规划到 %s 失败", target_name.c_str());
+        auto start = planner_->getCurrentPose();
+        std::vector<geometry_msgs::msg::Pose> wp{start, target};
+        
+        // 临时调整速度
+        planner_->setScalingFactors(0.3 * speed_factor, 0.3 * speed_factor);
+        
+        moveit_msgs::msg::RobotTrajectory traj;
+        bool success = planner_->planCartesianPath(wp, traj);
+        
+        // 恢复默认速度
+        planner_->setScalingFactors(0.3, 0.3);
+        
+        if (!success) {
+            RCLCPP_ERROR(get_logger(), "Cartesian planning failed!");
             return false;
         }
-        // 2. 平滑
-        planning_interface_->smoothTrajectory(plan.trajectory_);
-        // 3. 执行
-        return manipulation_interface_->executeTrajectory(plan.trajectory_);
+        
+        RCLCPP_INFO(get_logger(), "Executing trajectory...");
+        return exec_->executeTrajectory(traj);
     }
 
-    bool moveToPose(const geometry_msgs::msg::Pose& target_pose)
+    bool goNamed(const std::string& name)
     {
-        moveit::planning_interface::MoveGroupInterface::Plan plan;
-        if (!planning_interface_->planToPose(target_pose, plan)) {
-            RCLCPP_ERROR(this->get_logger(), "Pose 规划失败");
+        RCLCPP_INFO(get_logger(), "Moving to named target: %s", name.c_str());
+        moveit::planning_interface::MoveGroupInterface::Plan p;
+        if (!planner_->planToNamedTarget(name, p)) {
+            RCLCPP_ERROR(get_logger(), "Failed to plan to: %s", name.c_str());
             return false;
         }
-        planning_interface_->smoothTrajectory(plan.trajectory_);
-        return manipulation_interface_->executeTrajectory(plan.trajectory_);
+        return exec_->executeTrajectory(p.trajectory_);
     }
 
-    bool executeCartesianPath(const std::vector<geometry_msgs::msg::Pose>& waypoints)
+    void gripper(const std::string& cmd)
     {
-        moveit_msgs::msg::RobotTrajectory trajectory;
-        if (!planning_interface_->planCartesianPath(waypoints, trajectory)) {
-            RCLCPP_ERROR(this->get_logger(), "笛卡尔规划失败");
-            return false;
-        }
-        planning_interface_->smoothTrajectory(trajectory);
-        return manipulation_interface_->executeTrajectory(trajectory);
+        RCLCPP_INFO(get_logger(), "Gripper: %s", cmd.c_str());
+        planner_->changePlanningGroup("hand");
+        moveit::planning_interface::MoveGroupInterface::Plan p;
+        if (planner_->planToNamedTarget(cmd, p))
+            exec_->executeTrajectory(p.trajectory_);
+        planner_->changePlanningGroup("arm");
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-    
-    std::shared_ptr<coppelia_control::PlanningInterface> planning_interface_;
-    std::shared_ptr<coppelia_control::ManipulationInterface> manipulation_interface_;
-    std::thread demo_thread_;
+
+    geometry_msgs::msg::Quaternion downQuat()
+    {
+        geometry_msgs::msg::Quaternion q;
+        q.x = 1.0; q.y = 0.0; q.z = 0.0; q.w = 0.0;  // 向下
+        return q;
+    }
+
+    /* ================= Main Logic ================= */
+    void run()
+    {
+        // 从参数读取
+        double SAFE_Z, APPROACH_Z, GRASP_OFFSET;
+        get_parameter("safe_height", SAFE_Z);
+        get_parameter("approach_height", APPROACH_Z);
+        get_parameter("grasp_offset", GRASP_OFFSET);
+
+        RCLCPP_INFO(get_logger(), "===========================================");
+        RCLCPP_INFO(get_logger(), "Grasp Parameters:");
+        RCLCPP_INFO(get_logger(), "  Safe Height:     %.3f m", SAFE_Z);
+        RCLCPP_INFO(get_logger(), "  Approach Height: %.3f m", APPROACH_Z);
+        RCLCPP_INFO(get_logger(), "  Grasp Offset:    %.3f m", GRASP_OFFSET);
+        RCLCPP_INFO(get_logger(), "===========================================\n");
+
+        // 等待系统稳定
+        RCLCPP_INFO(get_logger(), "Waiting for system to stabilize...");
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+
+        while (rclcpp::ok())
+        {
+            RCLCPP_INFO(get_logger(), "\n========== NEW GRASP CYCLE ==========\n");
+
+            // ====== Stage 0: 回到起始位置 ======
+            RCLCPP_INFO(get_logger(), "[Stage 0] Moving to home position...");
+            if (!goNamed("home")) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach home, retrying...");
+                std::this_thread::sleep_for(std::chrono::seconds(2));
+                continue;
+            }
+            
+            gripper("open");
+
+            // ====== Stage 1: 在安全高度初步定位 ======
+            RCLCPP_INFO(get_logger(), "[Stage 1] Moving to safe height for initial detection...");
+            
+            // 移动到工作空间上方
+            geometry_msgs::msg::Pose pre_look;
+            pre_look.position.x = -0.13;  // 基于你的检测数据：x ≈ -0.13
+            pre_look.position.y = -0.18;  // y ≈ -0.18
+            pre_look.position.z = SAFE_Z;
+            pre_look.orientation = downQuat();
+            
+            if (!cartesianTo(pre_look, 0.8)) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach pre-look position");
+                continue;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            // ====== Stage 2: 第一次视觉检测（粗定位）======
+            RCLCPP_INFO(get_logger(), "[Stage 2] Vision #1 - Coarse detection...");
+            auto p1 = visionOnce(2.0);
+            
+            if (pose_count_ == 0) {
+                RCLCPP_WARN(get_logger(), "No object detected, retrying cycle...");
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                continue;
+            }
+            
+            RCLCPP_INFO(get_logger(), "  Detected at: [%.3f, %.3f, %.3f]",
+                       p1.position.x, p1.position.y, p1.position.z);
+
+            // ====== Stage 3: 移动到接近高度精确对齐 ======
+            RCLCPP_INFO(get_logger(), "[Stage 3] Moving to approach height...");
+            
+            geometry_msgs::msg::Pose approach;
+            approach.position.x = p1.position.x;
+            approach.position.y = p1.position.y;
+            approach.position.z = APPROACH_Z;
+            approach.orientation = downQuat();
+            
+            if (!cartesianTo(approach, 0.5)) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach approach position");
+                continue;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            // ====== Stage 4: 第二次视觉检测（精确定位）======
+            RCLCPP_INFO(get_logger(), "[Stage 4] Vision #2 - Precise detection...");
+            auto p2 = visionOnce(2.0);
+            
+            if (pose_count_ == 0) {
+                RCLCPP_WARN(get_logger(), "Lost object, going back...");
+                continue;
+            }
+            
+            RCLCPP_INFO(get_logger(), "  Precise location: [%.3f, %.3f, %.3f]",
+                       p2.position.x, p2.position.y, p2.position.z);
+
+            // ====== Stage 5: 执行抓取 ======
+            RCLCPP_INFO(get_logger(), "[Stage 5] Executing grasp...");
+            
+            geometry_msgs::msg::Pose grasp;
+            grasp.position.x = p2.position.x;
+            grasp.position.y = p2.position.y;
+            
+            // ⚠️ 关键：p2.position.z 已经是物体顶面的世界坐标
+            grasp.position.z = p2.position.z + GRASP_OFFSET;
+            grasp.orientation = downQuat();
+            
+            // 安全检查
+            if (grasp.position.z < 0.02) {
+                RCLCPP_ERROR(get_logger(), "Grasp height too low (%.3f m), ABORT!", 
+                           grasp.position.z);
+                continue;
+            }
+            
+            RCLCPP_INFO(get_logger(), "  Target grasp pose: [%.3f, %.3f, %.3f]",
+                       grasp.position.x, grasp.position.y, grasp.position.z);
+            
+            if (!cartesianTo(grasp, 0.3)) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach grasp pose!");
+                continue;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
+            
+            RCLCPP_INFO(get_logger(), "  Closing gripper...");
+            gripper("close");
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+            // ====== Stage 6: 提升物体 ======
+            RCLCPP_INFO(get_logger(), "[Stage 6] Lifting object...");
+            
+            geometry_msgs::msg::Pose lift = grasp;
+            lift.position.z = APPROACH_Z;
+            
+            if (!cartesianTo(lift, 0.5)) {
+                RCLCPP_WARN(get_logger(), "Lift failed, object may have dropped");
+            }
+
+            // ====== Stage 7: 返回起始位置 ======
+            RCLCPP_INFO(get_logger(), "[Stage 7] Returning home...");
+            goNamed("home");
+            
+            // 可选：在指定位置放下
+            // gripper("open");
+
+            RCLCPP_INFO(get_logger(), "\n========== CYCLE COMPLETE ==========\n");
+            
+            // 等待下一次循环
+            RCLCPP_INFO(get_logger(), "Waiting 3 seconds before next cycle...\n");
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+        }
+    }
+
+    std::shared_ptr<coppelia_control::PlanningInterface> planner_;
+    std::shared_ptr<coppelia_control::ManipulationInterface> exec_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr vision_sub_;
+
+    std::atomic<bool> enable_vision_;
+    bool has_pose_;
+    geometry_msgs::msg::Pose cached_pose_;
+    geometry_msgs::msg::Pose pose_sum_;
+    int pose_count_;
 };
 
 int main(int argc, char** argv)
 {
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<FrankaControlNode>();
-    
-    // 关键：在 shared_ptr 创建后初始化接口
-    node->initialize_interfaces();
-    
-    rclcpp::executors::MultiThreadedExecutor executor;
-    executor.add_node(node);
-    executor.spin();
-    
+    auto node = std::make_shared<FrankaCartesianGrasp>();
+    node->init();
+    rclcpp::executors::MultiThreadedExecutor exe;
+    exe.add_node(node);
+    exe.spin();
     rclcpp::shutdown();
     return 0;
 }

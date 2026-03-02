@@ -1,0 +1,23 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: cs_hardware_interface
+    relative_path: urdf/exported_panda.urdf
+  srdf:
+    relative_path: config/Franka.srdf
+  package_settings:
+    author_name: user
+    author_email: user@qq.com
+    generated_timestamp: 1770304205
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position

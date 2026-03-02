@@ -1,8 +1,0 @@
-[ 25%] Built target manipulation_interface
-[ 50%] Built target planning_interface
-[ 75%] Built target vision_interface
-[35m[1mConsolidate compiler generated dependencies of target franka_control_node[0m
-[ 87%] [32mBuilding CXX object CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o[0m
-gmake[2]: *** [CMakeFiles/franka_control_node.dir/build.make:76: CMakeFiles/franka_control_node.dir/src/franka_control_node.cpp.o] 中断
-gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/franka_control_node.dir/all] 中断
-gmake: *** [Makefile:146: all] 中断

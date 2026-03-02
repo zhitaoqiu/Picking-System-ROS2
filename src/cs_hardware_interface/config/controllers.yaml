@@ -1,0 +1,58 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100   # 改成 100Hz，动作才会顺滑
+    use_sim_time: true # 开启仿真时间同步 防止出错
+    publish_rate: 100  # 建议这个频率大于等于 update_rate
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # 2. 手臂控制器 (名字要和 MoveIt 配置对应)
+    panda_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # 3. 【关键】爪子控制器 (必须加上这个！)
+    hand_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+# ==================================
+# 具体的参数配置
+# ==================================
+
+panda_arm_controller:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    
+    command_interfaces:
+      - position
+    
+    state_interfaces:
+      - position
+
+   
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+
+hand_controller:
+  ros__parameters:
+    joints:
+      - openCloseJoint  # 必须对应 URDF
+      - centerJoint     # 必须对应 URDF
+    
+    command_interfaces:
+      - position
+    
+    state_interfaces:
+      - position
+
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true

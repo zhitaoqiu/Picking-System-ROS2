@@ -1,0 +1,88 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+
+Visualization Manager:
+  Displays:
+    # 1. TF 显示 - 查看所有坐标系
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Marker Scale: 0.3
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0.0
+
+    # 2. 机械臂模型
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Description Topic:
+        value: /robot_description
+        depth: 5
+      Visual Enabled: true
+      Collision Enabled: false
+
+    # 3. 相机画面
+    - Class: rviz_default_plugins/Camera
+      Name: Camera
+      Enabled: true
+      Image Topic: /camera/color/image_raw
+      Queue Size: 1
+
+    # 4. 检测到的物体位姿
+    - Class: rviz_default_plugins/PoseStamped
+      Name: ObjectPose
+      Enabled: true
+      Topic:
+        value: /vision/object_pose
+        depth: 5
+      Axes Length: 0.1
+      Axes Radius: 0.01
+      Color: 255; 0; 0
+      Shape: Arrow
+      Alpha: 1.0
+
+    # 5. 栅格地面
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 0.1
+      Color: 160; 160; 164
+      Line Style: Lines
+      Normal Cell Count: 0
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: robot_base  # ⚠️ 修正为 robot_base
+
+  # 全局选项
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: robot_base  # ⚠️ 关键修正：robot_base
+    Frame Rate: 30
+
+  # 视角设置
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 1.5
+      Enable Stereo Rendering:
+        stereo_eye_separation: 0.06
+        stereo_focal_distance: 1.0
+        swap_stereo_eyes: false
+        value: false
+      Focal Point:
+        X: 0.4
+        Y: 0.0
+        Z: 0.3
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 0.5
+      Target Frame: robot_base  # ⚠️ 修正为 robot_base
+      Yaw: 0.8

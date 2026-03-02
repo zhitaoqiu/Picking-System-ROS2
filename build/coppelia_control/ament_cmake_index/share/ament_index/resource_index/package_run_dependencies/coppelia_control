@@ -1,1 +1,1 @@
-rclcpp;std_msgs;geometry_msgs;sensor_msgs;moveit_core;moveit_ros_planning;moveit_ros_planning_interface;moveit_msgs;pluginlib;trajectory_msgs;ament_lint_auto;ament_lint_common
+rclcpp;std_msgs;geometry_msgs;sensor_msgs;moveit_core;moveit_ros_planning;moveit_ros_planning_interface;moveit_msgs;pluginlib;trajectory_msgs;rclpy;ament_lint_auto;ament_lint_common

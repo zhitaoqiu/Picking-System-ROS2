@@ -1,0 +1,4 @@
+source;share/cs_hardware_interface/local_setup.bash
+source;share/cs_hardware_interface/local_setup.dsv
+source;share/cs_hardware_interface/local_setup.sh
+source;share/cs_hardware_interface/local_setup.zsh

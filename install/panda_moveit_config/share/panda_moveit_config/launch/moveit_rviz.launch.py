@@ -1,0 +1,1 @@
+/home/rosqiu/coppelia_control/src/panda_moveit_config/launch/moveit_rviz.launch.py
