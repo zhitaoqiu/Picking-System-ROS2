@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/cs_hardware_interface/launch/coppelia_moveit.launch.py

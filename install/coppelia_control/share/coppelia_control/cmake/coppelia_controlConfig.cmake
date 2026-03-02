@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/build/coppelia_control/ament_cmake_core/coppelia_controlConfig.cmake

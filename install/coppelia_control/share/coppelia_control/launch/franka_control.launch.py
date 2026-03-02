@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/coppelia_control/launch/franka_control.launch.py

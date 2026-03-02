@@ -1,9 +1,0 @@
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/uninstall.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/coppelia_control_uninstall.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/test.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/edit_cache.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/rebuild_cache.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/list_install_components.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/install.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/install/local.dir
-/home/rosqiu/coppelia_control/build/coppelia_control/CMakeFiles/install/strip.dir

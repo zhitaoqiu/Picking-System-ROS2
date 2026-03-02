@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/coppelia_control/scripts/grasp_manager.py

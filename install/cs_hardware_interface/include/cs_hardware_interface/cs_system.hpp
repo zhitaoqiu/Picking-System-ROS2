@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/cs_hardware_interface/include/cs_hardware_interface/cs_system.hpp

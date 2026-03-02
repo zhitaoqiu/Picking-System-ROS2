@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/coppelia_vision/launch/global_vision_setup.launch.py

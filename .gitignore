@@ -39,3 +39,11 @@
 
 # debug information files
 *.dwo
+build/
+install/
+log/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+*.pyc

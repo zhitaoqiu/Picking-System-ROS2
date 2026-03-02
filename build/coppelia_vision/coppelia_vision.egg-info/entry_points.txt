@@ -1,3 +1,0 @@
-[console_scripts]
-vision_node = coppelia_vision.vision_node:main
-

@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/build/cs_hardware_interface/ament_cmake_environment_hooks/local_setup.sh

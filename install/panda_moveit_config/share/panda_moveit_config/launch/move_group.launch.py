@@ -1,1 +1,0 @@
-/home/rosqiu/coppelia_control/src/panda_moveit_config/launch/move_group.launch.py
