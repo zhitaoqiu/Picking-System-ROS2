@@ -1,5 +1,5 @@
 <library path="cs_hardware_interface">
-  <class name="cs_hardware_interface/CsSystemHardware" 
+  <class name="cs_hardware_interface/CsSystem" 
          type="cs_hardware_interface::CsSystem" 
          base_class_type="hardware_interface::SystemInterface">
     <description>

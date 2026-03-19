@@ -1,0 +1,3385 @@
+================================================================
+FILE: src/coppelia_control/include/coppelia_control/ManipulationInterface.hpp
+================================================================
+#pragma once
+
+#include <rclcpp/rclcpp.hpp>
+#include <moveit_msgs/msg/robot_trajectory.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <string>
+#include <memory>
+#include <vector> 
+#include <map>
+// manipulation 的主要功能是规划完毕发送关节命令到话题
+namespace coppelia_control
+{
+
+class ManipulationInterface
+{
+public:
+    explicit ManipulationInterface(const rclcpp::Node::SharedPtr& node);
+
+    // 初始化 Publisher
+    bool initialize();
+
+    // 执行 MoveIt 规划出的轨迹
+    bool executeTrajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);
+
+    // 夹爪控制
+    bool openGripper();
+    bool closeGripper();
+
+    // --- 配置接口 ---
+
+    // [新功能] 设置关节名称映射表 (URDF Name -> CoppeliaSim Name)
+    // 如果设置了映射，发送指令时会自动替换名字
+    void setJointNameRemap(const std::map<std::string, std::string>& remap_rules);
+    void setGripperJointNames(const std::vector<std::string>& gripper_joint_names);
+    void setJointCmdTopic(const std::string& topic);
+    void setGripperCmdTopic(const std::string& topic);
+    void useSmoothTrajectoryExecution(bool use_smooth);
+    
+private:
+    // 内部使用的名称转换函数
+    std::vector<std::string> remapNames(const std::vector<std::string>& original_names);
+
+    bool execute_smooth_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);
+    bool execute_point_to_point_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory);
+
+    rclcpp::Node::SharedPtr node_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_cmd_publisher_;
+    rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr gripper_cmd_publisher_;
+    
+    std::string joint_cmd_topic_;
+    std::string gripper_cmd_topic_;
+    std::vector<std::string> gripper_joint_names_;
+    
+    // 映射表: Key=MoveItName, Value=SimName
+    std::map<std::string, std::string> joint_name_map_; 
+    
+    bool use_smooth_trajectory_;
+};
+
+} // namespace coppelia_control
+================================================================
+FILE: src/coppelia_control/include/coppelia_control/PlanningInterface.hpp
+================================================================
+#pragma once
+
+#include <rclcpp/rclcpp.hpp>
+#include <moveit/move_group_interface/move_group_interface.h>
+#include <moveit_msgs/msg/robot_trajectory.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include <string>
+#include <vector>
+#include <memory>
+//planning 的主要功能是生成轨迹
+namespace coppelia_control
+{
+
+class PlanningInterface
+{
+public:
+    /**
+     * @brief 构造函数
+     * @param node ROS 2 节点指针
+     * @param planning_group 初始规划组名称 (例如 "panda_arm" 或 "franka_arm")
+     */
+    PlanningInterface(const rclcpp::Node::SharedPtr& node, const std::string& planning_group);
+
+    /**
+     * @brief 初始化 MoveGroupInterface
+     * @return true 如果初始化成功
+     */
+    bool initialize();
+
+    /**
+     * @brief [新功能] 动态更改规划组
+     * @param new_planning_group 新的规划组名称
+     * @return true 如果切换成功
+     */
+    bool changePlanningGroup(const std::string& new_planning_group);
+
+    /**
+     * @brief [新功能] 配置规划器参数
+     * @param planner_id 规划算法ID (例如 "RRTConnectkConfigDefault", "RRTstar", "Pilz" 等)
+     * @param planning_time 最大规划时间 (秒)
+     * @param attempts 最大尝试次数
+     */
+    void setupPlanner(const std::string& planner_id, double planning_time, int attempts);
+
+    /**
+     * @brief [新功能] 设置速度和加速度缩放因子
+     * @param max_vel_factor 最大速度比例 (0.0 - 1.0)
+     * @param max_acc_factor 最大加速度比例 (0.0 - 1.0)
+     */
+    void setScalingFactors(double max_vel_factor, double max_acc_factor);
+
+    // --- 核心规划功能 ---
+
+    bool planToPose(const geometry_msgs::msg::Pose& target_pose, moveit::planning_interface::MoveGroupInterface::Plan& plan);
+
+    bool planCartesianPath(const std::vector<geometry_msgs::msg::Pose>& waypoints, moveit_msgs::msg::RobotTrajectory& trajectory);
+
+    bool planToNamedTarget(const std::string& target_name, moveit::planning_interface::MoveGroupInterface::Plan& plan);
+
+    bool planToJointState(const std::vector<double>& joint_positions, moveit::planning_interface::MoveGroupInterface::Plan& plan);
+
+    // 轨迹平滑处理
+    bool smoothTrajectory(moveit_msgs::msg::RobotTrajectory& trajectory);
+
+    // 获取当前信息
+    geometry_msgs::msg::Pose getCurrentPose();
+    std::string getCurrentPlanningGroup() const { return planning_group_name_; }
+
+private:
+    rclcpp::Node::SharedPtr node_;
+    std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;
+    
+    // 配置参数成员变量
+    std::string planning_group_name_;
+    std::string current_planner_id_;
+    double planning_time_;
+    int planning_attempts_;
+    double max_vel_scaling_;
+    double max_acc_scaling_;
+};
+
+} // namespace coppelia_control
+================================================================
+FILE: src/coppelia_control/launch/franka_control.launch.py
+================================================================
+import os
+import yaml
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+from launch_ros.actions import Node
+
+# --- 辅助函数：加载 YAML 文件 ---
+def load_yaml(package_name, file_path):
+    package_path = get_package_share_directory(package_name)
+    absolute_file_path = os.path.join(package_path, file_path)
+    
+    try:
+        with open(absolute_file_path, 'r') as file:
+            return yaml.safe_load(file)
+    except EnvironmentError: 
+        raise FileNotFoundError(f"无法找到配置文件: {absolute_file_path}")
+
+def generate_launch_description():
+    # 1. 声明参数
+    # ---------------------------------------------------------
+    use_smooth_arg = DeclareLaunchArgument(
+        'use_smooth_trajectory', default_value='true'
+    )
+    
+    planning_group_arg = DeclareLaunchArgument(
+        'planning_group',
+        default_value='arm', 
+        description='MoveIt Planning Group Name'
+    )
+
+    # 2. 准备 MoveIt 配置
+    # ---------------------------------------------------------
+    moveit_config_pkg = 'franka_moveit_config'
+    
+    # A. Robot Description
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]), " ",
+            PathJoinSubstitution([get_package_share_directory(moveit_config_pkg), "config", "Franka.urdf.xacro"])
+        ],
+        on_stderr='ignore'
+    )
+    robot_description = {"robot_description": robot_description_content}
+
+    # B. SRDF
+    srdf_path = os.path.join(get_package_share_directory(moveit_config_pkg), "config", "Franka.srdf")
+    try:
+        with open(srdf_path, 'r') as f:
+            robot_description_semantic = {"robot_description_semantic": f.read()}
+    except FileNotFoundError:
+        raise FileNotFoundError(f"找不到 SRDF 文件: {srdf_path}")
+
+    # C. Kinematics & Limits
+    kinematics_yaml = load_yaml(moveit_config_pkg, "config/kinematics.yaml")
+    joint_limits_yaml = load_yaml(moveit_config_pkg, "config/joint_limits.yaml")
+    
+    # D. Planning Pipeline (OMPL)
+    ompl_planning_yaml = load_yaml(moveit_config_pkg, "config/ompl_planning.yaml")
+    
+    ompl_planning_pipeline_config = {
+        "move_group": {
+            "planning_plugin": "ompl_interface/OMPLPlanner",
+            "request_adapters": """default_planner_request_adapters/AddTimeOptimalParameterization default_planner_request_adapters/ResolveConstraintFrames default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints""",
+            "start_state_max_bounds_error": 0.1,
+        }
+    }
+    ompl_planning_pipeline_config["move_group"].update(ompl_planning_yaml)
+
+    # E. Trajectory Execution
+    # 加载控制器配置 (即使是 Topic 驱动，加载这个可以防止一些伪控制器报错)
+    try:
+        moveit_controllers = {
+            "moveit_simple_controller_manager": load_yaml(moveit_config_pkg, "config/moveit_controllers.yaml"),
+            "moveit_controller_manager": "moveit_simple_controller_manager/MoveItSimpleControllerManager",
+        }
+    except:
+        moveit_controllers = {}
+
+    # 3. 定义节点 (核心修改：全部加入 use_sim_time: True)
+    # ---------------------------------------------------------
+    
+    # [Node 1] Robot State Publisher
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[
+            robot_description,
+            {'use_sim_time': True} # <--- 关键修改
+        ],
+    )
+
+    # [Node 2] Move Group (服务端)
+    move_group_node = Node(
+        package="moveit_ros_move_group",
+        executable="move_group",
+        output="screen",
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            kinematics_yaml,
+            joint_limits_yaml,
+            ompl_planning_pipeline_config,
+            moveit_controllers,
+            {'use_sim_time': True} # <--- 关键修改
+        ],
+    )
+
+    # [Node 3] RViz
+    rviz_config_file = os.path.join(
+        get_package_share_directory(moveit_config_pkg), "config", "moveit.rviz"
+    )
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="log",
+        arguments=["-d", rviz_config_file],
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            ompl_planning_pipeline_config,
+            kinematics_yaml,
+            {'use_sim_time': True} # <--- 关键修改
+        ],
+    )
+
+    # [Node 4] 你的控制节点 (客户端)
+    franka_control_node = Node(
+        package='coppelia_control',
+        executable='franka_control_node',
+        name='franka_control_node',
+        output='screen',
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            kinematics_yaml,
+            joint_limits_yaml,
+            {
+                'use_smooth_trajectory': LaunchConfiguration('use_smooth_trajectory'),
+                'planning_group': LaunchConfiguration('planning_group'),
+                'joint_cmd_topic': '/coppelia/joint_cmd',
+                'gripper_cmd_topic': '/coppelia/gripper_cmd',
+                'use_sim_time': True # <--- 关键修改
+            }
+        ],
+    )
+
+    return LaunchDescription([
+        use_smooth_arg,
+        planning_group_arg,
+        robot_state_publisher_node,
+        move_group_node,
+        rviz_node,
+        franka_control_node,
+    ])
+================================================================
+FILE: src/coppelia_control/scripts/diagnostic.py
+================================================================
+#!/usr/bin/env python3
+"""
+ROS2 + MoveIt 诊断脚本
+检查: 坐标系树、控制器状态、节点连接
+"""
+import rclpy
+from rclpy.node import Node
+import subprocess
+import time
+
+class DiagnosticNode(Node):
+    def __init__(self):
+        super().__init__('diagnostic_node')
+        
+    def run_diagnostics(self):
+        """运行完整诊断"""
+        
+        print("\n" + "="*60)
+        print("🔍 ROS2 + MoveIt 诊断报告")
+        print("="*60)
+        
+        # 1. 检查 ROS 节点
+        print("\n[1️⃣] 活跃的 ROS 节点:")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'node', 'list'], 
+                                    capture_output=True, text=True, timeout=5)
+            nodes = result.stdout.strip().split('\n')
+            important_nodes = ['move_group', 'rviz', 'ros2_control', 'joint_state_broadcaster']
+            
+            for node in nodes:
+                if node:
+                    status = "✅" if any(imp in node for imp in important_nodes) else "  "
+                    print(f"{status} {node}")
+            
+            if 'move_group' not in result.stdout:
+                print("⚠️  WARNING: move_group node not found! Is demo.launch running?")
+        except Exception as e:
+            print(f"❌ Error: {e}")
+        
+        # 2. 检查 ros2_control 控制器
+        print("\n[2️⃣] ros2_control 控制器状态:")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'control', 'list_controllers'], 
+                                    capture_output=True, text=True, timeout=5)
+            print(result.stdout)
+            
+            if not result.stdout.strip() or 'active' not in result.stdout.lower():
+                print("❌ ERROR: No active controllers found!")
+                print("   Action: Launch ros2_control with demo.launch")
+        except Exception as e:
+            print(f"❌ Error: {e}")
+        
+        # 3. 检查关键话题
+        print("\n[3️⃣] 关键 ROS 话题:")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'topic', 'list'], 
+                                    capture_output=True, text=True, timeout=5)
+            topics = result.stdout.strip().split('\n')
+            
+            critical_topics = {
+                '/joint_states': '关节状态',
+                '/move_group/goal': '规划目标',
+                '/rviz_moveit_motion_planning_display/robot_state': '机械臂状态',
+                '/camera/image_raw': '摄像头图像',
+                '/vision/object_pose': '物体位置'
+            }
+            
+            for topic, desc in critical_topics.items():
+                exists = any(topic in t for t in topics)
+                status = "✅" if exists else "⚠️"
+                print(f"{status} {topic:45} ({desc})")
+            
+        except Exception as e:
+            print(f"❌ Error: {e}")
+        
+        # 4. 检查坐标系树
+        print("\n[4️⃣] TF 坐标系树 (关键帧):")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'tf2', 'list_frames'], 
+                                    capture_output=True, text=True, timeout=5)
+            frames = result.stdout.strip().split('\n')
+            
+            # 寻找关键帧
+            key_frames = ['panda_link0', 'world', 'base_link', 'panda_hand', 
+                         'Franka', 'base', 'robot_base', 'panda_joint']
+            
+            found_frames = [f for f in frames if any(k in f for k in key_frames)]
+            
+            print("找到的关键帧:")
+            for frame in found_frames[:15]:  # 只显示前15个
+                print(f"  - {frame}")
+            
+            if not found_frames:
+                print("⚠️  WARNING: No key frames found!")
+                print("所有帧:")
+                for frame in frames[:20]:
+                    print(f"  - {frame}")
+                    
+        except Exception as e:
+            print(f"⚠️  Warning (可能 TF 还未完全初始化): {e}")
+        
+        # 5. 检查 MoveGroup 连接
+        print("\n[5️⃣] MoveGroup 服务检查:")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'service', 'list'], 
+                                    capture_output=True, text=True, timeout=5)
+            
+            services = result.stdout.strip().split('\n')
+            moveit_services = [s for s in services if 'move_group' in s or 'planning' in s]
+            
+            if moveit_services:
+                print("✅ MoveGroup 服务找到:")
+                for svc in moveit_services[:10]:
+                    print(f"  - {svc}")
+            else:
+                print("❌ ERROR: No MoveGroup services found!")
+                
+        except Exception as e:
+            print(f"❌ Error: {e}")
+        
+        # 6. 检查 CoppeliaSim 连接
+        print("\n[6️⃣] CoppeliaSim 连接状态:")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'topic', 'echo', '/joint_states', '-n', '1'],
+                                    capture_output=True, text=True, timeout=3)
+            if result.returncode == 0:
+                print("✅ CoppeliaSim 正在发送关节状态")
+                # 解析关节数
+                if 'position' in result.stdout:
+                    print("   (正在接收数据)")
+            else:
+                print("⚠️  WARNING: 无法接收 /joint_states")
+                print("   Action: 确认 CoppeliaSim 和 ROS2 接口已启动")
+        except Exception as e:
+            print(f"⚠️  Warning: {e}")
+        
+        # 7. 检查参数
+        print("\n[7️⃣] MoveIt 关键参数:")
+        print("-" * 60)
+        try:
+            result = subprocess.run(['ros2', 'param', 'list'], 
+                                    capture_output=True, text=True, timeout=5)
+            
+            params = result.stdout.strip().split('\n')
+            key_params = [p for p in params if 'panda' in p.lower() or 'robot' in p.lower()]
+            
+            if key_params:
+                print("✅ 机械臂配置参数:")
+                for param in key_params[:10]:
+                    print(f"  - {param}")
+            else:
+                print("⚠️  No robot parameters found")
+                
+        except Exception as e:
+            print(f"⚠️  Warning: {e}")
+        
+        # 8. 建议
+        print("\n[⚠️] 故障排查建议:")
+        print("-" * 60)
+        print("""
+如果看到上面的错误，按这个顺序检查:
+
+1️⃣  启动顺序错误?
+   - 先启动 CoppeliaSim 和 ros2_control
+   - 再启动 demo.launch
+   - 最后启动你的抓取脚本
+
+2️⃣  坐标系错误?
+   - 检查 [4️⃣] 中的关键帧
+   - 修改脚本中的 self.base_frame
+   - 常见值: "panda_link0", "world", "base_link", "Franka"
+
+3️⃣  控制器未启动?
+   - 检查 [2️⃣] 中的控制器列表
+   - 如果为空，ros2_control 未正确启动
+   - 查看 demo.launch 的配置
+
+4️⃣  MoveGroup 无响应?
+   - 检查 [5️⃣] 的服务列表
+   - 查看 move_group 的完整日志:
+     ros2 launch panda_moveit_config demo.launch --log-level debug
+
+5️⃣  CoppeliaSim 未连接?
+   - 检查 [6️⃣] 的状态
+   - 确保 CoppeliaSim 在运行
+   - 检查 ROS2-CoppeliaSim 插件是否正确安装
+        """)
+        
+        print("\n" + "="*60)
+        print("诊断完成")
+        print("="*60 + "\n")
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = DiagnosticNode()
+    node.run_diagnostics()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+================================================================
+FILE: src/coppelia_control/scripts/grasp_manager.py
+================================================================
+#!/usr/bin/env python3
+"""
+✅ 最终修复版本 - 根据实际 URDF 文件修正
+关键改动:
+- base_frame: robot_base (从 URDF 确认)
+- end_effector_link: link8_resp (实际的手腕链接)
+- home_joints: 使用 URDF 中的初始值
+"""
+import rclpy
+from rclpy.node import Node
+from rclpy.action import ActionClient
+from geometry_msgs.msg import PoseStamped, Quaternion
+from moveit_msgs.action import MoveGroup
+from moveit_msgs.msg import Constraints, JointConstraint, PositionConstraint, OrientationConstraint
+from shape_msgs.msg import SolidPrimitive
+import threading
+import time
+
+class State:
+    SEARCHING = 0  
+    PLANNING  = 1  
+    MOVING    = 2  
+    GRASPING  = 3  
+    LIFTING   = 4  
+    DONE      = 5  
+
+class GraspManager(Node):
+    def __init__(self):
+        super().__init__('grasp_manager')
+        
+        # ✅ 【关键修复 1】从 URDF 确认的正确坐标系
+        self.base_frame = "robot_base"           # ✅ URDF 中的基座框架名称
+        self.end_effector_link = "link8_resp"    # ✅ 手腕最后一个链接（不是 panda_hand）
+        self.arm_group = "panda_arm"             # ✅ MoveIt 规划组
+        
+        self.get_logger().info(f"[INIT] Base Frame: {self.base_frame}")
+        self.get_logger().info(f"[INIT] EE Link: {self.end_effector_link}")
+        self.get_logger().info(f"[INIT] Arm Group: {self.arm_group}")
+        
+        # 1. 订阅视觉话题
+        self.sub_pose = self.create_subscription(
+            PoseStamped, 
+            '/vision/object_pose', 
+            self.vision_callback, 
+            10
+        )
+        self.get_logger().info("[INIT] Vision subscription created")
+        
+        # 2. 创建 MoveGroup 动作客户端
+        self.move_group = ActionClient(self, MoveGroup, 'move_action')
+        self.get_logger().info("[INIT] Waiting for MoveGroup action server...")
+        
+        # ✅ 【关键修复 2】等待 MoveGroup 服务器启动
+        if not self.move_group.wait_for_server(timeout_sec=10.0):
+            self.get_logger().error("[ERROR] MoveGroup server NOT available!")
+            self.get_logger().error("[ERROR] 检查:")
+            self.get_logger().error("[ERROR]   1. demo.launch 是否运行?")
+            self.get_logger().error("[ERROR]   2. ros2_control 是否启动?")
+            self.get_logger().error("[ERROR] 运行: ros2 control list_controllers")
+            raise RuntimeError("MoveGroup server unavailable")
+        
+        self.get_logger().info("[OK] MoveGroup server is ready!")
+        
+        # 3. 初始化状态
+        self.state = State.SEARCHING
+        self.target_pose = None
+        self.latest_vision_msg = None
+        self.pre_grasp_offset = 0.15  # 15cm 预抓取高度
+        
+        self.get_logger().info("[READY] Grasp Manager initialized successfully")
+
+        # 4. 启动独立控制线程
+        self.control_thread = threading.Thread(target=self.control_loop, daemon=True)
+        self.control_thread.start()
+
+    def vision_callback(self, msg):
+        """更新目标位置"""
+        self.latest_vision_msg = msg
+        if self.state == State.SEARCHING:
+            self.get_logger().info(
+                f"[VISION] Target Found! X={msg.pose.position.x:.3f}, "
+                f"Y={msg.pose.position.y:.3f}, Z={msg.pose.position.z:.3f}"
+            )
+            self.target_pose = msg
+            self.state = State.PLANNING
+
+    def control_loop(self):
+        """独立的控制循环"""
+        time.sleep(2.0)  # 等待完全初始化
+        self.get_logger().info("[CONTROL] Starting control loop...")
+        self.go_to_home()
+        time.sleep(1.0)
+        
+        while rclpy.ok():
+            if self.state == State.PLANNING:
+                self.execute_pick_sequence()
+            time.sleep(0.1)
+
+    def go_to_home(self):
+        """
+        ✅ 【关键修复 3】Home 姿态使用 URDF 中的初始值
+        从 URDF 看:
+        - joint1: 0.0
+        - joint2: -0.785
+        - joint3: 0.0
+        - joint4: -2.356
+        - joint5: 0.0
+        - joint6: 1.571
+        - joint7: 0.785
+        """
+        self.get_logger().info("[HOME] Moving to Home pose...")
+        
+        if not self.move_group.wait_for_server(timeout_sec=2.0):
+            self.get_logger().error("[HOME] MoveGroup server not available")
+            return False
+
+        goal_msg = MoveGroup.Goal()
+        goal_msg.request.group_name = self.arm_group
+        goal_msg.request.num_planning_attempts = 10
+        goal_msg.request.allowed_planning_time = 5.0
+        goal_msg.request.max_velocity_scaling_factor = 0.3
+        goal_msg.request.max_acceleration_scaling_factor = 0.3
+        
+        # ✅ 【关键修复 4】使用 URDF 中定义的初始值
+        home_joints = [0.0, -0.785, 0.0, -2.356, 0.0, 1.571, 0.785]
+        joint_names = [f"panda_joint{i+1}" for i in range(7)]
+        
+        constraints = Constraints()
+        for name, pos in zip(joint_names, home_joints):
+            jc = JointConstraint()
+            jc.joint_name = name
+            jc.position = pos
+            jc.tolerance_above = 0.05
+            jc.tolerance_below = 0.05
+            jc.weight = 1.0
+            constraints.joint_constraints.append(jc)
+            
+        goal_msg.request.goal_constraints.append(constraints)
+        
+        try:
+            future = self.move_group.send_goal_async(goal_msg)
+            start_time = time.time()
+            while not future.done():
+                if time.time() - start_time > 10.0:
+                    self.get_logger().error("[HOME] Timeout")
+                    return False
+                time.sleep(0.1)
+            
+            goal_handle = future.result()
+            if not goal_handle.accepted:
+                self.get_logger().error("[HOME] Goal rejected")
+                return False
+
+            res_future = goal_handle.get_result_async()
+            while not res_future.done(): 
+                time.sleep(0.1)
+                
+            result = res_future.result().result
+            if result.error_code.val == 1:
+                self.get_logger().info("[HOME] ✅ Homing succeeded!")
+                return True
+            else:
+                self.get_logger().error(f"[HOME] ❌ Failed with code: {result.error_code.val}")
+                return False
+        except Exception as e:
+            self.get_logger().error(f"[HOME] Exception: {e}")
+            return False
+
+    def execute_pick_sequence(self):
+        """执行完整的抓取流程"""
+        if not self.target_pose: 
+            return
+
+        self.get_logger().info("[PICK] ========== Pick Sequence Started ==========")
+
+        # Step 1: Pre-Grasp
+        self.get_logger().info("[PICK] Step 1: Moving to Pre-Grasp...")
+        self.state = State.MOVING
+        success = self.move_arm_to_pose(self.target_pose, z_offset=self.pre_grasp_offset)
+        
+        if not success:
+            self.get_logger().error("[PICK] Pre-grasp failed, retrying from home")
+            self.state = State.SEARCHING
+            self.go_to_home()
+            return
+
+        time.sleep(1.0)
+        
+        # Step 2: Descend to grasp
+        self.get_logger().info("[PICK] Step 2: Descending to object...")
+        success = self.move_arm_to_pose(self.target_pose, z_offset=0.01) 
+        
+        if success:
+            time.sleep(0.5)
+            self.state = State.GRASPING
+            self.get_logger().info("[PICK] Step 3: CLOSING GRIPPER...")
+            time.sleep(1.0) 
+            
+            # Step 3: Lift
+            self.state = State.LIFTING
+            self.get_logger().info("[PICK] Step 4: Lifting object...")
+            success_lift = self.move_arm_to_pose(self.target_pose, z_offset=0.20)
+            
+            if success_lift:
+                self.state = State.DONE
+                self.get_logger().info("[PICK] 🎉 Mission complete!")
+                time.sleep(5.0)
+        
+        self.get_logger().info("[PICK] Resetting to search mode...")
+        time.sleep(2.0)
+        self.state = State.SEARCHING 
+        self.go_to_home()
+
+    def move_arm_to_pose(self, target_msg, z_offset=0.0):
+        """
+        移动机械臂到指定位置
+        ✅ 【关键修复 5】使用正确的坐标系和末端执行器链接
+        """
+        if not self.move_group.wait_for_server(timeout_sec=1.0):
+            self.get_logger().error("[MOVE] MoveGroup not available")
+            return False
+
+        try:
+            goal_msg = MoveGroup.Goal()
+            goal_msg.request.group_name = self.arm_group
+            goal_msg.request.num_planning_attempts = 10
+            goal_msg.request.allowed_planning_time = 8.0
+            goal_msg.request.max_velocity_scaling_factor = 0.3
+            goal_msg.request.max_acceleration_scaling_factor = 0.3
+            
+            # 位置约束
+            p_const = PositionConstraint()
+            p_const.header.frame_id = self.base_frame  # ✅ robot_base
+            p_const.link_name = self.end_effector_link  # ✅ link8_resp
+            p_const.target_point_offset.x = 0.0
+            p_const.target_point_offset.y = 0.0
+            p_const.target_point_offset.z = 0.0
+            
+            box = SolidPrimitive()
+            box.type = SolidPrimitive.BOX
+            box.dimensions = [0.10, 0.10, 0.10]  # 10cm 容差
+            p_const.constraint_region.primitives.append(box)
+            
+            t_pose = target_msg.pose
+            p_const.constraint_region.primitive_poses.append(t_pose)
+            p_const.constraint_region.primitive_poses[0].position.z += z_offset
+
+            # 姿态约束 (手腕向下)
+            o_const = OrientationConstraint()
+            o_const.header.frame_id = self.base_frame
+            o_const.link_name = self.end_effector_link
+            o_const.orientation.x = 0.0
+            o_const.orientation.y = 0.707
+            o_const.orientation.z = 0.0
+            o_const.orientation.w = 0.707
+            
+            o_const.absolute_x_axis_tolerance = 0.5
+            o_const.absolute_y_axis_tolerance = 0.5
+            o_const.absolute_z_axis_tolerance = 0.5
+
+            constraints = Constraints()
+            constraints.position_constraints.append(p_const)
+            constraints.orientation_constraints.append(o_const)
+            goal_msg.request.goal_constraints.append(constraints)
+
+            self.get_logger().info(f"[MOVE] Planning to Z={t_pose.position.z + z_offset:.3f}")
+            
+            send_goal_future = self.move_group.send_goal_async(goal_msg)
+            
+            start_time = time.time()
+            while not send_goal_future.done():
+                if time.time() - start_time > 10.0:
+                    self.get_logger().error("[MOVE] Goal acceptance timeout")
+                    return False
+                time.sleep(0.05)
+                
+            goal_handle = send_goal_future.result()
+            if not goal_handle.accepted:
+                self.get_logger().error("[MOVE] Goal rejected by MoveGroup")
+                return False
+
+            self.get_logger().info("[MOVE] Goal accepted, executing...")
+
+            get_result_future = goal_handle.get_result_async()
+            start_time = time.time()
+            while not get_result_future.done():
+                if time.time() - start_time > 15.0:
+                    self.get_logger().error("[MOVE] Execution timeout")
+                    return False
+                time.sleep(0.05)
+                
+            result = get_result_future.result().result
+            error_code = result.error_code.val
+            
+            if error_code == 1:
+                self.get_logger().info("[MOVE] ✅ Motion succeeded!")
+                return True
+            else:
+                self.get_logger().error(f"[MOVE] ❌ Failed with code: {error_code}")
+                self._explain_error(error_code)
+                return False
+                
+        except Exception as e:
+            self.get_logger().error(f"[MOVE] Exception: {e}")
+            import traceback
+            traceback.print_exc()
+            return False
+
+    def _explain_error(self, code):
+        """解释 MoveIt 错误代码"""
+        errors = {
+            1: "SUCCESS",
+            -1: "FAILURE",
+            -2: "PLANNING_FAILED",
+            -3: "INVALID_MOTION_PLAN",
+            -5: "CONTROL_FAILED",
+            -7: "TIMED_OUT",
+            99999: "UNKNOWN (ros2_control issue)"
+        }
+        msg = errors.get(code, f"Unknown error {code}")
+        self.get_logger().error(f"[ERROR] MoveIt Error: {msg}")
+
+def main(args=None):
+    rclpy.init(args=args)
+    try:
+        node = GraspManager()
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        print("\n[SHUTDOWN] Interrupted")
+    except Exception as e:
+        print(f"\n[FATAL] {e}")
+    finally:
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+================================================================
+FILE: src/coppelia_control/src/franka_control_node.cpp
+================================================================
+#include <rclcpp/rclcpp.hpp>
+#include "coppelia_control/PlanningInterface.hpp"
+#include "coppelia_control/ManipulationInterface.hpp"
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <atomic>
+#include <thread>
+
+using std::placeholders::_1;
+
+class FrankaCartesianGrasp : public rclcpp::Node
+{
+public:
+    FrankaCartesianGrasp() : Node("franka_cartesian_grasp")
+    {
+        declare_parameter<std::string>("arm_group", "arm");
+        declare_parameter<std::string>("hand_group", "hand");
+        
+        // ⚠️ 根据实际场景调整的参数
+        declare_parameter<double>("safe_height", 0.35);      // 安全高度（不碰到任何东西）
+        declare_parameter<double>("approach_height", 0.15);  // 接近高度（能清晰看到方块）
+        declare_parameter<double>("grasp_offset", -0.01);    // 抓取偏移（负值=下探，正值=上浮）
+        
+        enable_vision_ = false;
+        has_pose_ = false;
+        pose_count_ = 0;
+        
+        RCLCPP_INFO(get_logger(), "Franka Cartesian Grasp Node Initialized");
+    }
+
+    void init()
+    {
+        auto self = shared_from_this();
+        std::string arm, hand;
+        get_parameter("arm_group", arm);
+        get_parameter("hand_group", hand);
+
+        planner_ = std::make_shared<coppelia_control::PlanningInterface>(self, arm);
+        planner_->initialize();
+        planner_->setScalingFactors(0.3, 0.3);  // 降低速度提高精度
+
+        exec_ = std::make_shared<coppelia_control::ManipulationInterface>(self);
+        exec_->setJointCmdTopic("/coppelia/joint_cmd");
+        exec_->setGripperCmdTopic("/coppelia/gripper_cmd");
+        exec_->useSmoothTrajectoryExecution(true);
+        exec_->initialize();
+
+        vision_sub_ = create_subscription<geometry_msgs::msg::PoseStamped>(
+            "/vision/object_pose", 10,
+            std::bind(&FrankaCartesianGrasp::visionCB, this, _1));
+
+        RCLCPP_INFO(get_logger(), "Starting grasp thread...");
+        std::thread(&FrankaCartesianGrasp::run, this).detach();
+    }
+
+private:
+    /* ================= Vision ================= */
+    void visionCB(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+    {
+        if (!enable_vision_) return;
+        
+        // 累积多帧取平均，降低抖动
+        pose_sum_.position.x += msg->pose.position.x;
+        pose_sum_.position.y += msg->pose.position.y;
+        pose_sum_.position.z += msg->pose.position.z;
+        pose_count_++;
+        
+        if (pose_count_ >= 5) {  // 累积5帧
+            cached_pose_.position.x = pose_sum_.position.x / pose_count_;
+            cached_pose_.position.y = pose_sum_.position.y / pose_count_;
+            cached_pose_.position.z = pose_sum_.position.z / pose_count_;
+            cached_pose_.orientation.w = 1.0;  // 默认姿态
+            has_pose_ = true;
+            
+            RCLCPP_DEBUG(get_logger(), "Vision averaged (%d frames): [%.3f, %.3f, %.3f]",
+                        pose_count_,
+                        cached_pose_.position.x,
+                        cached_pose_.position.y,
+                        cached_pose_.position.z);
+        }
+    }
+
+    geometry_msgs::msg::Pose visionOnce(double timeout = 1.5)
+    {
+        has_pose_ = false;
+        pose_count_ = 0;
+        pose_sum_ = geometry_msgs::msg::Pose();
+        
+        enable_vision_ = true;
+        auto start = std::chrono::steady_clock::now();
+        
+        while (!has_pose_ && rclcpp::ok()) {
+            auto elapsed = std::chrono::steady_clock::now() - start;
+            if (std::chrono::duration<double>(elapsed).count() > timeout) {
+                RCLCPP_WARN(get_logger(), "Vision timeout after %.1fs!", timeout);
+                break;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            rclcpp::spin_some(shared_from_this());
+        }
+        
+        enable_vision_ = false;
+        return cached_pose_;
+    }
+
+    /* ================= Motion ================= */
+    bool cartesianTo(const geometry_msgs::msg::Pose& target, double speed_factor = 1.0)
+    {
+        auto start = planner_->getCurrentPose();
+        std::vector<geometry_msgs::msg::Pose> wp{start, target};
+        
+        // 临时调整速度
+        planner_->setScalingFactors(0.3 * speed_factor, 0.3 * speed_factor);
+        
+        moveit_msgs::msg::RobotTrajectory traj;
+        bool success = planner_->planCartesianPath(wp, traj);
+        
+        // 恢复默认速度
+        planner_->setScalingFactors(0.3, 0.3);
+        
+        if (!success) {
+            RCLCPP_ERROR(get_logger(), "Cartesian planning failed!");
+            return false;
+        }
+        
+        RCLCPP_INFO(get_logger(), "Executing trajectory...");
+        return exec_->executeTrajectory(traj);
+    }
+
+    bool goNamed(const std::string& name)
+    {
+        RCLCPP_INFO(get_logger(), "Moving to named target: %s", name.c_str());
+        moveit::planning_interface::MoveGroupInterface::Plan p;
+        if (!planner_->planToNamedTarget(name, p)) {
+            RCLCPP_ERROR(get_logger(), "Failed to plan to: %s", name.c_str());
+            return false;
+        }
+        return exec_->executeTrajectory(p.trajectory_);
+    }
+
+    void gripper(const std::string& cmd)
+    {
+        RCLCPP_INFO(get_logger(), "Gripper: %s", cmd.c_str());
+        planner_->changePlanningGroup("hand");
+        moveit::planning_interface::MoveGroupInterface::Plan p;
+        if (planner_->planToNamedTarget(cmd, p))
+            exec_->executeTrajectory(p.trajectory_);
+        planner_->changePlanningGroup("arm");
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+
+    geometry_msgs::msg::Quaternion downQuat()
+    {
+        geometry_msgs::msg::Quaternion q;
+        q.x = 1.0; q.y = 0.0; q.z = 0.0; q.w = 0.0;  // 向下
+        return q;
+    }
+
+    /* ================= Main Logic ================= */
+    void run()
+    {
+        // 从参数读取
+        double SAFE_Z, APPROACH_Z, GRASP_OFFSET;
+        get_parameter("safe_height", SAFE_Z);
+        get_parameter("approach_height", APPROACH_Z);
+        get_parameter("grasp_offset", GRASP_OFFSET);
+
+        RCLCPP_INFO(get_logger(), "===========================================");
+        RCLCPP_INFO(get_logger(), "Grasp Parameters:");
+        RCLCPP_INFO(get_logger(), "  Safe Height:     %.3f m", SAFE_Z);
+        RCLCPP_INFO(get_logger(), "  Approach Height: %.3f m", APPROACH_Z);
+        RCLCPP_INFO(get_logger(), "  Grasp Offset:    %.3f m", GRASP_OFFSET);
+        RCLCPP_INFO(get_logger(), "===========================================\n");
+
+        // 等待系统稳定
+        RCLCPP_INFO(get_logger(), "Waiting for system to stabilize...");
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+
+        while (rclcpp::ok())
+        {
+            RCLCPP_INFO(get_logger(), "\n========== NEW GRASP CYCLE ==========\n");
+
+            // ====== Stage 0: 回到起始位置 ======
+            RCLCPP_INFO(get_logger(), "[Stage 0] Moving to home position...");
+            if (!goNamed("home")) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach home, retrying...");
+                std::this_thread::sleep_for(std::chrono::seconds(2));
+                continue;
+            }
+            
+            gripper("open");
+
+            // ====== Stage 1: 在安全高度初步定位 ======
+            RCLCPP_INFO(get_logger(), "[Stage 1] Moving to safe height for initial detection...");
+            
+            // 移动到工作空间上方
+            geometry_msgs::msg::Pose pre_look;
+            pre_look.position.x = -0.13;  // 基于你的检测数据：x ≈ -0.13
+            pre_look.position.y = -0.18;  // y ≈ -0.18
+            pre_look.position.z = SAFE_Z;
+            pre_look.orientation = downQuat();
+            
+            if (!cartesianTo(pre_look, 0.8)) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach pre-look position");
+                continue;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            // ====== Stage 2: 第一次视觉检测（粗定位）======
+            RCLCPP_INFO(get_logger(), "[Stage 2] Vision #1 - Coarse detection...");
+            auto p1 = visionOnce(2.0);
+            
+            if (pose_count_ == 0) {
+                RCLCPP_WARN(get_logger(), "No object detected, retrying cycle...");
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                continue;
+            }
+            
+            RCLCPP_INFO(get_logger(), "  Detected at: [%.3f, %.3f, %.3f]",
+                       p1.position.x, p1.position.y, p1.position.z);
+
+            // ====== Stage 3: 移动到接近高度精确对齐 ======
+            RCLCPP_INFO(get_logger(), "[Stage 3] Moving to approach height...");
+            
+            geometry_msgs::msg::Pose approach;
+            approach.position.x = p1.position.x;
+            approach.position.y = p1.position.y;
+            approach.position.z = APPROACH_Z;
+            approach.orientation = downQuat();
+            
+            if (!cartesianTo(approach, 0.5)) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach approach position");
+                continue;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            // ====== Stage 4: 第二次视觉检测（精确定位）======
+            RCLCPP_INFO(get_logger(), "[Stage 4] Vision #2 - Precise detection...");
+            auto p2 = visionOnce(2.0);
+            
+            if (pose_count_ == 0) {
+                RCLCPP_WARN(get_logger(), "Lost object, going back...");
+                continue;
+            }
+            
+            RCLCPP_INFO(get_logger(), "  Precise location: [%.3f, %.3f, %.3f]",
+                       p2.position.x, p2.position.y, p2.position.z);
+
+            // ====== Stage 5: 执行抓取 ======
+            RCLCPP_INFO(get_logger(), "[Stage 5] Executing grasp...");
+            
+            geometry_msgs::msg::Pose grasp;
+            grasp.position.x = p2.position.x;
+            grasp.position.y = p2.position.y;
+            
+            // ⚠️ 关键：p2.position.z 已经是物体顶面的世界坐标
+            grasp.position.z = p2.position.z + GRASP_OFFSET;
+            grasp.orientation = downQuat();
+            
+            // 安全检查
+            if (grasp.position.z < 0.02) {
+                RCLCPP_ERROR(get_logger(), "Grasp height too low (%.3f m), ABORT!", 
+                           grasp.position.z);
+                continue;
+            }
+            
+            RCLCPP_INFO(get_logger(), "  Target grasp pose: [%.3f, %.3f, %.3f]",
+                       grasp.position.x, grasp.position.y, grasp.position.z);
+            
+            if (!cartesianTo(grasp, 0.3)) {
+                RCLCPP_ERROR(get_logger(), "Failed to reach grasp pose!");
+                continue;
+            }
+            
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
+            
+            RCLCPP_INFO(get_logger(), "  Closing gripper...");
+            gripper("close");
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+            // ====== Stage 6: 提升物体 ======
+            RCLCPP_INFO(get_logger(), "[Stage 6] Lifting object...");
+            
+            geometry_msgs::msg::Pose lift = grasp;
+            lift.position.z = APPROACH_Z;
+            
+            if (!cartesianTo(lift, 0.5)) {
+                RCLCPP_WARN(get_logger(), "Lift failed, object may have dropped");
+            }
+
+            // ====== Stage 7: 返回起始位置 ======
+            RCLCPP_INFO(get_logger(), "[Stage 7] Returning home...");
+            goNamed("home");
+            
+            // 可选：在指定位置放下
+            // gripper("open");
+
+            RCLCPP_INFO(get_logger(), "\n========== CYCLE COMPLETE ==========\n");
+            
+            // 等待下一次循环
+            RCLCPP_INFO(get_logger(), "Waiting 3 seconds before next cycle...\n");
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+        }
+    }
+
+    std::shared_ptr<coppelia_control::PlanningInterface> planner_;
+    std::shared_ptr<coppelia_control::ManipulationInterface> exec_;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr vision_sub_;
+
+    std::atomic<bool> enable_vision_;
+    bool has_pose_;
+    geometry_msgs::msg::Pose cached_pose_;
+    geometry_msgs::msg::Pose pose_sum_;
+    int pose_count_;
+};
+
+int main(int argc, char** argv)
+{
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared<FrankaCartesianGrasp>();
+    node->init();
+    rclcpp::executors::MultiThreadedExecutor exe;
+    exe.add_node(node);
+    exe.spin();
+    rclcpp::shutdown();
+    return 0;
+}
+================================================================
+FILE: src/coppelia_control/src/ManipulationInterface.cpp
+================================================================
+#include "coppelia_control/ManipulationInterface.hpp"
+#include <chrono>
+#include <thread>
+#include <algorithm>
+
+namespace coppelia_control
+{
+
+ManipulationInterface::ManipulationInterface(const rclcpp::Node::SharedPtr& node)
+    : node_(node),
+      joint_cmd_topic_("/coppelia/joint_cmd"),
+      gripper_cmd_topic_("/coppelia/gripper_cmd"),
+      use_smooth_trajectory_(true)
+{
+    // 构造函数不做 Publisher 初始化，留给 initialize 或 setTopic
+}
+
+bool ManipulationInterface::initialize()
+{
+    if (!node_) return false;
+    
+    // 创建发布者
+    joint_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(joint_cmd_topic_, 10);
+    gripper_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(gripper_cmd_topic_, 10);
+    
+    RCLCPP_INFO(node_->get_logger(), "操作接口初始化完成 | Cmd Topic: %s", joint_cmd_topic_.c_str());
+    return true;
+}
+
+void ManipulationInterface::setJointNameRemap(const std::map<std::string, std::string>& remap_rules)
+{
+    joint_name_map_ = remap_rules;
+    RCLCPP_INFO(node_->get_logger(), "已设置 %zu 条关节名称映射规则", remap_rules.size());
+}
+
+std::vector<std::string> ManipulationInterface::remapNames(const std::vector<std::string>& original_names)
+{
+    // 如果没有映射表，直接返回原名
+    if (joint_name_map_.empty()) {
+        return original_names;
+    }
+
+    std::vector<std::string> new_names;
+    new_names.reserve(original_names.size());
+
+    for (const auto& name : original_names) {
+        auto it = joint_name_map_.find(name);
+        if (it != joint_name_map_.end()) {
+            new_names.push_back(it->second); // 使用映射后的名字
+        } else {
+            new_names.push_back(name); // 没找到映射就用原名
+        }
+    }
+    return new_names;
+}
+
+bool ManipulationInterface::executeTrajectory(const moveit_msgs::msg::RobotTrajectory& trajectory)
+{
+    if (trajectory.joint_trajectory.points.empty()) {
+        RCLCPP_WARN(node_->get_logger(), "收到空轨迹，忽略执行");
+        return false;
+    }
+    
+    if (!joint_cmd_publisher_) {
+        // 尝试懒加载初始化
+        initialize(); 
+        if (!joint_cmd_publisher_) {
+            RCLCPP_ERROR(node_->get_logger(), "Publisher 未初始化!");
+            return false;
+        }
+    }
+    
+    if (use_smooth_trajectory_) {
+        return execute_smooth_trajectory(trajectory);
+    } else {
+        return execute_point_to_point_trajectory(trajectory);
+    }
+}
+
+void ManipulationInterface::setGripperJointNames(const std::vector<std::string>& gripper_joint_names)
+{
+    gripper_joint_names_ = gripper_joint_names;
+}
+
+void ManipulationInterface::setJointCmdTopic(const std::string& topic)
+{
+    joint_cmd_topic_ = topic;
+    // 重新创建 publisher
+    if (node_) {
+        joint_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(joint_cmd_topic_, 10);
+    }
+}
+
+void ManipulationInterface::setGripperCmdTopic(const std::string& topic)
+{
+    gripper_cmd_topic_ = topic;
+    if (node_) {
+        gripper_cmd_publisher_ = node_->create_publisher<sensor_msgs::msg::JointState>(gripper_cmd_topic_, 10);
+    }
+}
+
+void ManipulationInterface::useSmoothTrajectoryExecution(bool use_smooth)
+{
+    use_smooth_trajectory_ = use_smooth;
+}
+
+bool ManipulationInterface::execute_smooth_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory)
+{
+    const auto& jt = trajectory.joint_trajectory;
+    
+    sensor_msgs::msg::JointState cmd;
+    cmd.header.stamp = node_->now();
+    
+    // 【关键】进行名称重映射
+    cmd.name = remapNames(jt.joint_names);
+    
+    // 平滑模式通常假设仿真器有插值能力，或者我们只发送终点
+    // 这里我们只发送轨迹的最后一个点作为目标
+    cmd.position = jt.points.back().positions;
+    
+    if (cmd.name.empty() || cmd.position.empty()) return false;
+
+    joint_cmd_publisher_->publish(cmd);
+
+    // 计算轨迹总耗时
+    double total_duration_sec = 0.5; // 默认最小时间
+    if (!jt.points.empty()) {
+        double traj_time = rclcpp::Duration(jt.points.back().time_from_start).seconds();
+        total_duration_sec = std::max(traj_time, 0.5);
+    }
+
+    // 等待执行完成
+    std::this_thread::sleep_for(std::chrono::duration<double>(total_duration_sec));
+
+    return true;
+}
+
+bool ManipulationInterface::execute_point_to_point_trajectory(const moveit_msgs::msg::RobotTrajectory& trajectory)
+{
+    const auto& jt = trajectory.joint_trajectory;
+    double last_time_sec = 0.0;
+    
+    // 缓存重映射后的名字，避免循环里重复查找
+    std::vector<std::string> target_names = remapNames(jt.joint_names);
+    
+    for (const auto& point : jt.points)
+    {
+        sensor_msgs::msg::JointState cmd;
+        cmd.header.stamp = node_->now();
+        cmd.name = target_names;
+        cmd.position = point.positions;
+        
+        joint_cmd_publisher_->publish(cmd);
+
+        double point_duration_sec = rclcpp::Duration(point.time_from_start).seconds();
+        double wait_time_sec = point_duration_sec - last_time_sec;
+        
+        if (wait_time_sec > 0.001) {
+            std::this_thread::sleep_for(std::chrono::duration<double>(wait_time_sec)); 
+        }
+        
+        last_time_sec = point_duration_sec;
+    }
+    return true;
+}
+
+bool ManipulationInterface::openGripper()
+{
+    if (!gripper_cmd_publisher_) return false;
+    if (gripper_joint_names_.empty()) return false;
+    
+    sensor_msgs::msg::JointState cmd;
+    cmd.header.stamp = node_->now();
+    // 夹爪名字也支持重映射
+    cmd.name = remapNames(gripper_joint_names_);
+    cmd.position.resize(cmd.name.size(), 0.04); // 0.04m 打开
+
+    gripper_cmd_publisher_->publish(cmd);
+    RCLCPP_INFO(node_->get_logger(), "Gripper Open 指令已发送");
+    return true;
+}
+
+bool ManipulationInterface::closeGripper()
+{
+    if (!gripper_cmd_publisher_) return false;
+    if (gripper_joint_names_.empty()) return false;
+    
+    sensor_msgs::msg::JointState cmd;
+    cmd.header.stamp = node_->now();
+    cmd.name = remapNames(gripper_joint_names_);
+    cmd.position.resize(cmd.name.size(), 0.00); // 0.00m 关闭
+
+    gripper_cmd_publisher_->publish(cmd);
+    RCLCPP_INFO(node_->get_logger(), "Gripper Close 指令已发送");
+    return true;
+}
+
+} // namespace coppelia_control
+================================================================
+FILE: src/coppelia_control/src/PlanningInterface.cpp
+================================================================
+#include "coppelia_control/PlanningInterface.hpp"
+#include <moveit/robot_state/conversions.h>
+#include <moveit/trajectory_processing/iterative_time_parameterization.h>
+
+namespace coppelia_control
+{
+
+PlanningInterface::PlanningInterface(const rclcpp::Node::SharedPtr& node, const std::string& planning_group)
+    : node_(node), 
+      planning_group_name_(planning_group),
+      // 设置默认参数
+      current_planner_id_("RRTConnectkConfigDefault"),
+      planning_time_(5.0),
+      planning_attempts_(5),
+      max_vel_scaling_(0.5),
+      max_acc_scaling_(0.5)
+{
+}
+
+bool PlanningInterface::initialize()
+{
+    if (!node_) return false;
+
+    try
+    {
+        // 重新创建 MoveGroupInterface
+        move_group_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(node_, planning_group_name_);
+        
+        // 应用当前的配置参数
+        move_group_->setPlannerId(current_planner_id_);
+        move_group_->setPlanningTime(planning_time_);
+        move_group_->setNumPlanningAttempts(planning_attempts_);
+        move_group_->setMaxVelocityScalingFactor(max_vel_scaling_);
+        move_group_->setMaxAccelerationScalingFactor(max_acc_scaling_);
+
+        // 默认不启用 start_state_monitor 的等待，防止仿真卡顿
+        // move_group_->setStartStateToCurrentState(); 
+
+        RCLCPP_INFO(node_->get_logger(), "规划接口初始化完成 | Group: %s | Planner: %s", 
+                    planning_group_name_.c_str(), current_planner_id_.c_str());
+        return true;
+    }
+    catch (const std::exception& e)
+    {
+        RCLCPP_ERROR(node_->get_logger(), "MoveGroup 初始化失败: %s", e.what());
+        return false;
+    }
+}
+
+bool PlanningInterface::changePlanningGroup(const std::string& new_planning_group)
+{
+    if (new_planning_group == planning_group_name_ && move_group_) {
+        RCLCPP_INFO(node_->get_logger(), "规划组已经是 %s，无需切换", new_planning_group.c_str());
+        return true;
+    }
+
+    RCLCPP_INFO(node_->get_logger(), "正在切换规划组: %s -> %s ...", 
+                planning_group_name_.c_str(), new_planning_group.c_str());
+    
+    planning_group_name_ = new_planning_group;
+    
+    // 重新初始化 move_group_ 指针
+    return initialize();
+}
+
+void PlanningInterface::setupPlanner(const std::string& planner_id, double planning_time, int attempts)
+{
+    current_planner_id_ = planner_id;
+    planning_time_ = planning_time;
+    planning_attempts_ = attempts;
+
+    if (move_group_) {
+        move_group_->setPlannerId(planner_id);
+        move_group_->setPlanningTime(planning_time);
+        move_group_->setNumPlanningAttempts(attempts);
+        RCLCPP_INFO(node_->get_logger(), "规划器参数已更新: ID=%s, Time=%.1f, Attempts=%d", 
+                    planner_id.c_str(), planning_time, attempts);
+    }
+}
+
+void PlanningInterface::setScalingFactors(double max_vel_factor, double max_acc_factor)
+{
+    max_vel_scaling_ = max_vel_factor;
+    max_acc_scaling_ = max_acc_factor;
+
+    if (move_group_) {
+        move_group_->setMaxVelocityScalingFactor(max_vel_factor);
+        move_group_->setMaxAccelerationScalingFactor(max_acc_factor);
+        RCLCPP_INFO(node_->get_logger(), "速度/加速度缩放已更新: V=%.2f, A=%.2f", 
+                    max_vel_factor, max_acc_factor);
+    }
+}
+
+bool PlanningInterface::planToPose(const geometry_msgs::msg::Pose& target_pose, 
+                                 moveit::planning_interface::MoveGroupInterface::Plan& plan)
+{
+    if (!move_group_) return false;
+    move_group_->clearPoseTargets();
+    move_group_->setPoseTarget(target_pose);
+    return static_cast<bool>(move_group_->plan(plan));
+}
+
+bool PlanningInterface::planToNamedTarget(const std::string& target_name, 
+                                        moveit::planning_interface::MoveGroupInterface::Plan& plan)
+{
+    if (!move_group_) return false;
+    move_group_->clearPoseTargets();
+    
+    if (!move_group_->setNamedTarget(target_name)) {
+        RCLCPP_ERROR(node_->get_logger(), "目标 '%s' 在 SRDF 中未定义", target_name.c_str());
+        return false;
+    }
+    return static_cast<bool>(move_group_->plan(plan));
+}
+
+bool PlanningInterface::planToJointState(const std::vector<double>& joint_positions, 
+                                       moveit::planning_interface::MoveGroupInterface::Plan& plan)
+{
+    if (!move_group_) return false;
+    move_group_->clearPoseTargets();
+    
+    move_group_->setJointValueTarget(joint_positions);
+    return static_cast<bool>(move_group_->plan(plan));
+}
+
+bool PlanningInterface::planCartesianPath(const std::vector<geometry_msgs::msg::Pose>& waypoints, 
+                                        moveit_msgs::msg::RobotTrajectory& trajectory)
+{
+    if (!move_group_ || waypoints.empty()) return false;
+    move_group_->clearPoseTargets();
+
+    const double jump_threshold = 0.0; 
+    const double eef_step = 0.01;      
+    
+    moveit_msgs::msg::RobotTrajectory temp_trajectory;
+    double fraction = move_group_->computeCartesianPath(waypoints, eef_step, jump_threshold, temp_trajectory);
+
+    if (fraction >= 0.9) {
+        trajectory = temp_trajectory;
+        return true;
+    }
+    RCLCPP_WARN(node_->get_logger(), "笛卡尔路径覆盖率低: %.2f%%", fraction * 100.0);
+    return false;
+}
+
+bool PlanningInterface::smoothTrajectory(moveit_msgs::msg::RobotTrajectory& trajectory)
+{
+    if (!move_group_) return false;
+
+    robot_trajectory::RobotTrajectory rt(move_group_->getRobotModel(), planning_group_name_);
+    
+    // 获取当前状态作为起点
+    auto current_state = move_group_->getCurrentState();
+    if (!current_state) return false;
+    
+    rt.setRobotTrajectoryMsg(*current_state, trajectory);
+
+    // 使用配置好的成员变量进行平滑
+    trajectory_processing::IterativeParabolicTimeParameterization iptp;
+    bool success = iptp.computeTimeStamps(rt, max_vel_scaling_, max_acc_scaling_);
+    
+    if (success) {
+        rt.getRobotTrajectoryMsg(trajectory);
+        return true;
+    }
+    return false;
+}
+
+geometry_msgs::msg::Pose PlanningInterface::getCurrentPose()
+{
+    if (!move_group_) return geometry_msgs::msg::Pose();
+    return move_group_->getCurrentPose().pose;
+}
+
+} // namespace coppelia_control
+================================================================
+FILE: src/coppelia_vision/config/vision_params.yaml
+================================================================
+vision_node:
+  ros__parameters:
+    # --- 话题配置 ---
+    # [关键修改] 必须和 Lua 脚本里的 M.cameraTopic 一致
+    sub_image_topic: "/camera/image_raw"
+    
+    # 发布：识别结果图像 (给 Rviz 看)
+    pub_debug_topic: "/vision/debug_image"
+    
+    # 发布：识别到的物体坐标 (给 coppelia_control 听)
+    pub_result_topic: "/vision/object_pose"
+
+    # --- 模型配置 ---
+    # 选择使用的模型类型: "color" (我们现在用颜色识别)
+    model_type: "color" 
+    
+    # [注] 下面这些 YOLO 的参数在 model_type="color" 时会被忽略，留着没事
+    model_path: "/home/rosqiu/coppelia_control/src/coppelia_vision/weights/yolov8n.pt"
+    device: "cuda" # 颜色识别其实用 cpu 就够了，不过写 cuda 也不影响
+    
+    # --- 算法参数 ---
+    conf_threshold: 0.5
+    enable_visualization: true
+
+    # --- [新增] 红色方块的 HSV 阈值 ---
+    # 这一步是为了让 color_detector.py 知道什么是"红色"
+    # CoppeliaSim 的红色通常很纯，H 分布在 0 和 180 附近
+    target_color:
+      lower: [0, 100, 100]    # H, S, V 下限
+      upper: [10, 255, 255]   # H, S, V 上限
+      lower2: [170, 100, 100] # 处理 HSV 色环另一端的红色
+      upper2: [180, 255, 255]
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/coordinate_mapper.py
+================================================================
+import numpy as np
+from tf2_ros import Buffer, TransformListener
+# 注意：虽然没直接用到，但必须导入它来注册 PoseStamped 的转换能力！
+import tf2_geometry_msgs 
+from geometry_msgs.msg import PoseStamped
+from rclpy.time import Time
+from rclpy.duration import Duration
+
+class CoordinateMapper:
+    def __init__(self, node, fov_deg, target_z, target_frame='robot_base'):
+        self.node = node
+        self.target_z = target_z
+        self.target_frame = target_frame
+        
+        self.w = 640
+        self.h = 480
+        self.fov = np.deg2rad(fov_deg)
+        self.update_intrinsics(self.w, self.h)
+        
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, node)
+
+    def update_intrinsics(self, w, h):
+        self.w = w
+        self.h = h
+        self.fx = (w / 2.0) / np.tan(self.fov / 2.0)
+        self.fy = self.fx
+        self.cx = w / 2.0
+        self.cy = h / 2.0
+
+    def pixel_to_world(self, u, v, src_frame, stamp):
+        try:
+            # 1. 构造相机坐标系下的 PoseStamped
+            pose_cam = PoseStamped()
+            pose_cam.header.frame_id = src_frame
+            # 使用 Time() (0) 代表“最新时刻”，让 buffer 自己去匹配
+            pose_cam.header.stamp = Time().to_msg()
+            
+            # 拆解赋值，确保不出错
+            pose_cam.pose.position.x = (u - self.cx) * 1.0 / self.fx
+            pose_cam.pose.position.y = (v - self.cy) * 1.0 / self.fy
+            pose_cam.pose.position.z = 1.0
+            pose_cam.pose.orientation.w = 1.0
+
+            # 2. 【核心修改】使用高阶 API 直接转换
+            # 这行代码会自动查找 TF 并完成数学运算，绕过底层 bug
+            pose_base = self.tf_buffer.transform(
+                pose_cam, 
+                self.target_frame, 
+                timeout=Duration(seconds=1.0)
+            )
+            
+            # 3. 射线计算 (后续逻辑不变)
+            # 获取相机在基座下的位置 (射线起点)
+            # 这里的 lookup_transform 只是为了拿相机原点，它是可靠的
+            cam_tf = self.tf_buffer.lookup_transform(
+                self.target_frame, 
+                src_frame, 
+                Time(), 
+                timeout=Duration(seconds=1.0)
+            )
+            trans_vec = cam_tf.transform.translation
+            cam_origin = np.array([trans_vec.x, trans_vec.y, trans_vec.z])
+            
+            # 射线终点
+            p_end = np.array([pose_base.pose.position.x, 
+                              pose_base.pose.position.y, 
+                              pose_base.pose.position.z])
+            
+            ray_dir = p_end - cam_origin
+            norm = np.linalg.norm(ray_dir)
+            if norm < 1e-6: return None
+            ray_dir = ray_dir / norm
+            
+            if abs(ray_dir[2]) < 1e-6: return None
+            
+            t = (self.target_z - cam_origin[2]) / ray_dir[2]
+            
+            if t < 0: return None
+            
+            final_pos = cam_origin + t * ray_dir
+            
+            # 4. 构造返回结果
+            res_pose = PoseStamped()
+            res_pose.header.frame_id = self.target_frame
+            res_pose.header.stamp = stamp # 保持原时间戳
+            
+            res_pose.pose.position.x = final_pos[0]
+            res_pose.pose.position.y = final_pos[1]
+            res_pose.pose.position.z = self.target_z
+            res_pose.pose.orientation.x = 1.0 
+            res_pose.pose.orientation.w = 0.0
+            
+            return res_pose
+
+        except Exception as e:
+            # 打印错误，但这次应该不会再崩了
+            import traceback
+            self.node.get_logger().error(f"Vision Transform Error: {e}")
+            self.node.get_logger().debug(traceback.format_exc())
+            return None
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/detectors/base_detector.py
+================================================================
+from abc import ABC, abstractmethod
+
+class BaseDetector(ABC):
+    """所有视觉模型的抽象基类"""
+    
+    def __init__(self, config: dict):
+        self.config = config
+
+    @abstractmethod
+    def load_model(self):
+        """加载模型权重"""
+        pass
+
+    @abstractmethod
+    def infer(self, image):
+        """
+        推理接口
+        :param image: OpenCV 格式图像 (BGR)
+        :return: result (自定义的标准格式，例如字典列表)
+        """
+        pass
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/detectors/color_detector.py
+================================================================
+import cv2
+import numpy as np
+
+class ColorDetector:
+    def __init__(self, cfg):
+        self.conf = cfg.get('conf', 0.5)
+        # 默认红色阈值 (CoppeliaSim Red)
+        # H: 0-10 & 170-180
+        self.lower1 = np.array([0, 100, 100])
+        self.upper1 = np.array([10, 255, 255])
+        self.lower2 = np.array([170, 100, 100])
+        self.upper2 = np.array([180, 255, 255])
+
+    def load_model(self):
+        # 传统算法不需要加载权重，占位函数
+        pass
+
+    def infer(self, cv_img):
+        """
+        输入: BGR 图像
+        输出: [{'label': 'red_cube', 'box': [x,y,w,h], 'center': (u,v)}, ...]
+        """
+        results = []
+        
+        # 1. 预处理
+        hsv = cv2.cvtColor(cv_img, cv2.COLOR_BGR2HSV)
+        
+        # 2. 颜色分割
+        mask1 = cv2.inRange(hsv, self.lower1, self.upper1)
+        mask2 = cv2.inRange(hsv, self.lower2, self.upper2)
+        mask = cv2.bitwise_or(mask1, mask2)
+        
+        # 3. 形态学操作 (去噪)
+        kernel = np.ones((5,5), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+        
+        # 4. 轮廓查找
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        for cnt in contours:
+            area = cv2.contourArea(cnt)
+            if area > 400: # 过滤太小的噪点
+                x, y, w, h = cv2.boundingRect(cnt)
+                
+                # 计算重心
+                M = cv2.moments(cnt)
+                if M["m00"] != 0:
+                    cX = int(M["m10"] / M["m00"])
+                    cY = int(M["m01"] / M["m00"])
+                else:
+                    cX, cY = x + w//2, y + h//2
+                
+                results.append({
+                    'label': 'red_cube',
+                    'conf': 1.0,
+                    'box': [x, y, w, h],
+                    'center': (cX, cY),
+                    'contour': cnt
+                })
+                
+        return results
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/detectors/__init__.py
+================================================================
+
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/detectors/yolo_detector.py
+================================================================
+from .base_detector import BaseDetector
+import cv2
+# import torch  # 以后如果用 pytorch
+# from ultralytics import YOLO # 如果用 ultralytics
+
+class YoloDetector(BaseDetector):
+    def __init__(self, config):
+        super().__init__(config)
+        self.model = None
+        print(f"[YoloDetector] 初始化参数: {config}")
+
+    def load_model(self):
+        path = self.config.get('model_path', '')
+        device = self.config.get('device', 'cpu')
+        print(f"[YoloDetector] 正在从 {path} 加载模型到 {device}...")
+        # TODO: 这里写真正的 YOLO 加载代码
+        # self.model = YOLO(path) 
+        # self.model.to(device)
+        return True
+
+    def infer(self, image):
+        """
+        返回格式示例:
+        [
+            {'label': 'cup', 'conf': 0.95, 'bbox': [x, y, w, h], 'center': (cx, cy)},
+            ...
+        ]
+        """
+        results = []
+        
+        # --- 模拟推理过程 (占位符) ---
+        # 实际代码这里会调用 self.model(image)
+        h, w, _ = image.shape
+        center_x, center_y = w // 2, h // 2
+        
+        # 模拟识别到一个物体在画面中心
+        results.append({
+            'label': 'simulated_object',
+            'conf': 0.99,
+            'bbox': [center_x-50, center_y-50, 100, 100],
+            'center': (center_x, center_y)
+        })
+        # ---------------------------
+        
+        return results
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/__init__.py
+================================================================
+
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/vision_node.py
+================================================================
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+from geometry_msgs.msg import PoseStamped
+from cv_bridge import CvBridge
+import cv2
+import numpy as np
+
+# 导入功能模块
+from coppelia_vision.coordinate_mapper import CoordinateMapper
+from coppelia_vision.visualizer import Visualizer
+from coppelia_vision.detectors.color_detector import ColorDetector
+
+class VisionNode(Node):
+    def __init__(self):
+        super().__init__('vision_node')
+
+        # 1. 参数配置
+        self.declare_parameters(namespace='', parameters=[
+            ('sub_image_topic', '/camera/image_raw'),
+            ('pub_result_topic', '/vision/object_pose'),
+            ('base_frame', 'robot_base'), 
+            ('camera_frame', 'HandCamera'),
+            ('model_type', 'color'),
+            ('model_path', ''),
+            ('device', 'cpu'),
+            ('conf_threshold', 0.5),
+            ('enable_visualization', True),
+            ('fov_degrees', 60.0),
+            ('target_z_height', 0.02)
+        ])
+        
+        # 2. 初始化核心模块
+        base_frame = self.get_parameter('base_frame').value
+        fov = self.get_parameter('fov_degrees').value
+        z_h = self.get_parameter('target_z_height').value
+        
+        self.bridge = CvBridge()
+        self.mapper = CoordinateMapper(self, fov, z_h, target_frame=base_frame) 
+        self.vis = Visualizer()
+        self.init_detector()
+
+        # 3. 通信建立 (恢复标准 Reliable 模式)
+        topic_name = self.get_parameter('sub_image_topic').value
+        self.get_logger().info(f"Vision Node Init | Listening to: {topic_name}")
+
+        self.sub = self.create_subscription(
+            Image, 
+            topic_name, 
+            self.img_callback, 
+            10  # 标准队列长度，默认就是 Reliable
+        )
+        self.pub_res = self.create_publisher(PoseStamped, self.get_parameter('pub_result_topic').value, 10)
+
+    def init_detector(self):
+        m_type = self.get_parameter('model_type').value
+        cfg = {'conf': self.get_parameter('conf_threshold').value}
+        self.detector = ColorDetector(cfg)
+        if hasattr(self.detector, 'load_model'):
+            self.detector.load_model()
+
+    def img_callback(self, msg):
+        try:
+            # 1. 安全解码 (防止 buffer 长度不一致报错)
+            expected_size = msg.height * msg.width * 3
+            if len(msg.data) != expected_size:
+                return 
+
+            # 使用 Numpy 转换 (比 cv_bridge 更快更稳)
+            np_img = np.array(msg.data, dtype=np.uint8)
+            cv_img = np_img.reshape((msg.height, msg.width, 3))
+            
+            if msg.encoding == 'rgb8':
+                cv_img = cv2.cvtColor(cv_img, cv2.COLOR_RGB2BGR)
+            
+            # 2. 视觉管线
+            self.mapper.update_intrinsics(msg.width, msg.height)
+            results = self.detector.infer(cv_img)
+            
+            for obj in results:
+                u, v = obj['center']
+                # 优先用消息帧，参数帧作备选
+                src_frame = msg.header.frame_id if msg.header.frame_id else self.get_parameter('camera_frame').value
+                
+                # 坐标映射
+                pose_3d = self.mapper.pixel_to_world(u, v, src_frame, msg.header.stamp)
+                
+                if pose_3d:
+                    obj['pose'] = pose_3d
+                    self.pub_res.publish(pose_3d)
+                    
+                    # 仅打印必要信息
+                    pos = pose_3d.pose.position
+                    self.get_logger().info(f"📍 Cube: [{pos.x:.3f}, {pos.y:.3f}, {pos.z:.3f}]")
+            
+            # 3. 可视化
+            if self.get_parameter('enable_visualization').value:
+                debug_img = self.vis.draw_results(cv_img, results)
+                cv2.imshow("Robot Eye", debug_img)
+                cv2.waitKey(1)
+
+        except Exception as e:
+            self.get_logger().error(f"Processing Error: {e}")
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = VisionNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt: pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+        cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
+================================================================
+FILE: src/coppelia_vision/coppelia_vision/visualizer.py
+================================================================
+import cv2
+import numpy as np
+
+class Visualizer:
+    def __init__(self):
+        pass
+
+    def draw_results(self, img, results):
+        vis_img = img.copy()
+        
+        for obj in results:
+            # 画框
+            x, y, w, h = obj['box']
+            cv2.rectangle(vis_img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            
+            # 画中心点
+            cX, cY = obj['center']
+            cv2.circle(vis_img, (cX, cY), 5, (0, 0, 255), -1)
+            
+            # 画文字 (如果有 3D 坐标则显示坐标，否则显示标签)
+            text = obj['label']
+            if 'pose' in obj:
+                p = obj['pose'].pose.position
+                text = f"[{p.x:.2f}, {p.y:.2f}, {p.z:.2f}]"
+            
+            cv2.putText(vis_img, text, (x, y - 10), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            
+        return vis_img
+================================================================
+FILE: src/coppelia_vision/launch/global_vision_setup.launch.py
+================================================================
+import os
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+
+    camera_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='global_camera_tf_publisher',
+        arguments=[
+            '--x', '0.5', 
+            '--y', '0.0', 
+            '--z', '1.0',         # 高度 1.5米
+            '--yaw', '0.0', 
+            '--pitch', '3.14159', # 垂直向下看 (180度)
+            '--roll', '0.0',
+            '--frame-id', 'robot_base',           # 父坐标系
+            '--child-frame-id', 'global_camera_link' # 子坐标系 (和 Python 参数对应)
+        ]
+    )
+
+
+    vision_node = Node(
+        package='coppelia_vision',
+        executable='vision_node', # 请确认 setup.py 里 entry_points 是这个名字
+        name='global_vision_node',
+        output='screen',
+        
+        # 【重点修改】使用 parameters 直接覆盖 Python 里的默认值
+        parameters=[{
+            # (1) 订阅话题：必须和 Lua 脚本发出的名字一致
+            'sub_image_topic': '/global_camera/image',
+            
+            # (2) 相机坐标系：必须和 TF 发布器里的 child-frame-id 一致
+            # 如果这里不改，默认是 HandCamera，算出来的坐标全是错的
+            'camera_frame': 'global_camera_link',
+            
+            # (3) 基座坐标系：告诉节点相对于谁计算坐标
+            'base_frame': 'robot_base',
+            
+            # (4) 结果发布话题 (可选，保持默认即可)
+            'pub_result_topic': '/vision/object_pose',
+            
+            # (5) 相机视野 (和你仿真器设置保持一致，截图里是60度)
+            'fov_degrees': 60.0,
+            
+            # (6) 物体高度 (红方块中心高度，大约2cm)
+            'target_z_height': 0.02
+        }]
+    )
+
+    return LaunchDescription([
+        camera_tf_node,
+        vision_node
+    ])
+================================================================
+FILE: src/coppelia_vision/launch/vision_system.launch.py
+================================================================
+import os
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+
+def generate_launch_description():
+    # 获取包路径 (如果有 config 文件可以这里加载，现在直接写参数里也行)
+    # config = os.path.join(...)
+
+    return LaunchDescription([
+        # ============================================================
+        # 1. 静态 TF 发布 (关键！)
+        # ============================================================
+        # 作用：告诉 ROS，"HandCamera" 这个坐标系是粘在机器人的 "panda_hand" 上的
+        # 参数：x y z yaw pitch roll parent child
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='camera_link_broadcaster',
+            arguments=[
+                '0', '0', '0',   # XYZ: 假设相机在手掌心前方上方 5cm
+                '0', '0', '0',         # RPY: 假设相机方向和手掌一致 (需根据实际调整)
+                'FrankaGripper',          # 父: MoveIt 标准手掌 Link 名
+                'HandCamera'           # 子: Lua 脚本里发的 frame_id
+            ]
+        ),
+
+        # ============================================================
+        # 2. Vision Node - 视觉核心
+        # ============================================================
+        Node(
+            package='coppelia_vision',
+            executable='vision_node', # 确保 setup.py 里 entry_point 也是这个名字
+            name='vision_node',
+            output='screen',
+            parameters=[{
+                # === 话题匹配 Lua ===
+                'sub_image_topic': '/camera/image_raw',
+                'pub_result_topic': '/vision/object_pose',
+                
+                # === 坐标系匹配 ===
+                'base_frame': 'robot_base', # Panda 机器人的基座
+                'camera_frame': 'HandCamera',
+                
+                # === 相机参数 (根据 CoppeliaSim 设置) ===
+                'fov_degrees': 60.0,    # 默认通常是 60 或 90
+                'target_z_height': 0.02, # 方块高度/2 (中心点高度)
+                
+                # === 调试 ===
+                'enable_visualization': True,
+                'model_type': 'color'
+            }]
+        )
+    ])
+================================================================
+FILE: src/coppelia_vision/setup.py
+================================================================
+from setuptools import setup
+import os
+from glob import glob
+
+package_name = 'coppelia_vision'
+
+setup(
+    name=package_name,
+    version='0.0.0',
+    packages=[package_name, package_name + '.detectors'], # 注意加上子包
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        # 安装 launch 文件
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
+        # 安装 config 文件
+        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='rosqiu',
+    maintainer_email='rosqiu@todo.todo',
+    description='Modular Vision Package for CoppeliaSim',
+    license='TODO: License declaration',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            # 名字 = 包名.文件名:主函数
+            'vision_node = coppelia_vision.vision_node:main',
+        ],
+    },
+)
+================================================================
+FILE: src/cs_hardware_interface/config/controllers.yaml
+================================================================
+controller_manager:
+  ros__parameters:
+    update_rate: 100   # 改成 100Hz，动作才会顺滑
+    use_sim_time: true # 开启仿真时间同步 防止出错
+    publish_rate: 100  # 建议这个频率大于等于 update_rate
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # 2. 手臂控制器 (名字要和 MoveIt 配置对应)
+    panda_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    # 3. 【关键】爪子控制器 (必须加上这个！)
+    hand_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+# ==================================
+# 具体的参数配置
+# ==================================
+
+panda_arm_controller:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    
+    command_interfaces:
+      - position
+    
+    state_interfaces:
+      - position
+
+   
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+
+
+hand_controller:
+  ros__parameters:
+    joints:
+      - openCloseJoint  # 必须对应 URDF
+      - centerJoint     # 必须对应 URDF
+    
+    command_interfaces:
+      - position
+    
+    state_interfaces:
+      - position
+
+    allow_partial_joints_goal: false
+    open_loop_control: true
+    allow_integration_in_goal_trajectories: true
+================================================================
+FILE: src/cs_hardware_interface/include/cs_hardware_interface/cs_system.hpp
+================================================================
+#ifndef CS_HARDWARE_INTERFACE__CS_SYSTEM_HPP_
+#define CS_HARDWARE_INTERFACE__CS_SYSTEM_HPP_
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "hardware_interface/handle.hpp"
+#include "hardware_interface/hardware_info.hpp"
+#include "hardware_interface/system_interface.hpp"
+#include "hardware_interface/types/hardware_interface_return_values.hpp"
+#include "rclcpp/macros.hpp"
+#include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
+#include "rclcpp/rclcpp.hpp"
+
+#include <zmq.h> // 确保你安装了 libzmq3-dev
+
+namespace cs_hardware_interface
+{
+class CsSystem : public hardware_interface::SystemInterface
+{
+public:
+  RCLCPP_SHARED_PTR_DEFINITIONS(CsSystem)
+
+  ~CsSystem(); 
+
+  hardware_interface::CallbackReturn on_init(
+    const hardware_interface::HardwareInfo & info) override;
+
+  hardware_interface::CallbackReturn on_configure(
+    const rclcpp_lifecycle::State & previous_state) override;
+
+  std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
+
+  std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
+
+  hardware_interface::CallbackReturn on_activate(
+    const rclcpp_lifecycle::State & previous_state) override;
+
+  hardware_interface::CallbackReturn on_deactivate(
+    const rclcpp_lifecycle::State & previous_state) override;
+
+  hardware_interface::return_type read(
+    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+
+  hardware_interface::return_type write(
+    const rclcpp::Time & time, const rclcpp::Duration & period) override;
+
+private:
+  // ZMQ 相关变量
+  void * zmq_context_;
+  void * zmq_socket_;
+  
+  // 存储关节数据的容器
+  std::vector<double> hw_commands_;
+  std::vector<double> hw_states_;
+  std::vector<double> hw_velocities_; // 预留，即便URDF没配，代码里最好留着结构
+
+  // 辅助函数
+  void parse_feedback(const std::string & data);
+};
+
+}  // namespace cs_hardware_interface
+
+#endif  // CS_HARDWARE_INTERFACE__CS_SYSTEM_HPP_
+================================================================
+FILE: src/cs_hardware_interface/launch/coppelia_moveit.launch.py
+================================================================
+import os
+import yaml
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, ExecuteProcess
+from launch.event_handlers import OnProcessExit
+from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
+from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
+
+# ==========================================
+# 辅助函数：安全加载 YAML
+# ==========================================
+def load_yaml(package_name, file_path):
+    package_path = get_package_share_directory(package_name)
+    absolute_file_path = os.path.join(package_path, file_path)
+    try:
+        with open(absolute_file_path, "r") as file:
+            return yaml.safe_load(file)
+    except EnvironmentError:
+        print(f"ERROR: Cannot find {absolute_file_path}")
+        return None
+
+def generate_launch_description():
+    driver_pkg = "cs_hardware_interface"
+    moveit_config_pkg = "panda_moveit_config"
+
+    use_sim_time = LaunchConfiguration("use_sim_time")
+    declare_use_sim_time = DeclareLaunchArgument(
+        "use_sim_time",
+        default_value="false",
+        description="Use simulation clock if true",
+    )
+
+    # ====================================================
+    # 2. 机器人描述 (URDF & SRDF) 
+    # ====================================================
+    # 方案A：从 config 包读取 
+    xacro_file = os.path.join(get_package_share_directory(moveit_config_pkg), "config", "Franka.urdf.xacro")
+    
+    # 如果你的 xacro 需要参数，可以在这里加
+    robot_description_content = Command([
+        FindExecutable(name="xacro"), " ", xacro_file,
+        " use_fake_hardware:=false" 
+    ])
+    robot_description = {"robot_description": robot_description_content}
+
+    # 根据你的截图，文件名是 Franka.srdf
+    srdf_file = os.path.join(get_package_share_directory(moveit_config_pkg), "config", "Franka.srdf")
+    with open(srdf_file, 'r') as f:
+        robot_description_semantic_content = f.read()
+    robot_description_semantic = {"robot_description_semantic": robot_description_semantic_content}
+
+    # ====================================================
+    # 3. 加载 MoveIt 核心配置
+    # ====================================================
+    kinematics_yaml = load_yaml(moveit_config_pkg, "config/kinematics.yaml")
+    joint_limits_yaml = load_yaml(moveit_config_pkg, "config/joint_limits.yaml")
+    
+    # OMPL 规划算法 
+    ompl_planning_yaml = load_yaml(moveit_config_pkg, "config/ompl_planning.yaml")
+    planning_pipelines_config = {
+        "planning_pipelines": ["ompl"],
+        "ompl": ompl_planning_yaml
+    }
+
+    # MoveIt 控制器映射
+    moveit_controllers_yaml = load_yaml(moveit_config_pkg, "config/moveit_controllers.yaml")
+    
+    trajectory_execution = {
+        "moveit_manage_controllers": True,
+        "trajectory_execution.allowed_execution_duration_scaling": 1.2,
+        "trajectory_execution.allowed_goal_duration_margin": 0.5,
+        "trajectory_execution.allowed_start_tolerance": 0.01,
+    }
+
+    # ====================================================
+    # 4. 底层驱动 (ROS2 Control Node)
+    # ====================================================
+    ros2_controllers = os.path.join(get_package_share_directory(moveit_config_pkg), "config", "ros2_controllers.yaml")
+
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_description, ros2_controllers, {"use_sim_time": use_sim_time}],
+        output="both",
+    )
+
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[robot_description, {"use_sim_time": use_sim_time}],
+    )
+
+    # ====================================================
+    # 5. 加载控制器 (Spawners)
+    # ====================================================
+    
+    
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    )
+
+    robot_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["panda_arm_controller", "--controller-manager", "/controller_manager"],
+    )
+
+    hand_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["hand_controller", "--controller-manager", "/controller_manager"],
+    )
+
+    # ====================================================
+    # 6. Move Group 节点 (大脑)
+    # ====================================================
+    move_group_node = Node(
+        package="moveit_ros_move_group",
+        executable="move_group",
+        output="screen",
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            kinematics_yaml,
+            joint_limits_yaml,
+            planning_pipelines_config,
+            trajectory_execution,
+            moveit_controllers_yaml,
+            {"use_sim_time": use_sim_time},
+            {"publish_robot_description_semantic": True},
+        ],
+    )
+
+    # ====================================================
+    # 7. Rviz 节点
+    # ====================================================
+    rviz_config_file = os.path.join(get_package_share_directory(moveit_config_pkg), "config", "moveit.rviz")
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        output="screen",
+        arguments=["-d", rviz_config_file],
+        parameters=[
+            robot_description,
+            robot_description_semantic,
+            kinematics_yaml,
+            planning_pipelines_config,
+            {"use_sim_time": use_sim_time}
+        ],
+    )
+
+    # 延迟启动控制器，确保 controller_manager 准备好了
+    delay_controllers_start = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[robot_controller_spawner, hand_controller_spawner],
+        )
+    )
+
+    return LaunchDescription([
+        declare_use_sim_time,
+        control_node,
+        robot_state_publisher_node,
+        joint_state_broadcaster_spawner,
+        delay_controllers_start,
+        move_group_node,
+        rviz_node
+    ])
+================================================================
+FILE: src/cs_hardware_interface/src/cs_system.cpp
+================================================================
+#include "cs_hardware_interface/cs_system.hpp"
+
+#include <chrono>
+#include <cmath>
+#include <limits>
+#include <memory>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iostream>
+
+#include "hardware_interface/types/hardware_interface_type_values.hpp"
+#include "rclcpp/rclcpp.hpp"
+
+namespace cs_hardware_interface
+{
+
+CsSystem::~CsSystem()
+{
+  // 析构函数：即使程序崩溃退出，也要尝试释放资源
+  if (zmq_socket_) {
+    zmq_close(zmq_socket_);
+    zmq_socket_ = nullptr;
+  }
+  if (zmq_context_) {
+    zmq_ctx_destroy(zmq_context_);
+    zmq_context_ = nullptr;
+  }
+}
+
+hardware_interface::CallbackReturn CsSystem::on_init(const hardware_interface::HardwareInfo & info)
+{
+  if (hardware_interface::SystemInterface::on_init(info) !=hardware_interface::CallbackReturn::SUCCESS)
+  {
+    return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  // 1. 分配内存
+  hw_states_.resize(info_.joints.size(), 0.0);
+  hw_commands_.resize(info_.joints.size(), 0.0);
+  
+  // 打印关节顺序，用于调试！这非常关键！
+  RCLCPP_INFO(rclcpp::get_logger("CsSystem"), "=== Joint Order Check ===");
+  for (size_t i = 0; i < info_.joints.size(); i++) {
+      RCLCPP_INFO(rclcpp::get_logger("CsSystem"), "Index %ld: %s", i, info_.joints[i].name.c_str());
+  }
+  RCLCPP_INFO(rclcpp::get_logger("CsSystem"), "=========================");
+
+  // 2. 初始化 ZMQ Context
+  zmq_context_ = zmq_ctx_new();
+  zmq_socket_ = zmq_socket(zmq_context_, ZMQ_REQ); // REQ 模式：一问一答
+
+  // 3. 设置超时 (防止仿真卡死导致 ROS 死锁)
+  int timeout_ms = 1000; // 1秒超时
+  zmq_setsockopt(zmq_socket_, ZMQ_RCVTIMEO, &timeout_ms, sizeof(timeout_ms));
+  zmq_setsockopt(zmq_socket_, ZMQ_SNDTIMEO, &timeout_ms, sizeof(timeout_ms));
+
+  // 4. 连接
+  int rc = zmq_connect(zmq_socket_, "tcp://localhost:5555");
+  if (rc != 0) {
+     RCLCPP_FATAL(rclcpp::get_logger("CsSystem"), "Failed to connect to ZMQ Server! RC=%d", rc);
+     return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  RCLCPP_INFO(rclcpp::get_logger("CsSystem"), "ZMQ Initialized and Connected.");
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+hardware_interface::CallbackReturn CsSystem::on_configure(const rclcpp_lifecycle::State & /*previous_state*/)
+{
+  // 如果需要重置参数可以在这里做，目前留空即可
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+std::vector<hardware_interface::StateInterface> CsSystem::export_state_interfaces()
+{
+  std::vector<hardware_interface::StateInterface> state_interfaces;
+  for (uint i = 0; i < info_.joints.size(); i++)
+  {
+    
+    state_interfaces.emplace_back(hardware_interface::StateInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_states_[i]));
+    
+    // 如果URDF里加了Velocity，这里也需要导出，目前只用了Position
+  }
+  return state_interfaces;
+}
+
+std::vector<hardware_interface::CommandInterface> CsSystem::export_command_interfaces()
+{
+  std::vector<hardware_interface::CommandInterface> command_interfaces;
+  for (uint i = 0; i < info_.joints.size(); i++)
+  {
+    command_interfaces.emplace_back(hardware_interface::CommandInterface(info_.joints[i].name, hardware_interface::HW_IF_POSITION, &hw_commands_[i]));
+  }
+  return command_interfaces;
+}
+
+hardware_interface::CallbackReturn CsSystem::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
+{
+
+  RCLCPP_INFO(rclcpp::get_logger("CsSystem"), "System Activated!");
+  
+  // 可以在这里发一个 Reset 信号给 CoppeliaSim，视需求而定
+  for (size_t i = 0; i < hw_commands_.size(); ++i) {
+      if (std::isnan(hw_states_[i])) {
+          hw_commands_[i] = 0.0;
+      } else {
+          hw_commands_[i] = hw_states_[i];
+      }
+  }
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+hardware_interface::CallbackReturn CsSystem::on_deactivate(
+  const rclcpp_lifecycle::State & /*previous_state*/)
+{
+  RCLCPP_INFO(rclcpp::get_logger("CsSystem"), "System Deactivated!");
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+hardware_interface::return_type CsSystem::read(
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+{
+  // 1. 构造请求：获取状态
+  std::string req = "get_state";
+  static rclcpp::Clock clock(RCL_STEADY_TIME);
+  int send_rc = zmq_send(zmq_socket_, req.c_str(), req.length(), 0);
+  
+  if (send_rc == -1) {
+      // 这里的 logger 加 throttle 防止刷屏
+      RCLCPP_ERROR_THROTTLE(rclcpp::get_logger("CsSystem"), clock, 2000, "ZMQ Send Error in read()");
+      return hardware_interface::return_type::OK; 
+  }
+
+  // 2. 接收数据
+  char buffer[2048];
+  int size = zmq_recv(zmq_socket_, buffer, 2048, 0);
+
+  if (size < 0) {
+      // 超时或错误
+      RCLCPP_WARN_THROTTLE(rclcpp::get_logger("CsSystem"), clock, 2000, "ZMQ Recv Timeout/Error in read() - Check CoppeliaSim status");
+      return hardware_interface::return_type::OK; // 容忍丢包
+  }
+  
+  // 3. 解析数据 "q1,q2,q3..."
+  buffer[size] = '\0';
+  parse_feedback(std::string(buffer));
+
+  return hardware_interface::return_type::OK;
+}
+
+hardware_interface::return_type CsSystem::write(
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+{
+  // 1. 构造命令字符串 "set:q1,q2,q3..."
+  std::stringstream ss;
+  ss << "set:";
+  for (size_t i = 0; i < hw_commands_.size(); ++i) {
+      ss << hw_commands_[i];
+      if (i < hw_commands_.size() - 1) ss << ",";
+  }
+  std::string send_str = ss.str();
+  static rclcpp::Clock clock(RCL_STEADY_TIME);
+
+  // 2. 发送命令
+  zmq_send(zmq_socket_, send_str.c_str(), send_str.length(), 0);
+
+  // 3. 接收确认 (REQ-REP 模式必须有一来一回，否则下次 send 会报错)
+  char buffer[128];
+  int size = zmq_recv(zmq_socket_, buffer, 128, 0);
+  
+  // 只要能收到东西就行，不需要太关心内容，除非是为了查错
+  if (size < 0) {
+       RCLCPP_WARN_THROTTLE(rclcpp::get_logger("CsSystem"), clock, 2000, "ZMQ Recv Timeout in write()");
+  }
+
+  return hardware_interface::return_type::OK;
+}
+
+void CsSystem::parse_feedback(const std::string & data) {
+    // 简单的 CSV 解析器
+    // 假设数据格式严格为: "val1,val2,val3"
+
+    static rclcpp::Clock clock(RCL_STEADY_TIME);
+    std::stringstream ss(data);
+    std::string segment;
+    int i = 0;
+    
+    while(std::getline(ss, segment, ',') && i < (int)hw_states_.size())
+    {
+       try {
+           hw_states_[i] = std::stod(segment);
+       } catch (const std::exception& e) {
+           RCLCPP_ERROR_THROTTLE(rclcpp::get_logger("CsSystem"), clock, 5000, "Data parse error: %s", segment.c_str());
+       }
+       i++;
+    }
+}
+
+}  // namespace cs_hardware_interface
+
+#include "pluginlib/class_list_macros.hpp"
+PLUGINLIB_EXPORT_CLASS(
+  cs_hardware_interface::CsSystem, hardware_interface::SystemInterface)
+================================================================
+FILE: src/custom_trajectory_core/include/custom_trajectory_core/path_smoother.hpp
+================================================================
+#ifndef CUSTOM_TRAJECTORY_CORE_PATH_SMOOTHER_HPP_
+#define CUSTOM_TRAJECTORY_CORE_PATH_SMOOTHER_HPP_
+
+#include <vector>
+#include <utility>
+#include <cmath>
+#include <algorithm>
+#include <functional> // 用于引入回调函数
+
+namespace custom_trajectory {
+
+
+struct Point2D {
+    double x;
+    double y;
+};
+
+
+struct Obstacle {
+    double x, y, radius;
+};
+
+class PathSmoother {
+public:
+    
+    using CollisionChecker = std::function<bool(const Point2D&, const Point2D&, const std::vector<Obstacle>&)>;
+
+    // 贪心剪枝法 
+    std::vector<Point2D> prunePath(
+        const std::vector<Point2D>& raw_path, 
+        const std::vector<Obstacle>& obstacles,
+        const CollisionChecker& check_collision);
+
+    // 二阶贝塞尔曲线优化 
+    std::vector<Point2D> bezierSmooth(
+        const Point2D& p0, const Point2D& p1, const Point2D& p2, double radius);
+
+    // 综合平滑接口
+    std::vector<Point2D> processPath(
+        const std::vector<Point2D>& raw_path, 
+        const std::vector<Obstacle>& obstacles, 
+        double radius,
+        const CollisionChecker& check_collision);
+};
+
+} // namespace custom_trajectory
+
+#endif // CUSTOM_TRAJECTORY_CORE_PATH_SMOOTHER_HPP_
+================================================================
+FILE: src/custom_trajectory_core/include/custom_trajectory_core/trapezoidal_planner.hpp
+================================================================
+#ifndef CUSTOM_TRAJECTORY_CORE_TRAPEZOIDAL_PLANNER_HPP_
+#define CUSTOM_TRAJECTORY_CORE_TRAPEZOIDAL_PLANNER_HPP_
+
+#include <cmath>
+
+namespace custom_trajectory {
+
+struct MotionState {
+    double v;
+    double s;
+    double a;
+};
+
+class TrapezoidalPlanner {
+public:
+    TrapezoidalPlanner(double s_total, double v_max, double a_max);
+    ~TrapezoidalPlanner() = default;
+
+    double getTotalTime() const;
+    MotionState getMotionState(double t) const;
+
+private:
+    double s_total_;
+    double v_max_;
+    double a_max_;
+    
+    double t_acc_;
+    double t_dec_;
+    double t_ave_;
+    
+    double s_acc_;
+    double s_ave_;
+    
+    double v_peak_; 
+};
+
+} // namespace custom_trajectory
+
+#endif // CUSTOM_TRAJECTORY_CORE_TRAPEZOIDAL_PLANNER_HPP_
+================================================================
+FILE: src/custom_trajectory_core/src/path_smoother.cpp
+================================================================
+#include "custom_trajectory_core/path_smoother.hpp"
+
+namespace custom_trajectory {
+
+std::vector<Point2D> PathSmoother::prunePath(
+    const std::vector<Point2D>& raw_path, 
+    const std::vector<Obstacle>& obstacles,
+    const CollisionChecker& check_collision) 
+{
+    if (raw_path.size() <= 2) {
+        return raw_path;
+    }
+
+    std::vector<Point2D> smoothed_path;
+    smoothed_path.push_back(raw_path.front()); 
+
+    int current_id = 0;
+    int target_id = raw_path.size() - 1;
+
+    while (current_id <= target_id) {
+        for (int i = target_id; i > current_id; --i) {
+            
+            if (!check_collision(raw_path[current_id], raw_path[i], obstacles)) {
+                smoothed_path.push_back(raw_path[i]);
+                current_id = i;
+                break;
+            }
+        }
+    }
+    return smoothed_path;
+}
+
+std::vector<Point2D> PathSmoother::bezierSmooth(
+    const Point2D& p0, const Point2D& p1, const Point2D& p2, double radius) 
+{
+    double d1 = std::hypot(p1.x - p0.x, p1.y - p0.y);
+    double d2 = std::hypot(p2.x - p1.x, p2.y - p1.y);
+    
+    
+    if (d1 < 1e-5 || d2 < 1e-5) return {p1}; 
+
+    double actual_radius = std::min(radius, std::min(d1, d2) / 2.0);
+    
+    Point2D b0 = { p1.x - actual_radius * (p1.x - p0.x) / d1, 
+                   p1.y - actual_radius * (p1.y - p0.y) / d1 };
+    Point2D b1 = { p1.x + actual_radius * (p2.x - p1.x) / d2, 
+                   p1.y + actual_radius * (p2.y - p1.y) / d2 };
+
+    std::vector<Point2D> blended_path;
+    const int num_points = 10;
+    
+    
+    for (int i = 0; i <= num_points; ++i) { 
+        double t = static_cast<double>(i) / num_points;
+        double u = 1.0 - t;
+        double bx = u * u * b0.x + 2 * t * u * p1.x + t * t * b1.x;
+        double by = u * u * b0.y + 2 * t * u * p1.y + t * t * b1.y;
+        blended_path.push_back({bx, by});
+    }
+
+    return blended_path;
+}
+
+std::vector<Point2D> PathSmoother::processPath(
+    const std::vector<Point2D>& raw_path, 
+    const std::vector<Obstacle>& obstacles, 
+    double radius,
+    const CollisionChecker& check_collision) 
+{
+    auto pruned_path = prunePath(raw_path, obstacles, check_collision);
+    std::vector<Point2D> smoothed_path;
+    
+    for (size_t i = 0; i < pruned_path.size(); ++i) {
+        if (i > 0 && i < pruned_path.size() - 1) {
+            auto blended_points = bezierSmooth(pruned_path[i-1], pruned_path[i], pruned_path[i+1], radius);
+            // 避免把拐点重复插入
+            if (!smoothed_path.empty()) {
+                 smoothed_path.pop_back(); 
+            }
+            smoothed_path.insert(smoothed_path.end(), blended_points.begin(), blended_points.end());
+        } else {
+            smoothed_path.push_back(pruned_path[i]);
+        }
+    }
+    return smoothed_path;
+}
+
+} // namespace custom_trajectory
+================================================================
+FILE: src/custom_trajectory_core/src/trapezoidal_planner.cpp
+================================================================
+#include "custom_trajectory_core/trapezoidal_planner.hpp"
+
+namespace custom_trajectory {
+
+
+TrapezoidalPlanner::TrapezoidalPlanner(double s_total, double v_max, double a_max)
+    : s_total_(std::abs(s_total)), v_max_(v_max), a_max_(a_max) 
+{
+    double theoretical_sa = (v_max_ * v_max_) / (2.0 * a_max_);
+
+    if (s_total_ >= 2.0 * theoretical_sa) {
+        // 正常梯形
+        v_peak_ = v_max_;
+        t_acc_ = v_max_ / a_max_;
+        s_acc_ = theoretical_sa;
+        s_ave_ = s_total_ - 2.0 * s_acc_;
+        t_ave_ = s_ave_ / v_max_;
+        t_dec_ = t_acc_;
+    } else {
+        // 退化为三角形
+        s_ave_ = 0.0;
+        v_peak_ = std::sqrt(2.0 * a_max_ * s_total_);
+        t_acc_ = v_peak_ / a_max_;
+        s_acc_ = s_total_ / 2.0;
+        t_ave_ = 0.0;
+        t_dec_ = t_acc_;
+    }
+}
+
+double TrapezoidalPlanner::getTotalTime() const {
+    return t_acc_ + t_ave_ + t_dec_;
+}
+
+MotionState TrapezoidalPlanner::getMotionState(double t) const {
+    MotionState state = {0.0, 0.0, 0.0};
+    
+    if (t < 0.0) {
+        return state;
+    } else if (t < t_acc_) {
+        state.a = a_max_;
+        state.v = a_max_ * t;
+        state.s = 0.5 * a_max_ * t * t;
+    } else if (t < t_acc_ + t_ave_) {
+        double t_ave = t - t_acc_;
+        state.a = 0.0;
+        state.v = v_peak_;
+        state.s = s_acc_ + v_peak_ * t_ave;
+    } else if (t < t_acc_ + t_ave_ + t_dec_) {
+        double t_dec = t - t_acc_ - t_ave_;
+        state.a = -a_max_;
+        state.v = v_peak_ - a_max_ * t_dec;
+        state.s = s_acc_ + s_ave_ + v_peak_ * t_dec - 0.5 * a_max_ * t_dec * t_dec;
+    } else {
+        state.a = 0.0;
+        state.v = 0.0;
+        state.s = s_total_;
+    }
+    return state;
+}
+
+} // namespace custom_trajectory
+================================================================
+FILE: src/panda_moveit_config/config/Franka.ros2_control.xacro
+================================================================
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    
+    <xacro:macro name="Franka_ros2_control" params="name initial_positions_file">
+        <xacro:property name="initial_positions" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+
+        <ros2_control name="${name}" type="system">
+            <hardware>
+                <plugin>cs_hardware_interface/CsSystem</plugin> 
+                
+                </hardware>
+
+            <joint name="panda_joint1">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint1']}</param>
+                </state_interface>
+            </joint>
+            <joint name="panda_joint2">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint2']}</param>
+                </state_interface>
+            </joint>
+            <joint name="panda_joint3">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint3']}</param>
+                </state_interface>
+            </joint>
+            <joint name="panda_joint4">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint4']}</param>
+                </state_interface>
+            </joint>
+            <joint name="panda_joint5">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint5']}</param>
+                </state_interface>
+            </joint>
+            <joint name="panda_joint6">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint6']}</param>
+                </state_interface>
+            </joint>
+            <joint name="panda_joint7">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['panda_joint7']}</param>
+                </state_interface>
+            </joint>
+
+            <joint name="openCloseJoint">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                    <param name="initial_value">0.0</param>
+                </state_interface>
+            </joint>
+            
+            <joint name="centerJoint">
+                <command_interface name="position"/>
+                <state_interface name="position">
+                     <param name="initial_value">0.0</param>
+                </state_interface>
+            </joint>
+
+        </ros2_control>
+    </xacro:macro>
+</robot>
+================================================================
+FILE: src/panda_moveit_config/config/Franka.urdf.xacro
+================================================================
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Franka">
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
+
+    <!-- Import Franka urdf file -->
+    <xacro:include filename="$(find cs_hardware_interface)/urdf/exported_panda.urdf" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="Franka.ros2_control.xacro" />
+
+
+    <xacro:Franka_ros2_control name="CoppeliaSimSystem" initial_positions_file="$(arg initial_positions_file)"/>
+
+</robot>
+
+================================================================
+FILE: src/panda_moveit_config/config/initial_positions.yaml
+================================================================
+# Default initial positions for Franka's ros2_control fake system
+
+initial_positions:
+  centerJoint: 0
+  openCloseJoint: 0
+  panda_joint1: 0
+  panda_joint2: 0
+  panda_joint3: 0
+  panda_joint4: 0
+  panda_joint5: 0
+  panda_joint6: 0
+  panda_joint7: 0
+================================================================
+FILE: src/panda_moveit_config/config/joint_limits.yaml
+================================================================
+# joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+
+# For beginners, we downscale velocity and acceleration limits.
+# You can always specify higher scaling factors (<= 1.0) in your motion requests.  # Increase the values below to 1.0 to always move at maximum speed.
+default_velocity_scaling_factor: 0.1
+default_acceleration_scaling_factor: 0.1
+
+# Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+joint_limits:
+  centerJoint:
+    has_velocity_limits: true
+    max_velocity: 0.10000000149012001
+    has_acceleration_limits: false
+    max_acceleration: 0
+  openCloseJoint:
+    has_velocity_limits: true
+    max_velocity: 10.0
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint1:
+    has_velocity_limits: true
+    max_velocity: 2.1749997138977002
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint2:
+    has_velocity_limits: true
+    max_velocity: 2.1749997138977002
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint3:
+    has_velocity_limits: true
+    max_velocity: 2.1749997138977002
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint4:
+    has_velocity_limits: true
+    max_velocity: 2.1749997138977002
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint5:
+    has_velocity_limits: true
+    max_velocity: 2.6100003719329998
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint6:
+    has_velocity_limits: true
+    max_velocity: 2.6100003719329998
+    has_acceleration_limits: false
+    max_acceleration: 0
+  panda_joint7:
+    has_velocity_limits: true
+    max_velocity: 2.6100003719329998
+    has_acceleration_limits: false
+    max_acceleration: 0
+================================================================
+FILE: src/panda_moveit_config/config/kinematics.yaml
+================================================================
+panda_arm:
+  kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+  kinematics_solver_search_resolution: 0.0050000000000000001
+  kinematics_solver_timeout: 0.0050000000000000001
+================================================================
+FILE: src/panda_moveit_config/config/moveit_controllers.yaml
+================================================================
+# MoveIt uses this configuration for controller management
+
+trajectory_execution:
+  allowed_execution_duration_scaling: 10.0
+  allowed_goal_duration_margin: 10.0
+  execution_duration_monitoring: true
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+moveit_simple_controller_manager:
+  controller_names:
+    - panda_arm_controller
+    - hand_controller
+
+  panda_arm_controller:
+    type: FollowJointTrajectory
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    action_ns: follow_joint_trajectory
+    default: true
+  hand_controller:
+    type: FollowJointTrajectory
+    joints:
+      - openCloseJoint
+      - centerJoint
+    action_ns: follow_joint_trajectory
+    default: true
+================================================================
+FILE: src/panda_moveit_config/config/ompl_planning.yaml
+================================================================
+planning_plugin: ompl_interface/OMPLPlanner
+request_adapters: >-
+  default_planner_request_adapters/AddTimeOptimalParameterization
+  default_planner_request_adapters/ResolveConstraintFrames
+  default_planner_request_adapters/FixWorkspaceBounds
+  default_planner_request_adapters/FixStartStateBounds
+  default_planner_request_adapters/FixStartStateCollision
+  default_planner_request_adapters/FixStartStatePathConstraints
+
+planner_configs:
+  SBLkConfigDefault:
+    type: geometric::SBL
+    range: 0.0  # Max motion range per step. 0.0 = automatic
+  ESTkConfigDefault:
+    type: geometric::EST
+    range: 0.0
+    goal_bias: 0.05
+  LBKPIECEkConfigDefault:
+    type: geometric::LBKPIECE
+    range: 0.0
+    border_fraction: 0.9
+    min_valid_path_fraction: 0.5
+  BKPIECEkConfigDefault:
+    type: geometric::BKPIECE
+    range: 0.0
+    border_fraction: 0.9
+    min_valid_path_fraction: 0.5
+  KPIECEkConfigDefault:
+    type: geometric::KPIECE
+    range: 0.0
+    goal_bias: 0.05
+    border_fraction: 0.9
+    min_valid_path_fraction: 0.5
+  RRTkConfigDefault:
+    type: geometric::RRT
+    range: 0.0
+    goal_bias: 0.05
+  RRTConnectkConfigDefault:
+    type: geometric::RRTConnect
+    range: 0.0
+  RRTstarkConfigDefault:
+    type: geometric::RRTstar
+    range: 0.0
+    goal_bias: 0.05
+    delay_collision_checking: 1
+  TRRTkConfigDefault:
+    type: geometric::TRRT
+    range: 0.0
+    goal_bias: 0.05
+    max_states_failed: 10
+    temp_change_factor: 2.0
+    min_temperature: 10e-10
+    init_temperature: 10e-6
+    frountier_threshold: 0.0
+    frountier_node_ratio: 0.1
+    k_constant: 0.0
+  PRMkConfigDefault:
+    type: geometric::PRM
+    max_nearest_neighbors: 10
+  PRMstarkConfigDefault:
+    type: geometric::PRMstar
+
+# 这里的 Group Name 必须和你截图里的名字一致
+panda_arm:
+  default_planner_config: RRTConnectkConfigDefault
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault
+
+hand:
+  default_planner_config: RRTConnectkConfigDefault
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault
+================================================================
+FILE: src/panda_moveit_config/config/pilz_cartesian_limits.yaml
+================================================================
+# Limits for the Pilz planner
+cartesian_limits:
+  max_trans_vel: 1.0
+  max_trans_acc: 2.25
+  max_trans_dec: -5.0
+  max_rot_vel: 1.57
+
+================================================================
+FILE: src/panda_moveit_config/config/ros2_controllers.yaml
+================================================================
+# This config file is used by ros2_control
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    panda_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+    hand_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+      publish_rate: 100
+
+panda_arm_controller:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+hand_controller:
+  ros__parameters:
+    joints:
+      - centerJoint
+      - openCloseJoint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+================================================================
+FILE: src/panda_moveit_config/config/sensors_3d.yaml
+================================================================
+sensors:
+  - kinect_pointcloud
+  - kinect_depthimage
+kinect_pointcloud:
+  filtered_cloud_topic: filtered_cloud
+  max_range: 5.0
+  max_update_rate: 1.0
+  padding_offset: 0.1
+  padding_scale: 1.0
+  point_cloud_topic: /head_mount_kinect/depth_registered/points
+  point_subsample: 1
+  sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+kinect_depthimage:
+  far_clipping_plane_distance: 5.0
+  filtered_cloud_topic: filtered_cloud
+  image_topic: /head_mount_kinect/depth_registered/image_raw
+  max_update_rate: 1.0
+  near_clipping_plane_distance: 0.3
+  padding_offset: 0.03
+  padding_scale: 4.0
+  queue_size: 5
+  sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+  shadow_threshold: 0.2
+================================================================
+FILE: src/panda_moveit_config/launch/demo.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_demo_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_demo_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/move_group.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_move_group_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_move_group_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/moveit_rviz.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_moveit_rviz_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_moveit_rviz_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/rsp.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_rsp_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_rsp_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/setup_assistant.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_setup_assistant_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_setup_assistant_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/spawn_controllers.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_spawn_controllers_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_spawn_controllers_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/static_virtual_joint_tfs.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_static_virtual_joint_tfs_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_static_virtual_joint_tfs_launch(moveit_config)
+
+================================================================
+FILE: src/panda_moveit_config/launch/warehouse_db.launch.py
+================================================================
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_warehouse_db_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("Franka", package_name="panda_moveit_config").to_moveit_configs()
+    return generate_warehouse_db_launch(moveit_config)
+

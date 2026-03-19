@@ -51,7 +51,7 @@ hardware_interface::CallbackReturn CsSystem::on_init(const hardware_interface::H
   zmq_socket_ = zmq_socket(zmq_context_, ZMQ_REQ); // REQ 模式：一问一答
 
   // 3. 设置超时 (防止仿真卡死导致 ROS 死锁)
-  int timeout_ms = 1000; // 1秒超时
+  int timeout_ms = 100; // 100ms 超时
   zmq_setsockopt(zmq_socket_, ZMQ_RCVTIMEO, &timeout_ms, sizeof(timeout_ms));
   zmq_setsockopt(zmq_socket_, ZMQ_SNDTIMEO, &timeout_ms, sizeof(timeout_ms));
 
@@ -172,8 +172,13 @@ hardware_interface::return_type CsSystem::write(
   // 只要能收到东西就行，不需要太关心内容，除非是为了查错
   if (size < 0) {
        RCLCPP_WARN_THROTTLE(rclcpp::get_logger("CsSystem"), clock, 2000, "ZMQ Recv Timeout in write()");
+             zmq_close(zmq_socket_);
+      zmq_socket_ = zmq_socket(zmq_context_, ZMQ_REQ);
+      int timeout_ms = 100;
+      zmq_setsockopt(zmq_socket_, ZMQ_RCVTIMEO, &timeout_ms, sizeof(timeout_ms));
+      zmq_setsockopt(zmq_socket_, ZMQ_SNDTIMEO, &timeout_ms, sizeof(timeout_ms));
+      zmq_connect(zmq_socket_, "tcp://localhost:5555");
   }
-
   return hardware_interface::return_type::OK;
 }
 

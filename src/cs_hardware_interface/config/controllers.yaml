@@ -37,8 +37,9 @@ panda_arm_controller:
 
    
     allow_partial_joints_goal: false
-    open_loop_control: true
+    open_loop_control: false
     allow_integration_in_goal_trajectories: true
+    goal_time: 10.0
 
 
 hand_controller:
@@ -54,5 +55,5 @@ hand_controller:
       - position
 
     allow_partial_joints_goal: false
-    open_loop_control: true
+    open_loop_control: false
     allow_integration_in_goal_trajectories: true

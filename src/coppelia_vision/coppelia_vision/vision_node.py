@@ -18,10 +18,10 @@ class VisionNode(Node):
 
         # 1. 参数配置
         self.declare_parameters(namespace='', parameters=[
-            ('sub_image_topic', '/camera/image_raw'),
+            ('sub_image_topic', '/global_camera/image'),
             ('pub_result_topic', '/vision/object_pose'),
             ('base_frame', 'robot_base'), 
-            ('camera_frame', 'HandCamera'),
+            ('camera_frame', 'global_camera_link'),
             ('model_type', 'color'),
             ('model_path', ''),
             ('device', 'cpu'),

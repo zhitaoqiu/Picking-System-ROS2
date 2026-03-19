@@ -37,9 +37,15 @@ class CoordinateMapper:
             pose_cam.header.stamp = Time().to_msg()
             
             # 拆解赋值，确保不出错
+            # 【恢复标准光学系映射】交给 TF 去处理旋转！
+            # 图像左右(u) 对应 相机的 X
             pose_cam.pose.position.x = (u - self.cx) * 1.0 / self.fx
+            
+            # 图像上下(v) 对应 相机的 Y
             pose_cam.pose.position.y = (v - self.cy) * 1.0 / self.fy
-            pose_cam.pose.position.z = 1.0
+            
+            # 深度恒定为正前方的 1.0
+            pose_cam.pose.position.z = 1.0 
             pose_cam.pose.orientation.w = 1.0
 
             # 2. 【核心修改】使用高阶 API 直接转换

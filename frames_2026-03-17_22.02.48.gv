@@ -1,0 +1,18 @@
+digraph G {
+"FrankaGripper" -> "leftFinger"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link8_resp" -> "FrankaGripper"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"leftFinger" -> "rightFinger"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"robot_base" -> "link2_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link2_resp" -> "link3_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link3_resp" -> "link4_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link4_resp" -> "link5_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link5_resp" -> "link6_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link6_resp" -> "link7_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"link7_resp" -> "link8_resp"[label=" Broadcaster: default_authority\nAverage rate: 5.246\nBuffer length: 4.956\nMost recent transform: 1773756168.172633\nOldest transform: 1773756163.216676\n"];
+"leftFinger" -> "leftPad"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"rightFinger" -> "rightPad"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1773756168.301261"[ shape=plaintext ] ;
+}->"robot_base";
+}

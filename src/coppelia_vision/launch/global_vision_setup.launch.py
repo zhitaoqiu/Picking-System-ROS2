@@ -9,12 +9,12 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='global_camera_tf_publisher',
         arguments=[
-            '--x', '0.5', 
+            '--x', '-1.0', 
             '--y', '0.0', 
-            '--z', '1.0',         # 高度 1.5米
+            '--z', '0.93',         # 高度 1.0米
             '--yaw', '0.0', 
-            '--pitch', '3.14159', # 垂直向下看 (180度)
-            '--roll', '0.0',
+            '--pitch', '0', 
+            '--roll', '-3.14159',
             '--frame-id', 'robot_base',           # 父坐标系
             '--child-frame-id', 'global_camera_link' # 子坐标系 (和 Python 参数对应)
         ]
@@ -46,7 +46,7 @@ def generate_launch_description():
             'fov_degrees': 60.0,
             
             # (6) 物体高度 (红方块中心高度，大约2cm)
-            'target_z_height': 0.02
+            'target_z_height': -0.050
         }]
     )
 

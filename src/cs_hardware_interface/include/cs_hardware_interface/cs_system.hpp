@@ -22,7 +22,7 @@ class CsSystem : public hardware_interface::SystemInterface
 public:
   RCLCPP_SHARED_PTR_DEFINITIONS(CsSystem)
 
-  ~CsSystem(); // 析构函数很重要
+  ~CsSystem(); 
 
   hardware_interface::CallbackReturn on_init(
     const hardware_interface::HardwareInfo & info) override;
